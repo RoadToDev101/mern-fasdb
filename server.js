@@ -2,8 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 const bodyParser = require("body-parser");
-const bcrypt = require("bcrypt");
-const fs = require("fs");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
 const path = require("path");
@@ -28,6 +26,9 @@ app.use("/html", express.static(path.resolve(__dirname, "assets/html")));
 // Use body-parser middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Load routers
+app.use("/", require("./server/routes/productRoutes"));
 
 // mongodb connection
 connectDB();
