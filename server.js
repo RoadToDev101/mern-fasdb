@@ -16,18 +16,11 @@ const PORT = process.env.PORT || 8080;
 // Use Morgan to log requests to the console
 app.use(morgan("tiny"));
 
-// Load assets
-app.use("/styles", express.static(path.resolve(__dirname, "assets/styles")));
-app.use("/icons", express.static(path.resolve(__dirname, "assets/icons")));
-app.use("/images", express.static(path.resolve(__dirname, "assets/images")));
-app.use("/scripts", express.static(path.resolve(__dirname, "assets/scripts")));
-app.use("/html", express.static(path.resolve(__dirname, "assets/html")));
-
 // Use body-parser middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Load routers
+// Load product routers
 app.use("/", require("./server/routes/productRoutes"));
 
 // mongodb connection
