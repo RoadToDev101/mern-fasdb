@@ -6,8 +6,8 @@ const reducer = (state, action) => {
       return {
         ...state,
         showAlert: true,
-        alertText: action.payload.alertText,
-        alertType: action.payload.alertType,
+        alertText: "Please provide all values!",
+        alertType: "danger",
       };
     case CLEAR_ALERT:
       return {

@@ -1,4 +1,5 @@
-import React, { useState, useReducer, useContext } from "react";
+import React from "react";
+import { useState, useReducer, useContext } from "react";
 
 import reducer from "./reducer";
 
@@ -11,7 +12,7 @@ const initialState = {
   alertType: "",
 };
 
-export const AppContext = React.createContext();
+const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -31,7 +32,7 @@ const AppProvider = ({ children }) => {
   };
 
   return (
-    <AppContext.Provider value={{ ...state, displayAlert }}>
+    <AppContext.Provider value={{ ...state, displayAlert, clearAlert }}>
       {children}
     </AppContext.Provider>
   );

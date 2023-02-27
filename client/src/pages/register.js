@@ -8,12 +8,13 @@ const initialState = {
   email: "",
   password: "",
   isMember: true,
+  showAlert: false,
 };
 
 const Register = () => {
   const [values, setValues] = useState(initialState);
   // global state and useNavigate
-  const { isLoading, showAlert, displayAlert } = useAppContext();
+  const { isLoading, showAlert, displayAlert, clearAlert } = useAppContext();
 
   const toggleMember = () => {
     setValues({ ...values, isMember: !values.isMember });
@@ -24,12 +25,16 @@ const Register = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { name, email, password, isMember } = values;
-    if (!email || !password || (!isMember && !name)) {
+    const { username, email, password, isMember } = values;
+    // Alert if email or password empty
+    if (!email || !password || (!isMember && !username)) {
       displayAlert("Please provide all values!", "danger");
+      // Clear alert after 3s
+      clearAlert();
       return;
     }
-    console.log("Submitted");
+
+    console.log(values);
   };
 
   return (
@@ -74,7 +79,7 @@ const Register = () => {
           autoComplete={"current-password"}
         />
         <button type="submit" className="btn btn-block">
-          Login
+          {values.isMember ? "Submit" : "Login"}
         </button>
         <p>
           {values.isMember ? "Not a member?" : "Already a member?"}
