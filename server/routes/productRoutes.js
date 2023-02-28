@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const services = require("../services/productRender.js");
-const userController = require("../controller/userController.js");
-const productController = require("../controller/productController.js");
+
+const productController = require("../controllers/productController.js");
 /**
  *@description Root Route
  * @method GET /
@@ -26,13 +26,6 @@ router.get("/update-product", services.updateProductRoute);
  * @method GET /show-product
  */
 router.get("/view-product", services.viewProductRoute);
-
-// API
-router.post("/api/users", userController.create);
-router.get("/api/users", userController.findAll);
-router.get("/api/users/:userId", userController.findOne);
-router.put("/api/users/:username", userController.update);
-router.delete("/api/users/:userId", userController.delete);
 
 router.post("/api/products", productController.create);
 router.get("/api/products", productController.findAll);
