@@ -1,4 +1,5 @@
-import { Dashboard, Landing, Register, ErrorPage } from "./pages/pagesIndex";
+import { Dashboard, Landing, ErrorPage } from "./pages/index";
+import { Register } from "./features/authentication/index";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 function App() {
