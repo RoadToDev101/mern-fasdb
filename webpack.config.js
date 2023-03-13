@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   entry: './client/src/index.js',
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, './client/build'),
     filename: 'bundle.js'
   },
   module: {
@@ -36,17 +36,29 @@ module.exports = {
       },
     ]
   },
-  resolve: {
-    alias: {
-      '@components': path.resolve(__dirname, 'client/src/components'),
-      '@images': path.resolve(__dirname, 'src/assets/images'),
-      '@wrappers': path.resolve(__dirname, 'src/assets/wrappers'),
-      '@context': path.resolve(__dirname, 'src/context'),
-    }
-  },
   plugins: [
     new HtmlWebpackPlugin({
       template: './client/public/index.html'
     })
-  ]
+  ],
+  devServer: {
+    static: {
+      directory: path.join(__dirname, 'build'),
+    },
+    compress: true,
+    port: 3000,
+    client: {
+      logging: 'warn',
+      overlay: true,
+    },
+    devMiddleware: {
+      publicPath: '/',
+    },
+    onBeforeSetupMiddleware() {
+      console.log('Starting dev server...');
+    },
+    onAfterSetupMiddleware() {
+      console.log('Dev server started.');
+    },
+  },
 };

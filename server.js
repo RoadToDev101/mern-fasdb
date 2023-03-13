@@ -1,4 +1,11 @@
 const express = require("express");
+
+// Async error handling middleware
+require("express-async-errors")
+
+// Initialize express app
+const app = express();
+
 const path = require('path');
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
@@ -19,16 +26,12 @@ const authRoutes = require("./server/routes/authRoutes");
 // Middleware
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
-require("express-async-errors");
 const notFoundMiddleware = require("./server/middleware/notFound");
 const errorHandlerMiddleware = require("./server/middleware/errorHandler");
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
-// Initialize express app
-const app = express();
-
 // Use Morgan to log requests to the console
-app.use(morgan("tiny"));
+app.use(morgan("dev"));
 
 // Use body-parser middleware
 app.use(bodyParser.json());
@@ -40,24 +43,30 @@ app.use(express.static(path.resolve(__dirname, './client/build')));
 // Proxy API requests to the backend server
 app.use('/api', createProxyMiddleware({ target: `http://localhost:${PORT}`, changeOrigin: true }));
 
-// Serve the React app's index.html file for all other requests
-app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, './client/build', 'index.html'));
-  });
-
 // Load auth, user, product routers
 app.use("/api/auth", authRoutes);
 // app.use("/api/users", userRoutes);
 // app.use("/api/products", productRoutes);
 
-// Use middleware
+// Serve the React app's index.html file for all other requests
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, './client/build', 'index.html'));
+});
+
+// Use error handling middleware
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
 // Start server only after mongodb connection is established
 const start = async () => {
+  try {
     await connectDB();
-    app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
+    app.listen(PORT, () => {
+      console.log(`Server is listening on port ${PORT}`);
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 start();
