@@ -29,7 +29,10 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, "Email is required"],
-    validate:{validator: validator.isEmail, message: "Please provide a valid email"},
+    validate: {
+      validator: validator.isEmail,
+      message: "Please provide a valid email",
+    },
     unique: true,
   },
   // roleID: {
@@ -52,6 +55,12 @@ userSchema.methods.createJWT = function () {
     expiresIn: process.env.JWT_LIFETIME,
   });
   return token;
+};
+
+userSchema.methods.comparePassword = async function (enteredPassword) {
+  // Compare password
+  const isMatch = await bcrypt.compare(enteredPassword, this.password);
+  return isMatch;
 };
 
 const User = mongoose.model("User", userSchema);

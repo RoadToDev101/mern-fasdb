@@ -1,12 +1,20 @@
 const express = require("express");
-
+const cors = require("cors");
 // Async error handling middleware
-require("express-async-errors")
+require("express-async-errors");
 
 // Initialize express app
 const app = express();
 
-const path = require('path');
+// Set up and use cors
+const corsOptions = {
+  origin: "http://localhost:5000", // Replace with your frontend domain
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+
+app.use(cors(corsOptions));
+
+const path = require("path");
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 
@@ -28,20 +36,18 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const notFoundMiddleware = require("./server/middleware/notFound");
 const errorHandlerMiddleware = require("./server/middleware/errorHandler");
-const { createProxyMiddleware } = require('http-proxy-middleware');
 
 // Use Morgan to log requests to the console
-app.use(morgan("dev"));
+if (process.env.NODE_ENV !== "production") {
+  app.use(morgan("dev"));
+}
 
 // Use body-parser middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Serve static files from the React app
-app.use(express.static(path.resolve(__dirname, './client/build')));
-
-// Proxy API requests to the backend server
-app.use('/api', createProxyMiddleware({ target: `http://localhost:${PORT}`, changeOrigin: true }));
+app.use(express.static(path.resolve(__dirname, "./public/build")));
 
 // Load auth, user, product routers
 app.use("/api/auth", authRoutes);
@@ -49,8 +55,8 @@ app.use("/api/auth", authRoutes);
 // app.use("/api/products", productRoutes);
 
 // Serve the React app's index.html file for all other requests
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, './client/build', 'index.html'));
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "./public/build", "index.html"));
 });
 
 // Use error handling middleware

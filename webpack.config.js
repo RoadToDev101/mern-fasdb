@@ -2,9 +2,10 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
+  mode: 'development',
   entry: './client/src/index.js',
   output: {
-    path: path.resolve(__dirname, './client/build'),
+    path: path.resolve(__dirname, './public/build'),
     filename: 'bundle.js'
   },
   module: {
@@ -41,24 +42,4 @@ module.exports = {
       template: './client/public/index.html'
     })
   ],
-  devServer: {
-    static: {
-      directory: path.join(__dirname, 'build'),
-    },
-    compress: true,
-    port: 3000,
-    client: {
-      logging: 'warn',
-      overlay: true,
-    },
-    devMiddleware: {
-      publicPath: '/',
-    },
-    onBeforeSetupMiddleware() {
-      console.log('Starting dev server...');
-    },
-    onAfterSetupMiddleware() {
-      console.log('Dev server started.');
-    },
-  },
 };

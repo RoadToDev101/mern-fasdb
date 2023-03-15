@@ -225,6 +225,7 @@ ul {
   margin-bottom: 0.5rem;
   text-transform: capitalize;
   letter-spacing: var(--letterSpacing);
+  border: 0;
 }
 .form-input,
 .form-textarea,

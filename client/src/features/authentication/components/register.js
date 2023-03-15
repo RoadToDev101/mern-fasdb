@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Logo, FormRow, Alert } from "../../../components/index";
 import Wrapper from "../../../assets/wrappers/registerPage";
 import { useAppContext } from "../../../context/appContext";
@@ -12,9 +13,18 @@ const initialState = {
 };
 
 const Register = () => {
+  const navigate = useNavigate();
   const [values, setValues] = useState(initialState);
   // global state and useNavigate
-  const { isLoading, showAlert, displayAlert, clearAlert } = useAppContext();
+  const {
+    user,
+    isLoading,
+    showAlert,
+    displayAlert,
+    clearAlert,
+    registerUser,
+    loginUser,
+  } = useAppContext();
 
   const toggleMember = () => {
     setValues({ ...values, isMember: !values.isMember });
@@ -23,19 +33,36 @@ const Register = () => {
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const { username, email, password, isMember } = values;
-    // Alert if email or password empty
-    if (!email || !password || (!isMember && !username)) {
-      displayAlert("Please provide all values!", "danger");
-      // Clear alert after 3s
-      clearAlert();
-      return;
-    }
 
-    console.log(values);
+    const currentUser = { password };
+    if (isMember) {
+      // Check if the user is trying to login with their username or email
+      if (username.includes("@")) {
+        // The user is trying to login with their email
+        currentUser.email = username;
+      } else {
+        // The user is trying to login with their username
+        currentUser.username = username;
+      }
+      loginUser(currentUser);
+    } else {
+      currentUser.username = username;
+      currentUser.email = email;
+      registerUser(currentUser);
+    }
   };
+
+  useEffect(() => {
+    if (user) {
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    }
+  }, [user, navigate]);
 
   return (
     <Wrapper className="full-page">
@@ -59,15 +86,18 @@ const Register = () => {
         )}
 
         <FormRow
-          type="email"
-          id="email"
-          name="email"
-          value={values.email}
+          type={!values.isMember ? "email" : "text"}
+          id="login-input"
+          name={!values.isMember ? "email" : "username"}
+          value={!values.isMember ? values.email : values.username}
           onChange={handleChange}
-          label="Email"
-          placeholder="Enter your email"
-          autoComplete={"email"}
+          label={!values.isMember ? "Email" : "Email/Username"}
+          placeholder={`Enter your ${
+            !values.isMember ? "email" : "email or username"
+          }`}
+          autoComplete={!values.isMember ? "email" : "email username"}
         />
+
         <FormRow
           type="password"
           id="password"
@@ -78,8 +108,9 @@ const Register = () => {
           placeholder="Enter your password"
           autoComplete={"current-password"}
         />
-        <button type="submit" className="btn btn-block">
-          {values.isMember ? "Submit" : "Login"}
+
+        <button type="submit" className="btn btn-block" disabled={isLoading}>
+          {values.isMember ? "Login" : "Submit"}
         </button>
         <p>
           {values.isMember ? "Not a member?" : "Already a member?"}
