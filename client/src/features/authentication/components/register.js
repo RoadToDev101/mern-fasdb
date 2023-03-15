@@ -1,68 +1,16 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Logo, FormRow, Alert } from "../../../components/index";
 import Wrapper from "../../../assets/wrappers/registerPage";
-import { useAppContext } from "../../../context/appContext";
-
-const initialState = {
-  username: "",
-  email: "",
-  password: "",
-  isMember: true,
-  showAlert: false,
-};
+import useRegister from "../hooks/useRegister";
 
 const Register = () => {
-  const navigate = useNavigate();
-  const [values, setValues] = useState(initialState);
-  // global state and useNavigate
   const {
-    user,
-    isLoading,
+    values,
+    handleChange,
+    handleSubmit,
+    toggleMember,
     showAlert,
-    displayAlert,
-    clearAlert,
-    registerUser,
-    loginUser,
-  } = useAppContext();
-
-  const toggleMember = () => {
-    setValues({ ...values, isMember: !values.isMember });
-  };
-
-  const handleChange = (e) => {
-    setValues({ ...values, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const { username, email, password, isMember } = values;
-
-    const currentUser = { password };
-    if (isMember) {
-      // Check if the user is trying to login with their username or email
-      if (username.includes("@")) {
-        // The user is trying to login with their email
-        currentUser.email = username;
-      } else {
-        // The user is trying to login with their username
-        currentUser.username = username;
-      }
-      loginUser(currentUser);
-    } else {
-      currentUser.username = username;
-      currentUser.email = email;
-      registerUser(currentUser);
-    }
-  };
-
-  useEffect(() => {
-    if (user) {
-      setTimeout(() => {
-        navigate("/");
-      }, 2000);
-    }
-  }, [user, navigate]);
+    isLoading,
+  } = useRegister();
 
   return (
     <Wrapper className="full-page">

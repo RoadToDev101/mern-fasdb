@@ -28,6 +28,7 @@ exports.register = async (req, res) => {
   const token = user.createJWT();
   res.status(StatusCodes.CREATED).json({
     user: {
+      _id: user._id,
       username: user.username,
       email: user.email,
     },
@@ -39,8 +40,12 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   const { username, email, password } = req.body;
 
-  if (!(username || email) || !password) {
-    throw new BadRequestError("Please provide all values");
+  if (!(username || email)) {
+    throw new BadRequestError("Please provide username or email");
+  }
+
+  if (!password) {
+    throw new BadRequestError("Please provide password");
   }
 
   // Check if user exists by username or email
@@ -48,13 +53,13 @@ exports.login = async (req, res) => {
     "+password"
   );
   if (!user) {
-    throw new UnAuthenticatedError("Invalid credentials");
+    throw new UnAuthenticatedError("User not found!");
   }
   console.log(user);
 
   const isPasswordCorrect = await user.comparePassword(password);
   if (!isPasswordCorrect) {
-    throw new UnAuthenticatedError("Invalid credentials");
+    throw new UnAuthenticatedError("Password is incorrect!");
   }
 
   const token = user.createJWT();

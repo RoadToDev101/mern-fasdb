@@ -1,5 +1,5 @@
-import Dashboard from "./dashboard";
 import Landing from "./landing";
 import ErrorPage from "./error";
+import ProtectedRoute from "./protectedRoute";
 
-export { Dashboard, Landing, ErrorPage };
+export { Landing, ErrorPage, ProtectedRoute };

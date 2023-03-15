@@ -1,17 +1,34 @@
-import { Dashboard, Landing, ErrorPage } from "./pages/index";
-import { Register } from "./features/authentication/index";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { Landing, ErrorPage, ProtectedRoute } from "./pages";
+import { Register } from "./features/authentication";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+  CreateProduct,
+  ShowProducts,
+  UpdateProduct,
+  UserProfile,
+} from "./features/dashboard";
+import SharedLayout from "./layouts";
 
 function App() {
   return (
     <BrowserRouter>
-      <nav>
-        <Link to="/">Dashboard</Link>
-        <Link to="/register">Register</Link>
-        <Link to="/landing">Landing</Link>
-      </nav>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <SharedLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<ShowProducts />} />
+          <Route path="create-products" element={<CreateProduct />} />
+          <Route path="update-products" element={<UpdateProduct />} />
+          <Route path="user-profile" element={<UserProfile />} />
+          {/* <Route path="show-files" element={<ShowFiles/>} /> */}
+          {/* <Route path="add-file" element={<AddFiles/>} /> */}
+          {/* <Route path="compare-products" element={<CompareProducts/>} /> */}
+        </Route>
         <Route path="/register" element={<Register />} />
         <Route path="/landing" element={<Landing />} />
         <Route path="*" element={<ErrorPage />} />

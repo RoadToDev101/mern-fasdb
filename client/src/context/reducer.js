@@ -1,13 +1,14 @@
 import {
   DISPLAY_ALERT,
   CLEAR_ALERT,
-  REGISTER_USER_BEGIN,
-  REGISTER_USER_SUCCESS,
-  REGISTER_USER_ERROR,
-  LOGIN_USER_BEGIN,
-  LOGIN_USER_SUCCESS,
-  LOGIN_USER_ERROR,
+  SETUP_USER_BEGIN,
+  SETUP_USER_SUCCESS,
+  SETUP_USER_ERROR,
+  TOGGLE_SIDEBAR,
+  LOGOUT_USER,
 } from "./action";
+
+import { initialState } from "./appContext";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -25,12 +26,12 @@ const reducer = (state, action) => {
         alertText: "",
         alertType: "",
       };
-    case REGISTER_USER_BEGIN:
+    case SETUP_USER_BEGIN:
       return {
         ...state,
         isLoading: true,
       };
-    case REGISTER_USER_SUCCESS:
+    case SETUP_USER_SUCCESS:
       return {
         ...state,
         isLoading: false,
@@ -38,9 +39,9 @@ const reducer = (state, action) => {
         token: action.payload.token,
         showAlert: true,
         alertType: "success",
-        alertText: "Register Successful! Redirecting...",
+        alertText: action.payload.alertText,
       };
-    case REGISTER_USER_ERROR:
+    case SETUP_USER_ERROR:
       return {
         ...state,
         isLoading: false,
@@ -48,28 +49,16 @@ const reducer = (state, action) => {
         alertText: action.payload.msg,
         alertType: "danger",
       };
-    case LOGIN_USER_BEGIN:
+    case LOGOUT_USER:
       return {
-        ...state,
-        isLoading: true,
+        ...initialState,
+        user: null,
+        token: null,
       };
-    case LOGIN_USER_SUCCESS:
+    case TOGGLE_SIDEBAR:
       return {
         ...state,
-        isLoading: false,
-        user: action.payload.user,
-        token: action.payload.token,
-        showAlert: true,
-        alertType: "success",
-        alertText: "Login Successful! Redirecting...",
-      };
-    case LOGIN_USER_ERROR:
-      return {
-        ...state,
-        isLoading: false,
-        showAlert: true,
-        alertText: action.payload.msg,
-        alertType: "danger",
+        showSideBar: !state.showSideBar,
       };
     default:
       return state;
