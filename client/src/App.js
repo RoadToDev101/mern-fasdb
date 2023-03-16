@@ -27,7 +27,8 @@ function App() {
           <Route path="user-profile" element={<UserProfile />} />
           {/* <Route path="show-files" element={<ShowFiles/>} /> */}
           {/* <Route path="add-file" element={<AddFiles/>} /> */}
-          {/* <Route path="compare-products" element={<CompareProducts/>} /> */}
+          {/* <Route path="tools" element={<Tools/>} /> */}
+          {/* <Route path="guide" element={<Guide/>} /> */}
         </Route>
         <Route path="/register" element={<Register />} />
         <Route path="/landing" element={<Landing />} />

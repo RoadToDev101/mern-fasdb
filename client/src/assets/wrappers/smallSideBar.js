@@ -19,6 +19,9 @@ const Wrapper = styled.aside`
     z-index: 99;
     opacity: 1;
   }
+  .close-sidebar {
+    display: none;
+  }
   .content {
     background: var(--white);
     width: var(--fluid-width);

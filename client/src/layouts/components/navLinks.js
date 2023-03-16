@@ -1,16 +1,18 @@
-import Links from "../../utils/links";
+import FeatureLinks from "../../utils/featureLinks";
 import { NavLink } from "react-router-dom";
+import { useAppContext } from "../../context/appContext";
 
-const NavLinks = ({ toggleSideBar }) => {
+const FeatureNavLinks = () => {
+  const { showBigSmallBar, toggleSmallSideBar } = useAppContext();
   return (
     <div className="nav-links">
-      {Links.map((link) => {
+      {FeatureLinks.map((link) => {
         const { id, text, path, icon } = link;
         return (
           <NavLink
             to={path}
             key={id}
-            onClick={toggleSideBar}
+            onClick={!showBigSmallBar ? toggleSmallSideBar : null}
             className={({ isActive }) =>
               isActive ? "nav-link active" : "nav-link"
             }
@@ -25,4 +27,4 @@ const NavLinks = ({ toggleSideBar }) => {
   );
 };
 
-export default NavLinks;
+export default FeatureNavLinks;

@@ -4,7 +4,9 @@ import {
   SETUP_USER_BEGIN,
   SETUP_USER_SUCCESS,
   SETUP_USER_ERROR,
-  TOGGLE_SIDEBAR,
+  // TOGGLE_SIDEBAR,
+  TOGGLE_BIG_SIDEBAR,
+  TOGGLE_SMALL_SIDEBAR,
   LOGOUT_USER,
 } from "./action";
 
@@ -55,10 +57,15 @@ const reducer = (state, action) => {
         user: null,
         token: null,
       };
-    case TOGGLE_SIDEBAR:
+    case TOGGLE_BIG_SIDEBAR:
       return {
         ...state,
-        showSideBar: !state.showSideBar,
+        showBigSideBar: !state.showBigSideBar,
+      };
+    case TOGGLE_SMALL_SIDEBAR:
+      return {
+        ...state,
+        showSmallSideBar: !state.showSmallSideBar,
       };
     default:
       return state;

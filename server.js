@@ -28,14 +28,14 @@ const connectDB = require("./server/database/connection");
 
 // Routes
 const authRoutes = require("./server/routes/authRoutes");
-// const userRoutes = require("./server/routes/userRoutes");
-// const productRoutes = require("./server/routes/productRoutes");
+const productRoutes = require("./server/routes/productRoutes");
 
 // Middleware
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const notFoundMiddleware = require("./server/middleware/notFound");
 const errorHandlerMiddleware = require("./server/middleware/errorHandler");
+const authenticateUser = require("./server/middleware/auth");
 
 // Use Morgan to log requests to the console
 if (process.env.NODE_ENV !== "production") {
@@ -51,8 +51,7 @@ app.use(express.static(path.resolve(__dirname, "./public/build")));
 
 // Load auth, user, product routers
 app.use("/api/auth", authRoutes);
-// app.use("/api/users", userRoutes);
-// app.use("/api/products", productRoutes);
+app.use("/api/products", authenticateUser, productRoutes);
 
 // Serve the React app's index.html file for all other requests
 app.get("*", (req, res) => {

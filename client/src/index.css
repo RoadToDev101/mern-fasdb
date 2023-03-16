@@ -13,7 +13,7 @@ html {
 
 :root {
   /* colors */
-  --primary-50: #e0fcff;
+  /* --primary-50: #e0fcff;
   --primary-100: #bef8fd;
   --primary-200: #87eaf2;
   --primary-300: #54d1db;
@@ -22,7 +22,19 @@ html {
   --primary-600: #14919b;
   --primary-700: #0e7c86;
   --primary-800: #0a6c74;
-  --primary-900: #044e54;
+  --primary-900: #044e54; */
+
+  /* colors */
+  --primary-50: #ffe5d5;
+  --primary-100: #ffccab;
+  --primary-200: #ff9d52;
+  --primary-300: #ff751a;
+  --primary-400: #ff6600;
+  --primary-500: #ff5308;
+  --primary-600: #e64600;
+  --primary-700: #c43300;
+  --primary-800: #a82b00;
+  --primary-900: #8a2100;
 
   /* grey */
   --grey-50: #f0f4f8;
@@ -149,7 +161,7 @@ ul {
 .btn {
   cursor: pointer;
   color: var(--white);
-  background: var(--sst-orange);
+  background: var(--primary-500);
   border: transparent;
   border-radius: var(--borderRadius);
   letter-spacing: var(--letterSpacing);

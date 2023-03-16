@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/authController.js");
-
+const authenticateUser = require("../middleware/auth");
 /**
  *
  * @method POST /api/auth/register
@@ -12,5 +12,6 @@ const authController = require("../controllers/authController.js");
  **/
 router.post("/register", authController.register);
 router.post("/login", authController.login);
-router.patch("/update", authController.updateUser);
+
+router.patch("/updateUser", authenticateUser, authController.updateUser);
 module.exports = router;

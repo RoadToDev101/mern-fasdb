@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useReducer, useContext } from "react";
+import { useReducer, useContext } from "react";
 import axios from "axios";
 
 import reducer from "./reducer";
@@ -10,7 +10,8 @@ import {
   SETUP_USER_BEGIN,
   SETUP_USER_SUCCESS,
   SETUP_USER_ERROR,
-  TOGGLE_SIDEBAR,
+  TOGGLE_BIG_SIDEBAR,
+  TOGGLE_SMALL_SIDEBAR,
   LOGOUT_USER,
 } from "./action";
 
@@ -22,7 +23,8 @@ const initialState = {
   showAlert: false,
   alertText: "",
   alertType: "",
-  showSideBar: false,
+  showBigSideBar: true,
+  showSmallSideBar: false,
   user: user ? JSON.parse(user) : null,
   token: token,
 };
@@ -85,9 +87,24 @@ const AppProvider = ({ children }) => {
     removeUserFromLocalStorage();
   };
 
-  const toggleSideBar = () => {
+  const toggleBothSideBar = () => {
     dispatch({
-      type: TOGGLE_SIDEBAR,
+      type: TOGGLE_BIG_SIDEBAR,
+    });
+    dispatch({
+      type: TOGGLE_SMALL_SIDEBAR,
+    });
+  };
+
+  const toggleBigSideBar = () => {
+    dispatch({
+      type: TOGGLE_BIG_SIDEBAR,
+    });
+  };
+
+  const toggleSmallSideBar = () => {
+    dispatch({
+      type: TOGGLE_SMALL_SIDEBAR,
     });
   };
 
@@ -99,7 +116,9 @@ const AppProvider = ({ children }) => {
         clearAlert,
         setupUser,
         logoutUser,
-        toggleSideBar,
+        toggleBothSideBar,
+        toggleBigSideBar,
+        toggleSmallSideBar,
       }}
     >
       {children}
