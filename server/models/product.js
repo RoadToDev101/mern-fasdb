@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { ProductionDrawing, CodeReport } = require("./file.js");
 
 const threadTypeSchema = new mongoose.Schema({
   threadTypeName: {
@@ -85,41 +86,6 @@ const featureSchema = new mongoose.Schema({
   ],
 });
 
-const productionDrawingSchema = new mongoose.Schema({
-  drawingName: {
-    type: String,
-    required: true,
-  },
-  version: {
-    type: String,
-    required: true,
-  },
-  file: {
-    type: Buffer,
-    required: true,
-  },
-  revisedDate: {
-    type: Date,
-    default: Date.now,
-    required: true,
-  },
-});
-
-productionDrawingSchema.index({ drawingName: 1, version: 1 }, { unique: true });
-
-const codeReportSchema = new mongoose.Schema({
-  code: {
-    type: String,
-  },
-  file: {
-    type: Buffer,
-  },
-  revisedDate: {
-    type: Date,
-    default: Date.now,
-  },
-});
-
 const skuSchema = new mongoose.Schema({
   skuCode: {
     type: String,
@@ -131,7 +97,6 @@ const skuSchema = new mongoose.Schema({
   },
   isCollated: {
     type: Boolean,
-    required: true,
     default: false,
   },
 });
@@ -139,11 +104,9 @@ const skuSchema = new mongoose.Schema({
 const commercialDimensionSchema = new mongoose.Schema({
   overallLength: {
     type: Number,
-    required: true,
   },
   size: {
     type: String,
-    required: true,
   },
   headDiameter: {
     type: Number,
@@ -175,6 +138,9 @@ const coatingSchema = new mongoose.Schema({
     type: String,
     unique: true,
     required: true,
+  },
+  description: {
+    type: String,
   },
 });
 
@@ -304,39 +270,34 @@ const productSchema = new mongoose.Schema({
     {
       type: mongoose.Types.ObjectId,
       ref: "ProductionDrawing",
-      required: true,
     },
   ],
-  codeReports: [codeReportSchema],
+  codeReports: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "CodeReport",
+    },
+  ],
   applicationID: [
     {
       type: mongoose.Types.ObjectId,
       ref: "Application",
-      required: true,
     },
   ],
 });
 
-const Product = mongoose.model("Product", productSchema);
-
+const Application = mongoose.model("Application", applicationSchema);
 const ThreadType = mongoose.model("ThreadType", threadTypeSchema);
 const HeadType = mongoose.model("HeadType", headTypeSchema);
 const DriveType = mongoose.model("DriveType", driveTypeSchema);
 const PointType = mongoose.model("PointType", pointTypeSchema);
 const ShankType = mongoose.model("ShankType", shankTypeSchema);
-
-const ProductionDrawing = mongoose.model(
-  "ProductionDrawing",
-  productionDrawingSchema
-);
-
 const Coating = mongoose.model("Coating", coatingSchema);
 const Material = mongoose.model("Material", materialSchema);
-const Application = mongoose.model("Application", applicationSchema);
+const Product = mongoose.model("Product", productSchema);
 
 module.exports = {
   Product,
-  ProductionDrawing,
   ThreadType,
   HeadType,
   DriveType,

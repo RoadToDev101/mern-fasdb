@@ -29,11 +29,10 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, "Email is required"],
-    validate: {
-      validator: validator.isEmail,
-      message: "Please provide a valid email",
-    },
+    validate: [validator.isEmail, "Please provide a valid email"],
     unique: true,
+    trim: true,
+    lowercase: true,
   },
   // roleID: {
   //   type: mongoose.Types.ObjectId,
@@ -44,6 +43,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.pre("save", async function (next) {
   // Hash password before saving to database
+  if (!this.isModified("password")) return next();
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
   next();

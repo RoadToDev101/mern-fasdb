@@ -2,7 +2,6 @@ const { User } = require("../models/user.js");
 const { StatusCodes } = require("http-status-codes");
 const BadRequestError = require("../errors/bad-request");
 const UnAuthenticatedError = require("../errors/unauthenticated");
-const { token } = require("morgan");
 
 // Register user, check existing user through username or email, if not found, create new user
 exports.register = async (req, res) => {
@@ -65,27 +64,6 @@ exports.login = async (req, res) => {
 
   const token = user.createJWT();
   user.password = undefined;
-  res.status(StatusCodes.OK).json({
-    user,
-    token,
-  });
-};
-
-exports.updateUser = async (req, res) => {
-  const { username, email, password } = req.body;
-  if (!username || !email || !password) {
-    throw new BadRequestError("Please provide all values");
-  }
-
-  const user = User.findOne({ _id: req.user._id });
-
-  user.username = username;
-  user.email = email;
-  user.password = password;
-
-  await user.save();
-
-  token = user.createJWT();
   res.status(StatusCodes.OK).json({
     user,
     token,

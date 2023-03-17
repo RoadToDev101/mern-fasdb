@@ -29,6 +29,8 @@ const connectDB = require("./server/database/connection");
 // Routes
 const authRoutes = require("./server/routes/authRoutes");
 const productRoutes = require("./server/routes/productRoutes");
+const userRoutes = require("./server/routes/userRoutes");
+const fileRoutes = require("./server/routes/fileRoutes");
 
 // Middleware
 const morgan = require("morgan");
@@ -51,7 +53,10 @@ app.use(express.static(path.resolve(__dirname, "./public/build")));
 
 // Load auth, user, product routers
 app.use("/api/auth", authRoutes);
-app.use("/api/products", authenticateUser, productRoutes);
+// Use authentication middleware for all routes below
+app.use("/api/product", authenticateUser, productRoutes);
+app.use("/api/user", authenticateUser, userRoutes);
+app.use("/api/file", authenticateUser, fileRoutes);
 
 // Serve the React app's index.html file for all other requests
 app.get("*", (req, res) => {
