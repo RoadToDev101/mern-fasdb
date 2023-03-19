@@ -1,12 +1,12 @@
 import { Landing, ErrorPage, ProtectedRoute } from "./pages";
 import { Register } from "./features/authentication";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { UserProfile } from "./features/other";
 import {
   CreateProduct,
   ShowProducts,
   UpdateProduct,
-  UserProfile,
-} from "./features/dashboard";
+} from "./features/crud-product";
 import SharedLayout from "./layouts";
 
 function App() {

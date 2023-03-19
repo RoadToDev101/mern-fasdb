@@ -7,11 +7,12 @@ const FormRow = ({
   label,
   placeholder,
   autoComplete,
+  labelText,
 }) => {
   return (
-    <div className="form-control form-row">
-      <label className="form-label" htmlFor={id}>
-        {label}
+    <div className="form-row">
+      <label htmlFor={name} className="form-label">
+        {labelText || name}
       </label>
       <input
         type={type}

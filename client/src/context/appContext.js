@@ -34,6 +34,14 @@ const AppContext = React.createContext();
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  //axios
+  const authFetch = axios.create({
+    baseURL: "/api",
+    headers: {
+      Authorization: `Bearer ${state.token}`,
+    },
+  });
+
   const displayAlert = () => {
     dispatch({
       type: DISPLAY_ALERT,
@@ -63,7 +71,7 @@ const AppProvider = ({ children }) => {
       type: SETUP_USER_BEGIN,
     });
     try {
-      const { data } = await axios.post(`/api/auth/${endPoint}`, currentUser);
+      const { data } = await axios.post(`api/auth/${endPoint}`, currentUser);
       const { token, user } = data;
       dispatch({
         type: SETUP_USER_SUCCESS,
@@ -85,6 +93,16 @@ const AppProvider = ({ children }) => {
       type: LOGOUT_USER,
     });
     removeUserFromLocalStorage();
+  };
+
+  //TODO: Check again
+  const updateUser = async (currentUser) => {
+    try {
+      const { data } = await authFetch.patch(`/user/updateUser`, currentUser);
+      console.log(data);
+    } catch (error) {
+      console.log(error.response);
+    }
   };
 
   const toggleBothSideBar = () => {
@@ -113,9 +131,9 @@ const AppProvider = ({ children }) => {
       value={{
         ...state,
         displayAlert,
-        clearAlert,
         setupUser,
         logoutUser,
+        updateUser,
         toggleBothSideBar,
         toggleBigSideBar,
         toggleSmallSideBar,

@@ -65,7 +65,11 @@ const NavBar = () => {
               <FaSignOutAlt /> logout
             </button>
             <Link to="/user-profile">
-              <button type="button" className="dropdown-btn">
+              <button
+                type="button"
+                className="dropdown-btn"
+                onClick={() => setShowUserDropdown(!showUserDropdown)}
+              >
                 <FaEye /> profile
               </button>
             </Link>

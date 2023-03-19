@@ -1,4 +1,3 @@
-//TODO: Check authorization of user later
 const UnAuthenticatedError = require("../errors/unauthenticated");
 const jwt = require("jsonwebtoken");
 
@@ -23,7 +22,7 @@ const authenticateUser = async (req, res, next) => {
   // console.log(token);
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(payload);
+    // console.log(payload);
     req.user = { userId: payload.userId };
     next();
   } catch (err) {
