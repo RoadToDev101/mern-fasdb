@@ -4,7 +4,8 @@ import { useAppContext } from "../../../context/appContext";
 import Wrapper from "../../../assets/wrappers/dashboardFormPage";
 
 const UserProfile = () => {
-  const { user, updateUser, displayAlert, isLoading } = useAppContext();
+  const { user, updateUser, displayAlert, showAlert, isLoading } =
+    useAppContext();
 
   const [username, setUsername] = useState(user?.username);
   const [email, setEmail] = useState(user?.email);
@@ -25,7 +26,7 @@ const UserProfile = () => {
     <Wrapper>
       <form className="form" onSubmit={handleSubmit}>
         <h3>Profile</h3>
-        {displayAlert && <Alert />}
+        {showAlert && <Alert />}
         <div className="form-center">
           <FormRow
             type="text"
@@ -43,7 +44,6 @@ const UserProfile = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-
           <button type="submit" className="btn btn-block" disabled={isLoading}>
             {isLoading ? "Updating..." : "Update"}
           </button>

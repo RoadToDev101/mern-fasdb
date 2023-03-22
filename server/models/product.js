@@ -1,45 +1,15 @@
 const mongoose = require("mongoose");
-const { ProductionDrawing, CodeReport } = require("./file.js");
-
-const threadTypeSchema = new mongoose.Schema({
-  threadTypeName: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-});
-
-const headTypeSchema = new mongoose.Schema({
-  headTypeName: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-});
-
-const driveTypeSchema = new mongoose.Schema({
-  driveTypeName: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-});
-
-const pointTypeSchema = new mongoose.Schema({
-  pointTypeName: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-});
-
-const shankTypeSchema = new mongoose.Schema({
-  shankTypeName: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-});
+// const { ProductionDrawing, CodeReport } = require("./file.js");
+const {
+  ThreadType,
+  ShankType,
+  HeadType,
+  PointType,
+  DriveType,
+} = require("./feature");
+const { Material, Coating } = require("./material-coatings");
+const { Application } = require("./application");
+const { User } = require("./user");
 
 const featureSchema = new mongoose.Schema({
   headType: {
@@ -65,7 +35,7 @@ const featureSchema = new mongoose.Schema({
       shankTypeId: {
         type: mongoose.Types.ObjectId,
         ref: "ShankType",
-        unique: true,
+        unique: [true, "Shank type must be unique"],
       },
     },
   ],
@@ -74,7 +44,7 @@ const featureSchema = new mongoose.Schema({
       threadTypeId: {
         type: mongoose.Types.ObjectId,
         ref: "ThreadType",
-        unique: true,
+        unique: [true, "Thread type must be unique"],
       },
       topThreadAngle: {
         type: Number,
@@ -89,8 +59,8 @@ const featureSchema = new mongoose.Schema({
 const skuSchema = new mongoose.Schema({
   skuCode: {
     type: String,
-    unique: true,
-    required: true,
+    unique: [true, "SKU code must be unique"],
+    required: [true, "SKU code is required"],
   },
   packagingQuantity: {
     type: Number,
@@ -118,39 +88,6 @@ const commercialDimensionSchema = new mongoose.Schema({
     type: Number,
   },
   nailGauge: {
-    type: String,
-  },
-});
-
-const applicationSchema = new mongoose.Schema({
-  applicationName: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  description: {
-    type: String,
-  },
-});
-
-const coatingSchema = new mongoose.Schema({
-  coatingName: {
-    type: String,
-    unique: true,
-    required: true,
-  },
-  description: {
-    type: String,
-  },
-});
-
-const materialSchema = new mongoose.Schema({
-  materialName: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  description: {
     type: String,
   },
 });
@@ -219,27 +156,27 @@ const allowableLoadSchema = new mongoose.Schema({
 const modelSchema = new mongoose.Schema({
   modelNumber: {
     type: String,
-    unique: true,
-    required: true,
+    unique: [true, "Model number already exists"],
+    required: [true, "Please provide model number"],
   },
   features: featureSchema,
   commercialDimensions: commercialDimensionSchema,
   materialId: {
     type: mongoose.Types.ObjectId,
     ref: "Material",
-    required: true,
+    required: [true, "Please provide material"],
   },
   coatings: [
     {
       coatingId: {
         type: mongoose.Types.ObjectId,
         ref: "Coating",
-        required: true,
+        required: [true, "Please provide coating"],
       },
       layer: {
         type: Number,
-        unique: true,
-        required: true,
+        unique: [true, "Layer already exists"],
+        required: [true, "Please provide layer"],
       },
       thickness: {
         type: Number,
@@ -251,59 +188,55 @@ const modelSchema = new mongoose.Schema({
   screwAllowableLoads: allowableLoadSchema,
 });
 
-const productSchema = new mongoose.Schema({
-  productType: {
-    type: String,
-    required: true,
-  },
-  modelName: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  company: {
-    type: String,
-    required: true,
-  },
-  models: [modelSchema],
-  productionDrawingID: [
-    {
-      type: mongoose.Types.ObjectId,
-      ref: "ProductionDrawing",
+const productSchema = new mongoose.Schema(
+  {
+    productType: {
+      type: String,
+      enum: ["Screw", "Nail", "Anchor", "Other"],
+      required: [true, "Please provide product type"],
+      default: "Screw",
     },
-  ],
-  codeReports: [
-    {
-      type: mongoose.Types.ObjectId,
-      ref: "CodeReport",
+    modelName: {
+      type: String,
+      required: [true, "Please provide model name"],
+      unique: [true, "Model name already exists"],
     },
-  ],
-  applicationID: [
-    {
-      type: mongoose.Types.ObjectId,
-      ref: "Application",
+    company: {
+      type: String,
+      enum: ["Simpson Strong-Tie", "Hilti", "DeWalt", "Other"],
+      required: [true, "Please provide company name"],
+      default: "Simpson Strong-Tie",
     },
-  ],
-});
+    models: [modelSchema],
+    // productionDrawingID: [
+    //   {
+    //     type: mongoose.Types.ObjectId,
+    //     ref: "ProductionDrawing",
+    //   },
+    // ],
+    // codeReports: [
+    //   {
+    //     type: mongoose.Types.ObjectId,
+    //     ref: "CodeReport",
+    //   },
+    // ],
+    applicationID: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "Application",
+      },
+    ],
+    createdBy: {
+      type: mongoose.Types.ObjectId,
+      ref: "User",
+      required: [true, "Please provide user"],
+    },
+  },
+  { timestamps: true }
+);
 
-const Application = mongoose.model("Application", applicationSchema);
-const ThreadType = mongoose.model("ThreadType", threadTypeSchema);
-const HeadType = mongoose.model("HeadType", headTypeSchema);
-const DriveType = mongoose.model("DriveType", driveTypeSchema);
-const PointType = mongoose.model("PointType", pointTypeSchema);
-const ShankType = mongoose.model("ShankType", shankTypeSchema);
-const Coating = mongoose.model("Coating", coatingSchema);
-const Material = mongoose.model("Material", materialSchema);
 const Product = mongoose.model("Product", productSchema);
 
 module.exports = {
   Product,
-  ThreadType,
-  HeadType,
-  DriveType,
-  PointType,
-  ShankType,
-  Material,
-  Coating,
-  Application,
 };

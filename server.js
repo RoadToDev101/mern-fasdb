@@ -1,14 +1,14 @@
 const express = require("express");
-const cors = require("cors");
-// Async error handling middleware
-require("express-async-errors");
-
 // Initialize express app
 const app = express();
+// Async error handling middleware
+require("express-async-errors");
+const cors = require("cors");
 
 // Set up and use cors
 const corsOptions = {
-  origin: "http://localhost:5000", // Replace with your frontend domain
+  origin: "http://localhost:3000", // Replace with your frontend domain
+  credentials: true, // Access-Control-Allow-Credentials: true
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 
@@ -28,6 +28,7 @@ const connectDB = require("./server/database/connection");
 
 // Routes
 const authRoutes = require("./server/routes/authRoutes");
+const featureRoutes = require("./server/routes/featureRoutes");
 const productRoutes = require("./server/routes/productRoutes");
 const userRoutes = require("./server/routes/userRoutes");
 const fileRoutes = require("./server/routes/fileRoutes");
@@ -35,8 +36,6 @@ const fileRoutes = require("./server/routes/fileRoutes");
 // Middleware
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
-const notFoundMiddleware = require("./server/middleware/notFound");
-const errorHandlerMiddleware = require("./server/middleware/errorHandler");
 const authenticateUser = require("./server/middleware/auth");
 
 // Use Morgan to log requests to the console
@@ -54,6 +53,7 @@ app.use(express.static(path.resolve(__dirname, "./public/build")));
 // Load auth, user, product routers
 app.use("/api/auth", authRoutes);
 // Use authentication middleware for all routes below
+app.use("/api/feature", featureRoutes);
 app.use("/api/product", authenticateUser, productRoutes);
 app.use("/api/user", authenticateUser, userRoutes);
 app.use("/api/file", authenticateUser, fileRoutes);
@@ -64,8 +64,8 @@ app.get("*", (req, res) => {
 });
 
 // Use error handling middleware
-app.use(notFoundMiddleware);
-app.use(errorHandlerMiddleware);
+app.use(require("./server/middleware/notFound"));
+app.use(require("./server/middleware/errorHandler"));
 
 // Start server only after mongodb connection is established
 const start = async () => {

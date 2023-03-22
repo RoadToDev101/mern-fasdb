@@ -3,14 +3,6 @@ const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const roleSchema = new mongoose.Schema({
-  roleName: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-});
-
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -34,11 +26,12 @@ const userSchema = new mongoose.Schema({
     trim: true,
     lowercase: true,
   },
-  // roleID: {
-  //   type: mongoose.Types.ObjectId,
-  //   ref: "Role",
-  //   required: true,
-  // },
+  role: {
+    type: String,
+    enum: ["user", "editor", "admin"],
+    default: "user",
+    required: [true, "Role is required"],
+  },
 });
 
 userSchema.pre("save", async function (next) {
@@ -66,6 +59,5 @@ userSchema.methods.comparePassword = async function (enteredPassword) {
 };
 
 const User = mongoose.model("User", userSchema);
-const Role = mongoose.model("Role", roleSchema);
 
-module.exports = { User, Role };
+module.exports = { User };

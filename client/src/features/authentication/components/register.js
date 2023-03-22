@@ -39,7 +39,7 @@ const Register = () => {
           name={!values.isMember ? "email" : "username"}
           value={!values.isMember ? values.email : values.username}
           onChange={handleChange}
-          label={!values.isMember ? "Email" : "Email/Username"}
+          labelText={!values.isMember ? "Email" : "Email/Username"}
           placeholder={`Enter your ${
             !values.isMember ? "email" : "email or username"
           }`}

@@ -25,13 +25,9 @@ function App() {
           <Route path="create-products" element={<CreateProduct />} />
           <Route path="update-products" element={<UpdateProduct />} />
           <Route path="user-profile" element={<UserProfile />} />
-          {/* <Route path="show-files" element={<ShowFiles/>} /> */}
-          {/* <Route path="add-file" element={<AddFiles/>} /> */}
-          {/* <Route path="tools" element={<Tools/>} /> */}
-          {/* <Route path="guide" element={<Guide/>} /> */}
         </Route>
-        <Route path="/register" element={<Register />} />
-        <Route path="/landing" element={<Landing />} />
+        <Route path="register" element={<Register />} />
+        <Route path="landing" element={<Landing />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </BrowserRouter>

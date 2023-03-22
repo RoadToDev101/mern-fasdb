@@ -1,6 +1,8 @@
+const { StatusCodes } = require("http-status-codes");
+
 const notFoundMiddleware = (req, res, next) => {
   const error = new Error(`Route - ${req.originalUrl} - not found.`);
-  res.status(404);
+  res.status(StatusCodes.NOT_FOUND);
   next(error);
 };
 

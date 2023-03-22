@@ -10,6 +10,9 @@ import {
   SETUP_USER_BEGIN,
   SETUP_USER_SUCCESS,
   SETUP_USER_ERROR,
+  UPDATE_USER_BEGIN,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_ERROR,
   TOGGLE_BIG_SIDEBAR,
   TOGGLE_SMALL_SIDEBAR,
   LOGOUT_USER,
@@ -19,14 +22,18 @@ const token = localStorage.getItem("token");
 const user = localStorage.getItem("user");
 
 const initialState = {
+  user: user ? JSON.parse(user) : null,
+  token: token,
   isLoading: false,
   showAlert: false,
   alertText: "",
   alertType: "",
   showBigSideBar: true,
   showSmallSideBar: false,
-  user: user ? JSON.parse(user) : null,
-  token: token,
+  editProductId: "",
+  productType: "",
+  modelName: "",
+  company: "",
 };
 
 const AppContext = React.createContext();
@@ -37,10 +44,34 @@ const AppProvider = ({ children }) => {
   //axios
   const authFetch = axios.create({
     baseURL: "/api",
-    headers: {
-      Authorization: `Bearer ${state.token}`,
-    },
   });
+  // request interceptor
+  authFetch.interceptors.request.use(
+    (config) => {
+      // do something before request is sent
+      config.headers["Authorization"] = `Bearer ${state.token}`;
+      return config;
+    },
+    (error) => {
+      // do something with request error
+      return Promise.reject(error);
+    }
+  );
+  // response interceptor
+  authFetch.interceptors.response.use(
+    (response) => {
+      // do something with response data
+      return response;
+    },
+    (error) => {
+      // do something with response error
+      // console.log(error.response);
+      if (error.response.status === 401) {
+        logoutUser();
+      }
+      return Promise.reject(error);
+    }
+  );
 
   const displayAlert = () => {
     dispatch({
@@ -95,14 +126,28 @@ const AppProvider = ({ children }) => {
     removeUserFromLocalStorage();
   };
 
-  //TODO: Check again
   const updateUser = async (currentUser) => {
+    dispatch({
+      type: UPDATE_USER_BEGIN,
+    });
     try {
       const { data } = await authFetch.patch(`/user/updateUser`, currentUser);
-      console.log(data);
+      const { user, token } = data;
+      dispatch({
+        type: UPDATE_USER_SUCCESS,
+        payload: { user, token },
+      });
+      addUserToLocalStorage({ user, token });
     } catch (error) {
-      console.log(error.response);
+      // If the user is not authorized, logout the user
+      if (error.response.status !== 401) {
+        dispatch({
+          type: UPDATE_USER_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
     }
+    clearAlert();
   };
 
   const toggleBothSideBar = () => {
