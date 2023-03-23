@@ -11,9 +11,9 @@ const FormRowSelect = ({ labelText, name, value, onChange, options }) => {
         className="form-select"
       >
         <option value="">Select {labelText}</option>
-        {options.map((option) => (
-          <option key={option.id} value={option.value}>
-            {option.value}
+        {options.map((option, index) => (
+          <option key={index} value={option.value} display={option.display}>
+            {option.display ? option.display : option.value}
           </option>
         ))}
       </select>

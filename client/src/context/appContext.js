@@ -13,9 +13,14 @@ import {
   UPDATE_USER_BEGIN,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
+  LOGOUT_USER,
   TOGGLE_BIG_SIDEBAR,
   TOGGLE_SMALL_SIDEBAR,
-  LOGOUT_USER,
+  HANDLE_CHANGE,
+  CLEAR_VALUES,
+  CREATE_PRODUCT_BEGIN,
+  CREATE_PRODUCT_SUCCESS,
+  CREATE_PRODUCT_ERROR,
 } from "./action";
 
 const token = localStorage.getItem("token");
@@ -87,6 +92,19 @@ const AppProvider = ({ children }) => {
     }, 3000);
   };
 
+  const handleChange = (e) => {
+    dispatch({
+      type: HANDLE_CHANGE,
+      payload: { name: e.target.name, value: e.target.value },
+    });
+  };
+
+  const clearValues = () => {
+    dispatch({
+      type: CLEAR_VALUES,
+    });
+  };
+
   const addUserToLocalStorage = ({ user, token }) => {
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("token", JSON.stringify(token));
@@ -131,7 +149,7 @@ const AppProvider = ({ children }) => {
       type: UPDATE_USER_BEGIN,
     });
     try {
-      const { data } = await authFetch.patch(`/user/updateUser`, currentUser);
+      const { data } = await authFetch.patch(`/user/update-user`, currentUser);
       const { user, token } = data;
       dispatch({
         type: UPDATE_USER_SUCCESS,
@@ -143,6 +161,29 @@ const AppProvider = ({ children }) => {
       if (error.response.status !== 401) {
         dispatch({
           type: UPDATE_USER_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+    }
+    clearAlert();
+  };
+
+  const createProduct = async (product) => {
+    dispatch({
+      type: CREATE_PRODUCT_BEGIN,
+    });
+    try {
+      const { data } = await authFetch.post(`/product/create-product`, product);
+      const { product } = data;
+      dispatch({
+        type: CREATE_PRODUCT_SUCCESS,
+        payload: { product },
+      });
+    } catch (error) {
+      // If the user is not authorized, logout the user
+      if (error.response.status !== 401) {
+        dispatch({
+          type: CREATE_PRODUCT_ERROR,
           payload: { msg: error.response.data.msg },
         });
       }
@@ -182,6 +223,8 @@ const AppProvider = ({ children }) => {
         toggleBothSideBar,
         toggleBigSideBar,
         toggleSmallSideBar,
+        handleChange,
+        clearValues,
       }}
     >
       {children}

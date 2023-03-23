@@ -10,6 +10,11 @@ import {
   TOGGLE_BIG_SIDEBAR,
   TOGGLE_SMALL_SIDEBAR,
   LOGOUT_USER,
+  HANDLE_CHANGE,
+  CLEAR_VALUES,
+  CREATE_PRODUCT_BEGIN,
+  CREATE_PRODUCT_SUCCESS,
+  CREATE_PRODUCT_ERROR,
 } from "./action";
 
 import { initialState } from "./appContext";
@@ -90,6 +95,19 @@ const reducer = (state, action) => {
       return {
         ...state,
         showSmallSideBar: !state.showSmallSideBar,
+      };
+    case HANDLE_CHANGE:
+      return {
+        ...state,
+        [action.payload.name]: action.payload.value,
+      };
+    case CLEAR_VALUES:
+      return {
+        ...state,
+        editProductId: "",
+        productType: "",
+        modelName: "",
+        company: "",
       };
     default:
       return state;
