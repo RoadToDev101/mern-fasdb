@@ -55,7 +55,7 @@ const CreateProduct = () => {
         {showAlert && <Alert />}
         <div className="form-center">
           <div className="form-section">
-            <label className="form-label-section">Product Info</label>
+            <label className="form-label-section">General Info</label>
             {/* Info section */}
             <FormRowSelect
               labelText="Product Type"
