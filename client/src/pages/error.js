@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import Wrapper from "../assets/wrappers/errorPage";
-import { Logo } from "../components/index";
+import Wrapper from "@wrappers/errorPage";
+import { Logo } from "@components/index";
 
 const ErrorPage = () => {
   return (

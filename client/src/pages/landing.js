@@ -1,5 +1,5 @@
-import Wrapper from "../assets/wrappers/landingPage";
-import { Logo } from "../components/index";
+import Wrapper from "@wrappers/landingPage";
+import { Logo } from "@components/index";
 import { Link } from "react-router-dom";
 const landing = () => {
   return (

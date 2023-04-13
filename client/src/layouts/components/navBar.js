@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Wrapper from "../../assets/wrappers/navBar";
+import Wrapper from "@wrappers/navBar";
 import {
   FaUserCircle,
   FaCaretDown,
@@ -7,11 +7,11 @@ import {
   FaEye,
   FaAlignJustify,
 } from "react-icons/fa";
-import { useAppContext } from "../../context/appContext";
-import { Logo } from "../../components/index";
+import { useAppContext } from "@context/appContext";
+import { Logo } from "@components/index";
 import { Link, useLocation } from "react-router-dom";
-import FeatureLinks from "../../utils/featureLinks";
-import OtherLinks from "../../utils/otherLinks";
+import FeatureLinks from "@utils/featureLinks";
+import OtherLinks from "@utils/otherLinks";
 
 const NavBar = () => {
   const [navBarTitle, setNavBarTitle] = useState("");

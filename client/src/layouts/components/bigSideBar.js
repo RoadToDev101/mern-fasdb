@@ -1,6 +1,6 @@
-import Wrapper from "../../assets/wrappers/bigSideBar";
-import { useAppContext } from "../../context/appContext";
-import { Logo } from "../../components/index";
+import Wrapper from "@wrappers/bigSideBar";
+import { useAppContext } from "@context/appContext";
+import { Logo } from "@components/index";
 import FeatureNavLinks from "./navLinks";
 
 const BigSideBar = () => {

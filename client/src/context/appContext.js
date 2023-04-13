@@ -107,7 +107,7 @@ const AppProvider = ({ children }) => {
 
   const addUserToLocalStorage = ({ user, token }) => {
     localStorage.setItem("user", JSON.stringify(user));
-    localStorage.setItem("token", JSON.stringify(token));
+    localStorage.setItem("token", token);
   };
 
   const removeUserFromLocalStorage = () => {
@@ -173,12 +173,14 @@ const AppProvider = ({ children }) => {
       type: CREATE_PRODUCT_BEGIN,
     });
     try {
-      const { data } = await authFetch.post(`/product/create-product`, product);
-      const { product } = data;
-      dispatch({
-        type: CREATE_PRODUCT_SUCCESS,
-        payload: { product },
+      const { productType, modelName, company } = state;
+      await authFetch.post(`/product/create-product`, {
+        productType,
+        modelName,
+        company,
       });
+      dispatch({ type: CREATE_PRODUCT_SUCCESS });
+      dispatch({ type: CLEAR_VALUES });
     } catch (error) {
       // If the user is not authorized, logout the user
       if (error.response.status !== 401) {
@@ -225,6 +227,7 @@ const AppProvider = ({ children }) => {
         toggleSmallSideBar,
         handleChange,
         clearValues,
+        createProduct,
       }}
     >
       {children}

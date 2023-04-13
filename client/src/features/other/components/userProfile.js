@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { FormRow, Alert } from "../../../components/index";
-import { useAppContext } from "../../../context/appContext";
-import Wrapper from "../../../assets/wrappers/dashboardFormPage";
+import { FormRow, Alert } from "@components/index";
+import { useAppContext } from "@context/appContext";
+import Wrapper from "@wrappers/dashboardFormPage";
 
 const UserProfile = () => {
   const { user, updateUser, displayAlert, showAlert, isLoading } =

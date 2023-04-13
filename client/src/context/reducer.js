@@ -109,6 +109,27 @@ const reducer = (state, action) => {
         modelName: "",
         company: "",
       };
+    case CREATE_PRODUCT_BEGIN:
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case CREATE_PRODUCT_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        showAlert: true,
+        alertType: "success",
+        alertText: "Product created successfully!",
+      };
+    case CREATE_PRODUCT_ERROR:
+      return {
+        ...state,
+        isLoading: false,
+        showAlert: true,
+        alertText: action.payload.msg,
+        alertType: "danger",
+      };
     default:
       return state;
   }

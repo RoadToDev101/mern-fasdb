@@ -1,5 +1,5 @@
-import { Logo, FormRow, Alert } from "../../../components/index";
-import Wrapper from "../../../assets/wrappers/registerPage";
+import { Logo, FormRow, Alert } from "@components/index";
+import Wrapper from "@wrappers/registerPage";
 import useRegister from "../hooks/useRegister";
 
 const Register = () => {

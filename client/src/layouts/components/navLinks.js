@@ -1,6 +1,6 @@
-import FeatureLinks from "../../utils/featureLinks";
+import FeatureLinks from "@utils/featureLinks";
 import { NavLink } from "react-router-dom";
-import { useAppContext } from "../../context/appContext";
+import { useAppContext } from "@context/appContext";
 
 const FeatureNavLinks = () => {
   const { showBigSmallBar, toggleSmallSideBar } = useAppContext();
