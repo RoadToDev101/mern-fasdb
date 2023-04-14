@@ -1,7 +1,13 @@
-import { FormRow, FormRowSelect, Alert } from "@components/index";
+// import { useEffect, useState } from "react";
+import {
+  FormRow,
+  FormRowSelect,
+  // FormRowMultiSelectCheckbox,
+  Alert,
+} from "@components/index";
 import { useAppContext } from "@context/appContext";
 import Wrapper from "@wrappers/dashboardFormPage";
-import { CreateScrew } from "./create/createScrew.js";
+// import { getApplications } from "@crud-utils/api";
 
 const CreateProduct = () => {
   const {
@@ -16,17 +22,35 @@ const CreateProduct = () => {
     createProduct,
   } = useAppContext();
 
+  // const [applications, setApplications] = useState([]);
+
+  // useEffect(() => {
+  //   getApplications().then((data) => {
+  //     setApplications(data);
+  //   });
+  // }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!productType || !company || !modelName) {
       displayAlert();
     }
     createProduct();
-    // console.log("submit");
   };
 
   const handleProductInput = (e) => {
-    handleChange(e);
+    if (
+      e.target.name === "applications" &&
+      typeof e.target.value === "string" &&
+      e.target.value.split
+    ) {
+      handleChange({
+        target: { name: e.target.name, value: e.target.value.split(",") },
+      });
+    } else {
+      handleChange(e);
+    }
+    console.log(e.target.value);
   };
 
   return (
@@ -65,32 +89,43 @@ const CreateProduct = () => {
               value={modelName}
               onChange={handleProductInput}
             />
-          </div>
 
-          {productType === "Screw" && <CreateScrew />}
-          {productType && (
-            <div className="btn-container form-section">
-              <button
-                type="submit"
-                className="btn btn-block submit-btn"
-                disabled={isLoading}
-                onClick={handleSubmit}
-              >
-                Submit
-              </button>
-              <button
-                className="btn btn-block clear-btn"
-                onClick={(e) => {
-                  e.preventDefault();
-                  clearValues();
-                }}
-              >
-                Clear all
-              </button>
-            </div>
-          )}
+            {/* Applications section */}
+            {/* <FormRowMultiSelectCheckbox
+              labelText="Applications"
+              name="applications"
+              value={applications}
+              onChange={handleProductInput}
+              options={[
+                { _id: 1, value: "Wood" },
+                { _id: 2, value: "Concrete" },
+                { _id: 3, value: "Steel" },
+              ]}
+            /> */}
+          </div>
         </div>
       </form>
+      {productType && (
+        <div className="btn-container">
+          <button
+            type="submit"
+            className="btn btn-block submit-btn"
+            disabled={isLoading}
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
+          <button
+            className="btn btn-block clear-btn"
+            onClick={(e) => {
+              e.preventDefault();
+              clearValues();
+            }}
+          >
+            Clear all
+          </button>
+        </div>
+      )}
     </Wrapper>
   );
 };

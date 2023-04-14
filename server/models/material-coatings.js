@@ -16,7 +16,6 @@ const materialSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    default: "Carbon Steel",
   },
   description: {
     type: String,

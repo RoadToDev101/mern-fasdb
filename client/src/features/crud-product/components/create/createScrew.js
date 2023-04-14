@@ -1,7 +1,7 @@
 import { FormRow, FormRowSelect, Alert } from "@components/index";
 import { useAppContext } from "@context/appContext";
 import { useEffect, useState } from "react";
-import { getAllFeatures } from "../../utils/api";
+import { getAllFeatures } from "@crud-utils/api";
 
 const CreateScrew = () => {
   const { handleChange } = useAppContext();

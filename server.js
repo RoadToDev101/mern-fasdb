@@ -26,13 +26,6 @@ const PORT = process.env.PORT || 8080;
 // Database connection
 const connectDB = require("./server/database/connection");
 
-// Routes
-const authRoutes = require("./server/routes/authRoutes");
-const featureRoutes = require("./server/routes/featureRoutes");
-const productRoutes = require("./server/routes/productRoutes");
-const userRoutes = require("./server/routes/userRoutes");
-const fileRoutes = require("./server/routes/fileRoutes");
-
 // Middleware
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
@@ -50,13 +43,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Serve static files from the React app
 app.use(express.static(path.resolve(__dirname, "./public/build")));
 
-// Load auth, user, product routers
-app.use("/api/auth", authRoutes);
-// Use authentication middleware for all routes below
-app.use("/api/feature", featureRoutes);
-app.use("/api/product", authenticateUser, productRoutes);
-app.use("/api/user", authenticateUser, userRoutes);
-app.use("/api/file", authenticateUser, fileRoutes);
+// Load and use authentication middleware for protected routes
+app.use("/api/auth", require("./server/routes/authRoutes"));
+app.use("/api/others", require("./server/routes/othersRoutes"));
+app.use(
+  "/api/product",
+  authenticateUser,
+  require("./server/routes/productRoutes")
+);
+app.use("/api/user", authenticateUser, require("./server/routes/userRoutes"));
+app.use("/api/file", authenticateUser, require("./server/routes/fileRoutes"));
 
 // Serve the React app's index.html file for all other requests
 app.get("*", (req, res) => {

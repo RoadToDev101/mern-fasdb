@@ -15,6 +15,8 @@ import {
   CREATE_PRODUCT_BEGIN,
   CREATE_PRODUCT_SUCCESS,
   CREATE_PRODUCT_ERROR,
+  GET_PRODUCTS_BEGIN,
+  GET_PRODUCTS_SUCCESS,
 } from "./action";
 
 import { initialState } from "./appContext";
@@ -129,6 +131,20 @@ const reducer = (state, action) => {
         showAlert: true,
         alertText: action.payload.msg,
         alertType: "danger",
+      };
+    case GET_PRODUCTS_BEGIN:
+      return {
+        ...state,
+        isLoading: true,
+        showAlert: false,
+      };
+    case GET_PRODUCTS_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        products: action.payload.products,
+        totalProducts: action.payload.totalProducts,
+        numOfPages: action.payload.numOfPages,
       };
     default:
       return state;

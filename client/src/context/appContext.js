@@ -21,6 +21,8 @@ import {
   CREATE_PRODUCT_BEGIN,
   CREATE_PRODUCT_SUCCESS,
   CREATE_PRODUCT_ERROR,
+  GET_PRODUCTS_BEGIN,
+  GET_PRODUCTS_SUCCESS,
 } from "./action";
 
 const token = localStorage.getItem("token");
@@ -39,6 +41,10 @@ const initialState = {
   productType: "",
   modelName: "",
   company: "",
+  products: [],
+  totalProducts: 0,
+  page: 1,
+  numOfPages: 1,
 };
 
 const AppContext = React.createContext();
@@ -102,6 +108,27 @@ const AppProvider = ({ children }) => {
   const clearValues = () => {
     dispatch({
       type: CLEAR_VALUES,
+    });
+  };
+
+  const toggleBothSideBar = () => {
+    dispatch({
+      type: TOGGLE_BIG_SIDEBAR,
+    });
+    dispatch({
+      type: TOGGLE_SMALL_SIDEBAR,
+    });
+  };
+
+  const toggleBigSideBar = () => {
+    dispatch({
+      type: TOGGLE_BIG_SIDEBAR,
+    });
+  };
+
+  const toggleSmallSideBar = () => {
+    dispatch({
+      type: TOGGLE_SMALL_SIDEBAR,
     });
   };
 
@@ -193,25 +220,25 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
-  const toggleBothSideBar = () => {
-    dispatch({
-      type: TOGGLE_BIG_SIDEBAR,
-    });
-    dispatch({
-      type: TOGGLE_SMALL_SIDEBAR,
-    });
-  };
+  const getProducts = async () => {
+    let url = "/product/get-all-products";
 
-  const toggleBigSideBar = () => {
-    dispatch({
-      type: TOGGLE_BIG_SIDEBAR,
-    });
-  };
-
-  const toggleSmallSideBar = () => {
-    dispatch({
-      type: TOGGLE_SMALL_SIDEBAR,
-    });
+    dispatch({ type: GET_PRODUCTS_BEGIN });
+    try {
+      const { data } = await authFetch.get(url);
+      const { products, totalProducts, numOfPages } = data;
+      dispatch({
+        type: GET_PRODUCTS_SUCCESS,
+        payload: {
+          products,
+          totalProducts,
+          numOfPages,
+        },
+      });
+    } catch (error) {
+      console.log(error.response);
+    }
+    clearAlert();
   };
 
   return (
@@ -228,6 +255,7 @@ const AppProvider = ({ children }) => {
         handleChange,
         clearValues,
         createProduct,
+        getProducts,
       }}
     >
       {children}

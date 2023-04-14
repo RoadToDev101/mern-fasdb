@@ -62,6 +62,12 @@ const skuSchema = new mongoose.Schema({
     unique: [true, "SKU code must be unique"],
     required: [true, "SKU code is required"],
   },
+  status: {
+    type: String,
+    enum: ["Active", "Obsolete", "Discontinued"],
+    required: [true, "Please provide status"],
+    default: "Active",
+  },
   packagingQuantity: {
     type: Number,
   },
@@ -159,13 +165,18 @@ const modelSchema = new mongoose.Schema({
     unique: [true, "Model number already exists"],
     required: [true, "Please provide model number"],
   },
-  features: featureSchema,
-  commercialDimensions: commercialDimensionSchema,
   materialId: {
     type: mongoose.Types.ObjectId,
     ref: "Material",
     required: [true, "Please provide material"],
   },
+  corrosionResistance: {
+    type: String,
+    enum: ["None", "Low", "Medium", "High", "Severe"],
+    default: "None",
+  },
+  features: featureSchema,
+  commercialDimensions: commercialDimensionSchema,
   coatings: [
     {
       coatingId: {
@@ -173,14 +184,14 @@ const modelSchema = new mongoose.Schema({
         ref: "Coating",
         required: [true, "Please provide coating"],
       },
-      layer: {
-        type: Number,
-        unique: [true, "Layer already exists"],
-        required: [true, "Please provide layer"],
-      },
-      thickness: {
-        type: Number,
-      },
+      // layer: {
+      //   type: Number,
+      //   unique: [true, "Layer already exists"],
+      //   required: [true, "Please provide layer"],
+      // },
+      // thickness: {
+      //   type: Number,
+      // },
     },
   ],
   SKUs: [skuSchema],
@@ -206,6 +217,11 @@ const productSchema = new mongoose.Schema(
       enum: ["Simpson Strong-Tie", "Hilti", "DeWalt", "Other"],
       required: [true, "Please provide company name"],
       default: "Simpson Strong-Tie",
+    },
+    active: {
+      type: Boolean,
+      default: true,
+      required: [true, "Please provide active status"],
     },
     models: [modelSchema],
     // productionDrawingID: [

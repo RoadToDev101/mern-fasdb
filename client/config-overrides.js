@@ -7,6 +7,7 @@ module.exports = function override(config) {
     "@wrappers": "src/assets/wrappers",
     "@context": "src/context",
     "@utils": "src/utils",
+    "@crud-utils": "src/features/crud-product/utils",
   })(config);
 
   return config;

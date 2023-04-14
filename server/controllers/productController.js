@@ -16,3 +16,13 @@ exports.createProduct = async (req, res) => {
     product,
   });
 };
+
+exports.getAllProducts = async (req, res) => {
+  const products = await Product.find({});
+  res.status(StatusCodes.OK).json({
+    success: true,
+    count: products.length,
+    products,
+    numOfPages: Math.ceil(products.length / 10),
+  });
+};

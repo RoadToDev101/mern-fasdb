@@ -41,6 +41,21 @@ const Wrapper = styled.section`
   .form-label-section {
     font-weight: bold;
   }
+  .checkbox-options {
+    display: flex;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1rem;
+    row-gap: 0.5rem;
+    margin-top: 0.5rem;
+    label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      input {
+        margin-right: 0.5rem;
+      }
+    }
+  }
   .btn-container {
     display: flex;
     flex-direction: row;
@@ -53,6 +68,7 @@ const Wrapper = styled.section`
     margin-top: 0.5rem;
     button {
       height: 35px;
+      width: 350px;
     }
   }
   .clear-btn {

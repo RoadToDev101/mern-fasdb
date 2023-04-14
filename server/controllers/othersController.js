@@ -5,6 +5,7 @@ const {
   PointType,
   ShankType,
 } = require("../models/feature");
+const { Application } = require("../models/application");
 const { StatusCodes } = require("http-status-codes");
 
 // @desc    Get all thread types
@@ -14,7 +15,7 @@ exports.getThreadTypes = async (req, res, next) => {
     res.status(StatusCodes.OK).json({
       success: true,
       count: threadTypes.length,
-      data: threadTypes,
+      threadTypes,
     });
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -31,7 +32,7 @@ exports.getHeadTypes = async (req, res, next) => {
     res.status(StatusCodes.OK).json({
       success: true,
       count: headTypes.length,
-      data: headTypes,
+      headTypes,
     });
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -48,7 +49,7 @@ exports.getDriveTypes = async (req, res, next) => {
     res.status(StatusCodes.OK).json({
       success: true,
       count: driveTypes.length,
-      data: driveTypes,
+      driveTypes,
     });
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -65,7 +66,7 @@ exports.getPointTypes = async (req, res, next) => {
     res.status(StatusCodes.OK).json({
       success: true,
       count: pointTypes.length,
-      data: pointTypes,
+      pointTypes,
     });
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -82,7 +83,7 @@ exports.getShankTypes = async (req, res, next) => {
     res.status(StatusCodes.OK).json({
       success: true,
       count: shankTypes.length,
-      data: shankTypes,
+      shankTypes,
     });
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -106,6 +107,23 @@ exports.getAllFeatureTypes = async (req, res, next) => {
       driveTypes,
       pointTypes,
       shankTypes,
+    });
+  } catch (err) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      error: "Server Error",
+    });
+  }
+};
+
+// Get applications
+exports.getApplications = async (req, res, next) => {
+  try {
+    const applications = await Application.find();
+    res.status(StatusCodes.OK).json({
+      success: true,
+      count: applications.length,
+      applications,
     });
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
