@@ -20,14 +20,14 @@ const FeatureLinks = [
     id: 2,
     text: "new product",
     title: "add a new product",
-    path: "/create-products",
+    path: "/create-product",
     icon: <FaPlus />,
   },
   {
     id: 3,
     text: "update product",
     title: "update product",
-    path: "/update-products",
+    path: "/update-product",
     icon: <FaEdit />,
   },
   {

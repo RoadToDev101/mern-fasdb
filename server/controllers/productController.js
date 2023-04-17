@@ -21,7 +21,7 @@ exports.getAllProducts = async (req, res) => {
   const products = await Product.find({});
   res.status(StatusCodes.OK).json({
     success: true,
-    count: products.length,
+    totalProducts: products.length,
     products,
     numOfPages: Math.ceil(products.length / 10),
   });

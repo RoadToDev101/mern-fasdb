@@ -37,7 +37,7 @@ const initialState = {
   alertType: "",
   showBigSideBar: true,
   showSmallSideBar: false,
-  editProductId: "",
+  selectedProductId: "",
   productType: "",
   modelName: "",
   company: "",
@@ -221,11 +221,9 @@ const AppProvider = ({ children }) => {
   };
 
   const getProducts = async () => {
-    let url = "/product/get-all-products";
-
     dispatch({ type: GET_PRODUCTS_BEGIN });
     try {
-      const { data } = await authFetch.get(url);
+      const { data } = await authFetch.get(`/product/get-all-products`);
       const { products, totalProducts, numOfPages } = data;
       dispatch({
         type: GET_PRODUCTS_SUCCESS,
@@ -237,8 +235,21 @@ const AppProvider = ({ children }) => {
       });
     } catch (error) {
       console.log(error.response);
+      // logoutUser();
     }
     clearAlert();
+  };
+
+  const viewProduct = (id) => {
+    console.log(`view product id: ${id}`);
+  };
+
+  const setEditProduct = (id) => {
+    console.log(`edit product id: ${id}`);
+  };
+
+  const deleteProduct = (id) => {
+    console.log(`delete product id: ${id}`);
   };
 
   return (
@@ -256,6 +267,9 @@ const AppProvider = ({ children }) => {
         clearValues,
         createProduct,
         getProducts,
+        viewProduct,
+        setEditProduct,
+        deleteProduct,
       }}
     >
       {children}

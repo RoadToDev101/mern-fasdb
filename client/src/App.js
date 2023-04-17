@@ -6,6 +6,7 @@ import {
   CreateProduct,
   ShowProducts,
   UpdateProduct,
+  ProductDetails,
 } from "./features/crud-product";
 import SharedLayout from "./layouts";
 
@@ -22,8 +23,9 @@ function App() {
           }
         >
           <Route index element={<ShowProducts />} />
-          <Route path="create-products" element={<CreateProduct />} />
-          <Route path="update-products" element={<UpdateProduct />} />
+          <Route path="product-details" element={<ProductDetails />} />
+          <Route path="create-product" element={<CreateProduct />} />
+          <Route path="update-product" element={<UpdateProduct />} />
           <Route path="user-profile" element={<UserProfile />} />
         </Route>
         <Route path="register" element={<Register />} />
