@@ -89,7 +89,6 @@ const CreateProduct = () => {
               value={modelName}
               onChange={handleProductInput}
             />
-
             {/* Applications section */}
             {/* <FormRowMultiSelectCheckbox
               labelText="Applications"
@@ -113,7 +112,7 @@ const CreateProduct = () => {
             disabled={isLoading}
             onClick={handleSubmit}
           >
-            Submit
+            Add a new product
           </button>
           <button
             className="btn btn-block clear-btn"

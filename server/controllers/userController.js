@@ -4,7 +4,7 @@ const BadRequestError = require("../errors/bad-request");
 const UnAuthenticatedError = require("../errors/unauthenticated");
 
 exports.updateUsernameAndEmail = async (req, res) => {
-  const { username, email } = req.body;
+  const { username, email, role } = req.body;
 
   if (!username || !email) {
     throw new BadRequestError("Please provide all values");
@@ -17,6 +17,7 @@ exports.updateUsernameAndEmail = async (req, res) => {
 
   user.username = username;
   user.email = email;
+  user.role = role;
 
   await user.save();
 

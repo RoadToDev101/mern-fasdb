@@ -16,7 +16,7 @@ import { BsFillHouseGearFill } from "react-icons/bs";
 const ProductCard = ({
   _id,
   productType,
-  active,
+  isActive,
   modelName,
   company,
   updatedAt,
@@ -35,16 +35,14 @@ const ProductCard = ({
         </div>
       </header>
       <div className="content">
-        {/* TODO: Check this active/inactive color */}
-        <div className={`status ${active}`}>
-          <ProductInfo
-            icon={active ? <FaCheck /> : <FaMinusCircle />}
-            text={active ? "Active" : "Inactive"}
-          />
+        <div className="content-center">
+          {/* TODO: Check this active/inactive color */}
+          <div className={`status {isActive ? active : inactive}`}>
+            {isActive ? "Active" : "Inactive"}
+          </div>
+          <ProductInfo icon={<BsFillHouseGearFill />} text={company} />
+          <ProductInfo icon={<FaCalendarAlt />} text={date} />
         </div>
-        <ProductInfo icon={<BsFillHouseGearFill />} text={company} />
-        <ProductInfo icon={<FaCalendarAlt />} text={date} />
-
         <footer>
           <div className="actions">
             <Link

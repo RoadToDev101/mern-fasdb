@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FormRow, Alert } from "@components/index";
+import { FormRow, FormRowSelect, Alert } from "@components/index";
 import { useAppContext } from "@context/appContext";
 import Wrapper from "@wrappers/dashboardFormPage";
 
@@ -9,16 +9,18 @@ const UserProfile = () => {
 
   const [username, setUsername] = useState(user?.username);
   const [email, setEmail] = useState(user?.email);
+  const [role, setRole] = useState(user?.role);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!username || !email) {
+    if (!username || !email || !role) {
       displayAlert();
       return;
     }
     updateUser({
       username,
       email,
+      role,
     });
   };
 
@@ -44,9 +46,23 @@ const UserProfile = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+          <FormRowSelect
+            labelText="Role"
+            name="role"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            options={[
+              { _id: 1, value: "Admin" },
+              { _id: 2, value: "User" },
+              { _id: 3, value: "Editor" },
+            ]}
+            //If user role is not admin, disable the select
+            disabled={user?.role !== "Admin"}
+          />
           <button type="submit" className="btn btn-block" disabled={isLoading}>
-            {isLoading ? "Updating..." : "Update"}
+            {isLoading ? "Updating..." : "Update User"}
           </button>
+          {/* TODO: Change password */}
         </div>
       </form>
     </Wrapper>

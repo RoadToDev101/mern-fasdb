@@ -218,12 +218,12 @@ const productSchema = new mongoose.Schema(
       required: [true, "Please provide company name"],
       default: "Simpson Strong-Tie",
     },
-    active: {
+    isActive: {
       type: Boolean,
       default: true,
       required: [true, "Please provide active status"],
     },
-    models: [modelSchema],
+    // models: [modelSchema],
     // productionDrawingID: [
     //   {
     //     type: mongoose.Types.ObjectId,
@@ -243,6 +243,11 @@ const productSchema = new mongoose.Schema(
       },
     ],
     createdBy: {
+      type: mongoose.Types.ObjectId,
+      ref: "User",
+      required: [true, "Please provide user"],
+    },
+    updatedBy: {
       type: mongoose.Types.ObjectId,
       ref: "User",
       required: [true, "Please provide user"],

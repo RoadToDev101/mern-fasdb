@@ -17,6 +17,11 @@ import {
   CREATE_PRODUCT_ERROR,
   GET_PRODUCTS_BEGIN,
   GET_PRODUCTS_SUCCESS,
+  SET_EDIT_PRODUCT,
+  EDIT_PRODUCT_BEGIN,
+  EDIT_PRODUCT_SUCCESS,
+  EDIT_PRODUCT_ERROR,
+  DELETE_PRODUCT_BEGIN,
 } from "./action";
 
 import { initialState } from "./appContext";
@@ -146,8 +151,47 @@ const reducer = (state, action) => {
         totalProducts: action.payload.totalProducts,
         numOfPages: action.payload.numOfPages,
       };
+    case SET_EDIT_PRODUCT:
+      const product = state.products.find(
+        (product) => product._id === action.payload.id
+      );
+      const { _id, isActive, productType, modelName, company } = product;
+      return {
+        ...state,
+        selectedProductId: _id,
+        isActive,
+        productType,
+        modelName,
+        company,
+      };
+    case EDIT_PRODUCT_BEGIN:
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case EDIT_PRODUCT_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        showAlert: true,
+        alertType: "success",
+        alertText: "Product updated successfully!",
+      };
+    case EDIT_PRODUCT_ERROR:
+      return {
+        ...state,
+        isLoading: false,
+        showAlert: true,
+        alertText: action.payload.msg,
+        alertType: "danger",
+      };
+    case DELETE_PRODUCT_BEGIN:
+      return {
+        ...state,
+        isLoading: true,
+      };
     default:
-      return state;
+      throw new Error(`No Matching "${action.type}" - action type`);
   }
 };
 

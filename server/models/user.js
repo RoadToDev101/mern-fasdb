@@ -3,36 +3,39 @@ const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const userSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    unique: true, // `username` must be unique
-    required: [true, "Username is required"], // Error message
-    minlength: [5, "Username must be at least 5 characters"],
-    maxlength: [20, "Username must be at most 20 characters"],
-    trim: true,
+const userSchema = new mongoose.Schema(
+  {
+    username: {
+      type: String,
+      unique: true, // `username` must be unique
+      required: [true, "Username is required"], // Error message
+      minlength: [5, "Username must be at least 5 characters"],
+      maxlength: [20, "Username must be at most 20 characters"],
+      trim: true,
+    },
+    password: {
+      type: String,
+      required: [true, "Password is required"],
+      minlength: [6, "Password must be at least 6 characters"],
+      select: false,
+    },
+    email: {
+      type: String,
+      required: [true, "Email is required"],
+      validate: [validator.isEmail, "Please provide a valid email"],
+      unique: true,
+      trim: true,
+      lowercase: true,
+    },
+    role: {
+      type: String,
+      enum: ["User", "Editor", "Admin"],
+      default: "User",
+      required: [true, "Role is required"],
+    },
   },
-  password: {
-    type: String,
-    required: [true, "Password is required"],
-    minlength: [6, "Password must be at least 6 characters"],
-    select: false,
-  },
-  email: {
-    type: String,
-    required: [true, "Email is required"],
-    validate: [validator.isEmail, "Please provide a valid email"],
-    unique: true,
-    trim: true,
-    lowercase: true,
-  },
-  role: {
-    type: String,
-    enum: ["user", "editor", "admin"],
-    default: "user",
-    required: [true, "Role is required"],
-  },
-});
+  { timestamps: true }
+);
 
 userSchema.pre("save", async function (next) {
   // If password is not modified, return next

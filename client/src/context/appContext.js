@@ -23,6 +23,11 @@ import {
   CREATE_PRODUCT_ERROR,
   GET_PRODUCTS_BEGIN,
   GET_PRODUCTS_SUCCESS,
+  SET_EDIT_PRODUCT,
+  EDIT_PRODUCT_BEGIN,
+  EDIT_PRODUCT_SUCCESS,
+  EDIT_PRODUCT_ERROR,
+  DELETE_PRODUCT_BEGIN,
 } from "./action";
 
 const token = localStorage.getItem("token");
@@ -38,6 +43,7 @@ const initialState = {
   showBigSideBar: true,
   showSmallSideBar: false,
   selectedProductId: "",
+  isActive: false,
   productType: "",
   modelName: "",
   company: "",
@@ -245,11 +251,51 @@ const AppProvider = ({ children }) => {
   };
 
   const setEditProduct = (id) => {
-    console.log(`edit product id: ${id}`);
+    dispatch({
+      type: SET_EDIT_PRODUCT,
+      payload: { id },
+    });
   };
 
-  const deleteProduct = (id) => {
-    console.log(`delete product id: ${id}`);
+  const editProduct = async () => {
+    dispatch({
+      type: EDIT_PRODUCT_BEGIN,
+    });
+    try {
+      const { productType, modelName, company, isActive } = state;
+      await authFetch.patch(
+        `/product/update-product/${state.selectedProductId}`,
+        {
+          isActive,
+          productType,
+          modelName,
+          company,
+        }
+      );
+      dispatch({ type: EDIT_PRODUCT_SUCCESS });
+      dispatch({ type: CLEAR_VALUES });
+    } catch (error) {
+      // If the user is not authorized, logout the user
+      if (error.response.status !== 401) {
+        dispatch({
+          type: EDIT_PRODUCT_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+    }
+  };
+
+  const deleteProduct = async (productId) => {
+    dispatch({
+      type: DELETE_PRODUCT_BEGIN,
+    });
+    try {
+      await authFetch.delete(`/product/delete-product/${productId}`);
+      getProducts();
+    } catch (error) {
+      console.log(error.response);
+      logoutUser();
+    }
   };
 
   return (
@@ -269,6 +315,7 @@ const AppProvider = ({ children }) => {
         getProducts,
         viewProduct,
         setEditProduct,
+        editProduct,
         deleteProduct,
       }}
     >

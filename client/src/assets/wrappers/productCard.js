@@ -46,8 +46,8 @@ const Wrapper = styled.article`
     color: #e9b949;
   } */
   .active {
-    background: #e0e8f9;
-    color: #647acb;
+    background: var(--green-light);
+    color: (--green-dark);
   }
   .inactive {
     color: #d66a6a;
@@ -95,8 +95,8 @@ const Wrapper = styled.article`
     margin-right: 0.5rem;
   }
   .edit-btn {
-    color: var(--green-dark);
-    background: var(--green-light);
+    color: var(--yellow-dark);
+    background: var(--yellow-light);
     margin-right: 0.5rem;
   }
   .delete-btn {

@@ -10,7 +10,8 @@ const ProductCardsContainer = () => {
 
   useEffect(() => {
     getProducts();
-  }, [page]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (isLoading) {
     return <Loading center />;
