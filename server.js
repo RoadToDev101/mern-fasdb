@@ -30,15 +30,20 @@ const connectDB = require("./server/database/connection");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const authenticateUser = require("./server/middleware/auth");
+const helmet = require("helmet");
+const xss = require("xss-clean");
+const mongoSanitize = require("express-mongo-sanitize");
 
 // Use Morgan to log requests to the console
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
 
-// Use body-parser middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(helmet());
+app.use(xss());
+app.use(mongoSanitize());
 
 // Serve static files from the React app
 app.use(express.static(path.resolve(__dirname, "./client/build")));

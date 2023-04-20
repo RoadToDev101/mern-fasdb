@@ -2,6 +2,14 @@ const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/authController.js");
 
+const rateLimit = require("express-rate-limit");
+
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 10, // limit each IP to 10 requests per windowMs
+  message: "Too many requests from this IP, please try again after 10 minutes",
+});
+
 /**
  *
  * @method POST /api/auth/register
@@ -10,7 +18,7 @@ const authController = require("../controllers/authController.js");
  *
  * @method PATCH /api/auth/update
  **/
-router.post("/register", authController.register);
-router.post("/login", authController.login);
+router.post("/register", limiter, authController.register);
+router.post("/login", limiter, authController.login);
 
 module.exports = router;
