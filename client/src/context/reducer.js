@@ -11,7 +11,9 @@ import {
   TOGGLE_SMALL_SIDEBAR,
   LOGOUT_USER,
   HANDLE_CHANGE,
+  CHANGE_PAGE,
   CLEAR_VALUES,
+  CLEAR_FILTERS,
   CREATE_PRODUCT_BEGIN,
   CREATE_PRODUCT_SUCCESS,
   CREATE_PRODUCT_ERROR,
@@ -41,6 +43,25 @@ const reducer = (state, action) => {
         showAlert: false,
         alertText: "",
         alertType: "",
+      };
+    case CLEAR_FILTERS:
+      return {
+        ...state,
+        companySearch: "all",
+        modelNameSearch: "",
+        productTypeSearch: "all",
+        sortBy: "a-z",
+      };
+    case HANDLE_CHANGE:
+      return {
+        ...state,
+        page: 1,
+        [action.payload.name]: action.payload.value,
+      };
+    case CHANGE_PAGE:
+      return {
+        ...state,
+        page: action.payload.page,
       };
     case SETUP_USER_BEGIN:
       return {
@@ -102,11 +123,6 @@ const reducer = (state, action) => {
       return {
         ...state,
         showSmallSideBar: !state.showSmallSideBar,
-      };
-    case HANDLE_CHANGE:
-      return {
-        ...state,
-        [action.payload.name]: action.payload.value,
       };
     case CLEAR_VALUES:
       return {

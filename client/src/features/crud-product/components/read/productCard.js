@@ -3,14 +3,7 @@ import { Link } from "react-router-dom";
 import ProductInfo from "./productCardInfo";
 import { useAppContext } from "@context/appContext";
 import Wrapper from "@wrappers/productCard";
-import {
-  FaEdit,
-  FaTrash,
-  FaSearch,
-  FaCalendarAlt,
-  FaCheck,
-  FaMinusCircle,
-} from "react-icons/fa";
+import { FaEdit, FaTrash, FaSearch, FaCalendarAlt } from "react-icons/fa";
 import { BsFillHouseGearFill } from "react-icons/bs";
 
 const ProductCard = ({
@@ -27,8 +20,8 @@ const ProductCard = ({
   return (
     <Wrapper>
       <header>
-        {/*TODO: Replace product picture in the future */}
         <div className="main-icon">{productType.charAt(0)}</div>
+        {/*TODO: Replace with product picture or carousel in the future */}
         <div className="info">
           <h5>{modelName}</h5>
           <p>{productType}</p>
@@ -36,12 +29,11 @@ const ProductCard = ({
       </header>
       <div className="content">
         <div className="content-center">
-          {/* TODO: Check this active/inactive color */}
-          <div className={`status {isActive ? active : inactive}`}>
-            {isActive ? "Active" : "Inactive"}
-          </div>
           <ProductInfo icon={<BsFillHouseGearFill />} text={company} />
           <ProductInfo icon={<FaCalendarAlt />} text={date} />
+          <div className={`status ${isActive ? "active" : "inactive"}`}>
+            {isActive ? "Active" : "Inactive"}
+          </div>
         </div>
         <footer>
           <div className="actions">

@@ -46,7 +46,7 @@ const UpdateProduct = () => {
     // } else {
     handleChange(e);
     // }
-    console.log(e.target.name, e.target.value);
+    // console.log(e.target.name, e.target.value);
   };
 
   return (
@@ -55,7 +55,7 @@ const UpdateProduct = () => {
         {showAlert && <Alert />}
         <div className="form-center">
           <div className="form-section">
-            <label className="form-label-section">General Info</label>
+            {/* <label className="form-label-section">General Info</label> */}
             {/* Info section */}
             <FormRowSelect
               labelText="Product Status"
@@ -78,6 +78,8 @@ const UpdateProduct = () => {
                 { _id: 3, value: "Anchor" },
               ]}
             />
+          </div>
+          <div className="form-section">
             <FormRowSelect
               labelText="Company"
               name="company"

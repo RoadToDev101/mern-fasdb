@@ -37,9 +37,9 @@ const Wrapper = styled.section`
     display: grid;
     grid-template-columns: 1fr;
     row-gap: 0.5rem;
-  }
-  .form-label-section {
-    font-weight: bold;
+    label {
+      font-weight: bold;
+    }
   }
   .checkbox-options {
     display: flex;

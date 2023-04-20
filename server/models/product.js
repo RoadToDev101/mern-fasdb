@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const uniqueValidator = require("mongoose-unique-validator");
 // const { ProductionDrawing, CodeReport } = require("./file.js");
 const {
   ThreadType,
@@ -209,8 +210,11 @@ const productSchema = new mongoose.Schema(
     },
     modelName: {
       type: String,
+      uppercase: true,
       required: [true, "Please provide model name"],
-      unique: [true, "Model name already exists"],
+      unique: true,
+      index: true,
+      uniqueCaseInsensitive: true,
     },
     company: {
       type: String,
@@ -256,6 +260,7 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+productSchema.plugin(uniqueValidator, { message: "{VALUE} already exists" });
 const Product = mongoose.model("Product", productSchema);
 
 module.exports = {

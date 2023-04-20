@@ -3,48 +3,89 @@ const { User } = require("../models/user.js");
 const { StatusCodes } = require("http-status-codes");
 const BadRequestError = require("../errors/bad-request");
 const NotFoundError = require("../errors/not-found");
+const mongoose = require("mongoose");
 
 exports.createProduct = async (req, res) => {
   const { productType, modelName, company } = req.body;
   // Validate request
-  if (!req.body) {
+  if (!productType || !modelName || !company) {
     throw new BadRequestError("Please provide all values!");
   }
+
   req.body.createdBy = req.user.userId;
   req.body.updatedBy = req.user.userId;
-  const product = await Product.create(req.body);
+
+  const newProduct = new Product(req.body);
+  await newProduct.save();
   res.status(StatusCodes.CREATED).json({
-    product,
+    newProduct,
   });
 };
 
 exports.getAllProducts = async (req, res) => {
-  const products = await Product.find({});
+  const { productTypeSearch, modelNameSearch, companySearch, sortBy } =
+    req.query;
+
+  const queryObj = {};
+
+  //Search criteria
+  if (productTypeSearch && productTypeSearch !== "all") {
+    queryObj.productType = productTypeSearch;
+  }
+  if (modelNameSearch) {
+    queryObj.modelName = { $regex: modelNameSearch, $options: "i" };
+  }
+  if (companySearch && companySearch !== "all") {
+    queryObj.company = companySearch;
+  }
+
+  let queryResult = Product.find(queryObj);
+
+  //Sorting
+  if (sortBy === "a-z") queryResult = queryResult.sort(modelNameSearch);
+  if (sortBy === "z-a") queryResult = queryResult.sort(-modelNameSearch);
+  if (sortBy === "oldest") queryResult = queryResult.sort("updatedAt");
+  if (sortBy === "latest") queryResult = queryResult.sort("-updatedAt");
+
+  //Pagination
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const startIndex = (page - 1) * limit;
+
+  queryResult = queryResult.skip(startIndex).limit(limit);
+
+  const products = await queryResult;
+
+  const totalProducts = await Product.countDocuments(queryObj);
+
   res.status(StatusCodes.OK).json({
     success: true,
-    totalProducts: products.length,
+    totalProducts, // Cant use products.length because of limit
     products,
-    numOfPages: Math.ceil(products.length / 10),
+    numOfPages: Math.ceil(totalProducts / limit),
   });
 };
 
 exports.updateProduct = async (req, res) => {
   const { id: productId } = req.params;
-  const { productType, modelName, company, isActive } = req.body;
+  const { productType, modelName, company } = req.body;
   // Validate request
   if (!req.body) {
     throw new BadRequestError("Please provide all values!");
   }
-  const product = await Product.findOne({ _id: productId });
-  if (!product) {
-    throw new NotFoundError(`Product with id ${productId} not found!`);
-  }
+
   const updatedBy = req.user.userId;
+
   const updatedProduct = await Product.findOneAndUpdate(
     { _id: productId },
-    { productType, modelName, company, isActive, updatedBy },
+    { ...req.body, updatedBy },
     { new: true, runValidators: true }
   );
+
+  if (!updatedProduct) {
+    throw new NotFoundError(`Product with id ${productId} not found!`);
+  }
+
   res.status(StatusCodes.OK).json({
     success: true,
     updatedProduct,
@@ -53,13 +94,12 @@ exports.updateProduct = async (req, res) => {
 
 exports.deleteProduct = async (req, res) => {
   const { id: productId } = req.params;
-  const product = await Product.findOne({ _id: productId });
+  const deletedProduct = await Product.findOneAndDelete({ _id: productId });
 
-  if (!product) {
+  if (!deletedProduct) {
     throw new NotFoundError(`Product with id ${productId} not found!`);
   }
 
-  await product.remove();
   res.status(StatusCodes.OK).json({
     msg: "Product deleted successfully",
   });

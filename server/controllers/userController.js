@@ -84,7 +84,7 @@ exports.deleteUser = async (req, res) => {
     throw new BadRequestError("Password is incorrect");
   }
 
-  await user.remove();
+  await user.deleteOne();
 
   res.status(StatusCodes.OK).json({
     message: "User deleted",

@@ -1,17 +1,27 @@
 import { useEffect } from "react";
-import { Loading } from "@components/index";
+import { Loading, Pagination } from "@components/index";
 import { useAppContext } from "@context/appContext";
 import Product from "./productCard";
 import Wrapper from "@wrappers/productCardsContainer";
 
 const ProductCardsContainer = () => {
-  const { getProducts, products, isLoading, page, totalProducts } =
-    useAppContext();
+  const {
+    getProducts,
+    products,
+    isLoading,
+    page,
+    totalProducts,
+    modelNameSearch,
+    companySearch,
+    sortBy,
+    productTypeSearch,
+    numOfPages,
+  } = useAppContext();
 
   useEffect(() => {
     getProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [modelNameSearch, companySearch, sortBy, productTypeSearch, page]);
 
   if (isLoading) {
     return <Loading center />;
@@ -36,7 +46,7 @@ const ProductCardsContainer = () => {
           return <Product key={product._id} {...product} />;
         })}
       </div>
-      {/* Pagination buttons */}
+      {numOfPages > 1 && <Pagination />}
     </Wrapper>
   );
 };

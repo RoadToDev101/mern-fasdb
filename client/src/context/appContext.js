@@ -1,5 +1,5 @@
 import React from "react";
-import { useReducer, useContext } from "react";
+import { useState, useReducer, useContext, useCallback } from "react";
 import axios from "axios";
 
 import reducer from "./reducer";
@@ -16,8 +16,10 @@ import {
   LOGOUT_USER,
   TOGGLE_BIG_SIDEBAR,
   TOGGLE_SMALL_SIDEBAR,
+  CHANGE_PAGE,
   HANDLE_CHANGE,
   CLEAR_VALUES,
+  CLEAR_FILTERS,
   CREATE_PRODUCT_BEGIN,
   CREATE_PRODUCT_SUCCESS,
   CREATE_PRODUCT_ERROR,
@@ -51,6 +53,10 @@ const initialState = {
   totalProducts: 0,
   page: 1,
   numOfPages: 1,
+  modelNameSearch: "",
+  productTypeSearch: "all",
+  companySearch: "all",
+  sortBy: "a-z",
 };
 
 const AppContext = React.createContext();
@@ -91,18 +97,22 @@ const AppProvider = ({ children }) => {
   );
 
   const displayAlert = () => {
-    dispatch({
-      type: DISPLAY_ALERT,
-    });
+    dispatch({ type: DISPLAY_ALERT });
   };
 
-  const clearAlert = () => {
-    setTimeout(() => {
+  const [timeoutId, setTimeoutId] = useState(null);
+
+  const clearAlert = useCallback(() => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    const id = setTimeout(() => {
       dispatch({
         type: CLEAR_ALERT,
       });
     }, 3000);
-  };
+    setTimeoutId(id);
+  }, [dispatch, timeoutId]);
 
   const handleChange = (e) => {
     dispatch({
@@ -112,9 +122,11 @@ const AppProvider = ({ children }) => {
   };
 
   const clearValues = () => {
-    dispatch({
-      type: CLEAR_VALUES,
-    });
+    dispatch({ type: CLEAR_VALUES });
+  };
+
+  const clearFilters = () => {
+    dispatch({ type: CLEAR_FILTERS });
   };
 
   const toggleBothSideBar = () => {
@@ -136,6 +148,10 @@ const AppProvider = ({ children }) => {
     dispatch({
       type: TOGGLE_SMALL_SIDEBAR,
     });
+  };
+
+  const changePage = (page) => {
+    dispatch({ type: CHANGE_PAGE, payload: { page } });
   };
 
   const addUserToLocalStorage = ({ user, token }) => {
@@ -161,7 +177,7 @@ const AppProvider = ({ children }) => {
       });
       addUserToLocalStorage({ token, user });
     } catch (error) {
-      console.log(error.response);
+      // console.log(error.response);
       dispatch({
         type: SETUP_USER_ERROR,
         payload: { msg: error.response.data.msg },
@@ -215,6 +231,7 @@ const AppProvider = ({ children }) => {
       dispatch({ type: CREATE_PRODUCT_SUCCESS });
       dispatch({ type: CLEAR_VALUES });
     } catch (error) {
+      console.log(error.response);
       // If the user is not authorized, logout the user
       if (error.response.status !== 401) {
         dispatch({
@@ -227,9 +244,16 @@ const AppProvider = ({ children }) => {
   };
 
   const getProducts = async () => {
+    const { page, modelNameSearch, productTypeSearch, companySearch, sortBy } =
+      state;
+    const searchString = `?page=${page}&?productTypeSearch=${productTypeSearch}&companySearch=${companySearch}&sortBy=${sortBy}`;
+    let url = `/product/get-all-products${searchString}`;
+    if (modelNameSearch) {
+      url = url + `&modelNameSearch=${modelNameSearch}`;
+    }
     dispatch({ type: GET_PRODUCTS_BEGIN });
     try {
-      const { data } = await authFetch.get(`/product/get-all-products`);
+      const { data } = await authFetch.get(url);
       const { products, totalProducts, numOfPages } = data;
       dispatch({
         type: GET_PRODUCTS_SUCCESS,
@@ -240,8 +264,7 @@ const AppProvider = ({ children }) => {
         },
       });
     } catch (error) {
-      console.log(error.response);
-      // logoutUser();
+      logoutUser();
     }
     clearAlert();
   };
@@ -275,7 +298,6 @@ const AppProvider = ({ children }) => {
       dispatch({ type: EDIT_PRODUCT_SUCCESS });
       dispatch({ type: CLEAR_VALUES });
     } catch (error) {
-      // If the user is not authorized, logout the user
       if (error.response.status !== 401) {
         dispatch({
           type: EDIT_PRODUCT_ERROR,
@@ -293,7 +315,7 @@ const AppProvider = ({ children }) => {
       await authFetch.delete(`/product/delete-product/${productId}`);
       getProducts();
     } catch (error) {
-      console.log(error.response);
+      // console.log(error.response);
       logoutUser();
     }
   };
@@ -303,14 +325,16 @@ const AppProvider = ({ children }) => {
       value={{
         ...state,
         displayAlert,
-        setupUser,
-        logoutUser,
-        updateUser,
+        clearValues,
+        clearFilters,
         toggleBothSideBar,
         toggleBigSideBar,
         toggleSmallSideBar,
         handleChange,
-        clearValues,
+        changePage,
+        setupUser,
+        logoutUser,
+        updateUser,
         createProduct,
         getProducts,
         viewProduct,

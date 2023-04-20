@@ -4,6 +4,7 @@ import FormRowMultiSelectCheckbox from "./form/formRowMultiSelectCheckbox";
 import Logo from "./ui/logo";
 import Alert from "./ui/alert";
 import Loading from "./ui/loading";
+import Pagination from "./ui/pagination";
 
 export {
   Logo,
@@ -12,4 +13,5 @@ export {
   FormRowMultiSelectCheckbox,
   Alert,
   Loading,
+  Pagination,
 };

@@ -41,7 +41,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Serve static files from the React app
-app.use(express.static(path.resolve(__dirname, "./public/build")));
+app.use(express.static(path.resolve(__dirname, "./client/build")));
 
 // Load and use authentication middleware for protected routes
 app.use("/api/auth", require("./server/routes/authRoutes"));
@@ -56,7 +56,7 @@ app.use("/api/file", authenticateUser, require("./server/routes/fileRoutes"));
 
 // Serve the React app's index.html file for all other requests
 app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "./public/build", "index.html"));
+  res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
 });
 
 // Use error handling middleware

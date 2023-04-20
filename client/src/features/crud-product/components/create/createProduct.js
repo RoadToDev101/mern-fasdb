@@ -12,7 +12,7 @@ import Wrapper from "@wrappers/dashboardFormPage";
 const CreateProduct = () => {
   const {
     showAlert,
-    displayAlert,
+    // displayAlert,
     isLoading,
     productType,
     company,
@@ -32,25 +32,25 @@ const CreateProduct = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!productType || !company || !modelName) {
-      displayAlert();
-    }
+    // if (!productType || !company || !modelName) {
+    //   displayAlert();
+    // }
     createProduct();
   };
 
   const handleProductInput = (e) => {
-    if (
-      e.target.name === "applications" &&
-      typeof e.target.value === "string" &&
-      e.target.value.split
-    ) {
-      handleChange({
-        target: { name: e.target.name, value: e.target.value.split(",") },
-      });
-    } else {
-      handleChange(e);
-    }
-    console.log(e.target.value);
+    // if (
+    //   e.target.name === "applications" &&
+    //   typeof e.target.value === "string" &&
+    //   e.target.value.split
+    // ) {
+    //   handleChange({
+    //     target: { name: e.target.name, value: e.target.value.split(",") },
+    //   });
+    // } else {
+    handleChange(e);
+    // }
+    // console.log(e.target.value);
   };
 
   return (
@@ -59,7 +59,7 @@ const CreateProduct = () => {
         {showAlert && <Alert />}
         <div className="form-center">
           <div className="form-section">
-            <label className="form-label-section">General Info</label>
+            {/* <label>General Info</label> */}
             {/* Info section */}
             <FormRowSelect
               labelText="Product Type"
@@ -72,23 +72,7 @@ const CreateProduct = () => {
                 { _id: 3, value: "Anchor" },
               ]}
             />
-            <FormRowSelect
-              labelText="Company"
-              name="company"
-              value={company}
-              onChange={handleProductInput}
-              options={[
-                { _id: 1, value: "Simpson Strong-Tie" },
-                { _id: 2, value: "Hilti" },
-                { _id: 3, value: "DeWalt" },
-              ]}
-            />
-            <FormRow
-              labelText="Model Name"
-              name="modelName"
-              value={modelName}
-              onChange={handleProductInput}
-            />
+
             {/* Applications section */}
             {/* <FormRowMultiSelectCheckbox
               labelText="Applications"
@@ -102,6 +86,27 @@ const CreateProduct = () => {
               ]}
             /> */}
           </div>
+          <div className="form-section">
+            <FormRowSelect
+              labelText="Company"
+              name="company"
+              value={company}
+              onChange={handleProductInput}
+              options={[
+                { _id: 1, value: "Simpson Strong-Tie" },
+                { _id: 2, value: "Hilti" },
+                { _id: 3, value: "DeWalt" },
+              ]}
+            />
+          </div>
+          <div className="form-section">
+            <FormRow
+              labelText="Model Name"
+              name="modelName"
+              value={modelName}
+              onChange={handleProductInput}
+            />
+          </div>
         </div>
       </form>
       {productType && (
@@ -112,7 +117,7 @@ const CreateProduct = () => {
             disabled={isLoading}
             onClick={handleSubmit}
           >
-            Add a new product
+            Add
           </button>
           <button
             className="btn btn-block clear-btn"
