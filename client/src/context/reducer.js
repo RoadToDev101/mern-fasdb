@@ -24,6 +24,8 @@ import {
   EDIT_PRODUCT_SUCCESS,
   EDIT_PRODUCT_ERROR,
   DELETE_PRODUCT_BEGIN,
+  GET_CURRENT_USER_BEGIN,
+  GET_CURRENT_USER_SUCCESS,
 } from "./action";
 
 import { initialState } from "./appContext";
@@ -73,7 +75,7 @@ const reducer = (state, action) => {
         ...state,
         isLoading: false,
         user: action.payload.user,
-        token: action.payload.token,
+
         showAlert: true,
         alertType: "success",
         alertText: action.payload.alertText,
@@ -85,6 +87,18 @@ const reducer = (state, action) => {
         showAlert: true,
         alertText: action.payload.msg,
         alertType: "danger",
+      };
+    case GET_CURRENT_USER_BEGIN:
+      return {
+        ...state,
+        userLoading: true,
+        showAlert: false,
+      };
+    case GET_CURRENT_USER_SUCCESS:
+      return {
+        ...state,
+        userLoading: false,
+        user: action.payload.user,
       };
     case UPDATE_USER_BEGIN:
       return {
@@ -111,8 +125,7 @@ const reducer = (state, action) => {
     case LOGOUT_USER:
       return {
         ...initialState,
-        user: null,
-        token: null,
+        userLoading: false,
       };
     case TOGGLE_BIG_SIDEBAR:
       return {

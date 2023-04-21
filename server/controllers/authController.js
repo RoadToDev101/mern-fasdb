@@ -2,6 +2,7 @@ const { User } = require("../models/user.js");
 const { StatusCodes } = require("http-status-codes");
 const BadRequestError = require("../errors/bad-request");
 const UnAuthenticatedError = require("../errors/unauthenticated");
+const attachCookies = require("../utils/attachCookies.js");
 
 // Register user, check existing user through username or email, if not found, create new user
 exports.register = async (req, res) => {
@@ -26,6 +27,9 @@ exports.register = async (req, res) => {
   // Create a new user
   const user = await User.create({ username, email, password });
   const token = user.createJWT();
+
+  attachCookies(res, token);
+
   res.status(StatusCodes.CREATED).json({
     user: {
       _id: user._id,
@@ -33,7 +37,6 @@ exports.register = async (req, res) => {
       email: user.email,
       role: user.role,
     },
-    token,
   });
 };
 
@@ -65,8 +68,24 @@ exports.login = async (req, res) => {
 
   const token = user.createJWT();
   user.password = undefined;
+
+  attachCookies(res, token);
+
   res.status(StatusCodes.OK).json({
     user,
-    token,
+  });
+};
+
+exports.getCurrentUser = async (req, res) => {
+  const user = await User.findOne({ _id: req.user.userId });
+  res.status(StatusCodes.OK).json({
+    user,
+  });
+};
+
+exports.logout = async (req, res) => {
+  res.clearCookie("token");
+  res.status(StatusCodes.OK).json({
+    msg: "Logged out",
   });
 };

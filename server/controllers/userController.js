@@ -25,7 +25,6 @@ exports.updateUsernameAndEmail = async (req, res) => {
   token = user.createJWT();
   res.status(StatusCodes.OK).json({
     user,
-    token,
   });
 };
 
@@ -58,7 +57,6 @@ exports.changePassword = async (req, res) => {
   token = user.createJWT();
   res.status(StatusCodes.OK).json({
     user,
-    token,
   });
 };
 

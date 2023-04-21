@@ -5,29 +5,40 @@ import {
 } from "@components/index";
 import { useAppContext } from "@context/appContext";
 import Wrapper from "@wrappers/dashboardFormPage";
+import { useState, useMemo } from "react";
 
 const SearchContainer = () => {
+  const [localSearch, setLocalSearch] = useState("");
   const {
-    isLoading,
     productTypeSearch,
     companySearch,
-    modelNameSearch,
     sortBy,
     handleChange,
     clearFilters,
   } = useAppContext();
 
   const handleSearch = (e) => {
-    if (isLoading) return;
     handleChange(e);
-    console.log(e.target.name, e.target.value);
   };
 
   const handelClearFilters = (e) => {
     e.preventDefault();
-    // setLocalSearch('');
+    setLocalSearch("");
     clearFilters();
   };
+
+  const debounce = () => {
+    let timeoutID;
+    return (e) => {
+      setLocalSearch(e.target.value);
+      clearTimeout(timeoutID);
+      timeoutID = setTimeout(() => {
+        handleChange(e);
+      }, 1000);
+    };
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const optimizedDebounce = useMemo(() => debounce(), []);
 
   return (
     <Wrapper>
@@ -37,8 +48,8 @@ const SearchContainer = () => {
           <FormRow
             labelText="Model Name"
             name="modelNameSearch"
-            value={modelNameSearch}
-            onChange={handleSearch}
+            value={localSearch}
+            onChange={optimizedDebounce}
           />
           <FormRowSelect
             labelText="Product Type"

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const checkPermission = require("../middleware/checkPermission.js");
+const checkPermission = require("../utils/checkPermission.js");
 const productController = require("../controllers/productController.js");
 
 router.post(

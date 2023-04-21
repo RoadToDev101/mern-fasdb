@@ -9,7 +9,8 @@
     "server": "nodemon server.js --ignore client",
     "client": "npm start --prefix client",
     "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
-    "build-client": "cd client && npm run build"
+    "build-client": "cd client && npm run build",
+    "setup-production": "npm run install-client && npm run build-client && npm install"
   },
   "keywords": [
     "fastener",
@@ -22,6 +23,7 @@
     "axios": "^1.3.4",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",

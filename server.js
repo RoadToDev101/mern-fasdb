@@ -33,6 +33,7 @@ const authenticateUser = require("./server/middleware/auth");
 const helmet = require("helmet");
 const xss = require("xss-clean");
 const mongoSanitize = require("express-mongo-sanitize");
+const cookieParser = require("cookie-parser");
 
 // Use Morgan to log requests to the console
 if (process.env.NODE_ENV !== "production") {
@@ -41,6 +42,7 @@ if (process.env.NODE_ENV !== "production") {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(helmet());
 app.use(xss());
 app.use(mongoSanitize());
