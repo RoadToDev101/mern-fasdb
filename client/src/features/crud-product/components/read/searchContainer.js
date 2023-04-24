@@ -52,7 +52,7 @@ const SearchContainer = () => {
             onChange={optimizedDebounce}
           />
           <FormRowSelect
-            labelText="Product Type"
+            labelText="product Line"
             name="productTypeSearch"
             value={productTypeSearch}
             onChange={handleSearch}

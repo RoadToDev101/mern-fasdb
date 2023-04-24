@@ -1,0 +1,65 @@
+[
+  {
+    "driveTypeName": "#1 Square"
+  },
+  {
+    "driveTypeName": "#2 Phillips"
+  },
+  {
+    "driveTypeName": "#2 Square"
+  },
+  {
+    "driveTypeName": "#2 Square, Undersized"
+  },
+  {
+    "driveTypeName": "#3 Phillips"
+  },
+  {
+    "driveTypeName": "#3 Phillips or 7/16 in. Hex"
+  },
+  {
+    "driveTypeName": "#3 Square"
+  },
+  {
+    "driveTypeName": "#3 Square, Undersized"
+  },
+  {
+    "driveTypeName": "1/4 in. Hex"
+  },
+  {
+    "driveTypeName": "1/2 in. Hex"
+  },
+  {
+    "driveTypeName": "3/8 in. Hex"
+  },
+  {
+    "driveTypeName": "5/16 in. Hex"
+  },
+  {
+    "driveTypeName": "T10 6-Lobe"
+  },
+  {
+    "driveTypeName": "T15 6-Lobe"
+  },
+  {
+    "driveTypeName": "T20 6-Lobe"
+  },
+  {
+    "driveTypeName": "T25 6-Lobe"
+  },
+  {
+    "driveTypeName": "T27 6-Lobe"
+  },
+  {
+    "driveTypeName": "T30 6-Lobe"
+  },
+  {
+    "driveTypeName": "T40 6-Lobe"
+  },
+  {
+    "driveTypeName": "T40 6-Lobe or Hex-Head"
+  },
+  {
+    "driveTypeName": "T50 6-Lobe"
+  }
+]

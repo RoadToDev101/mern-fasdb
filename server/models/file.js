@@ -22,24 +22,9 @@ const productionDrawingSchema = new mongoose.Schema({
 
 productionDrawingSchema.index({ drawingName: 1, version: 1 }, { unique: true });
 
-const codeReportSchema = new mongoose.Schema({
-  code: {
-    type: String,
-  },
-  file: {
-    type: Buffer,
-  },
-  revisedDate: {
-    type: Date,
-    default: Date.now,
-  },
-});
-
 const ProductionDrawing = mongoose.model(
   "ProductionDrawing",
   productionDrawingSchema
 );
 
-const CodeReport = mongoose.model("CodeReport", codeReportSchema);
-
-module.exports = { ProductionDrawing, CodeReport };
+module.exports = { ProductionDrawing };

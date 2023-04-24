@@ -6,9 +6,9 @@ const NotFoundError = require("../errors/not-found");
 const mongoose = require("mongoose");
 
 exports.createProduct = async (req, res) => {
-  const { productType, modelName, company } = req.body;
+  const { productLine, modelName, company } = req.body;
   // Validate request
-  if (!productType || !modelName || !company) {
+  if (!productLine || !modelName || !company) {
     throw new BadRequestError("Please provide all values!");
   }
 
@@ -30,7 +30,7 @@ exports.getAllProducts = async (req, res) => {
 
   //Search criteria
   if (productTypeSearch && productTypeSearch !== "all") {
-    queryObj.productType = productTypeSearch;
+    queryObj.productLine = productTypeSearch;
   }
   if (modelNameSearch) {
     queryObj.modelName = { $regex: modelNameSearch, $options: "i" };
@@ -68,7 +68,7 @@ exports.getAllProducts = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
   const { id: productId } = req.params;
-  const { productType, modelName, company } = req.body;
+  const { productLine, modelName, company } = req.body;
   // Validate request
   if (!req.body) {
     throw new BadRequestError("Please provide all values!");

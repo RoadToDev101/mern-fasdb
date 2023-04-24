@@ -1,56 +1,35 @@
-// import { useEffect, useState } from "react";
 import {
   FormRow,
   FormRowSelect,
-  // FormRowMultiSelectCheckbox,
+  FormRowMultiSelectCheckbox,
   Alert,
 } from "@components/index";
 import { useAppContext } from "@context/appContext";
 import Wrapper from "@wrappers/dashboardFormPage";
-// import { getApplications } from "@crud-utils/api";
+import applicationList from "@data/application";
 
 const CreateProduct = () => {
   const {
     showAlert,
     // displayAlert,
     isLoading,
-    productType,
+    productLine,
     company,
     modelName,
+    application,
     handleChange,
     clearValues,
     createProduct,
   } = useAppContext();
 
-  // const [applications, setApplications] = useState([]);
-
-  // useEffect(() => {
-  //   getApplications().then((data) => {
-  //     setApplications(data);
-  //   });
-  // }, []);
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    // if (!productType || !company || !modelName) {
-    //   displayAlert();
-    // }
     createProduct();
   };
 
   const handleProductInput = (e) => {
-    // if (
-    //   e.target.name === "applications" &&
-    //   typeof e.target.value === "string" &&
-    //   e.target.value.split
-    // ) {
-    //   handleChange({
-    //     target: { name: e.target.name, value: e.target.value.split(",") },
-    //   });
-    // } else {
     handleChange(e);
-    // }
-    // console.log(e.target.value);
+    console.log(e.target.value);
   };
 
   return (
@@ -59,12 +38,11 @@ const CreateProduct = () => {
         {showAlert && <Alert />}
         <div className="form-center">
           <div className="form-section">
-            {/* <label>General Info</label> */}
-            {/* Info section */}
+            <label>General Info</label>
             <FormRowSelect
-              labelText="Product Type"
-              name="productType"
-              value={productType}
+              labelText="product Line"
+              name="productLine"
+              value={productLine}
               onChange={handleProductInput}
               options={[
                 { _id: 1, value: "Screw" },
@@ -72,19 +50,16 @@ const CreateProduct = () => {
                 { _id: 3, value: "Anchor" },
               ]}
             />
-
-            {/* Applications section */}
-            {/* <FormRowMultiSelectCheckbox
-              labelText="Applications"
-              name="applications"
-              value={applications}
+          </div>
+          <div className="form-section">
+            <FormRowMultiSelectCheckbox
+              labelText="Application"
+              name="application"
+              value={application}
               onChange={handleProductInput}
-              options={[
-                { _id: 1, value: "Wood" },
-                { _id: 2, value: "Concrete" },
-                { _id: 3, value: "Steel" },
-              ]}
-            /> */}
+              //Get the options from the application.json file
+              options={applicationList}
+            />
           </div>
           <div className="form-section">
             <FormRowSelect
@@ -109,7 +84,7 @@ const CreateProduct = () => {
           </div>
         </div>
       </form>
-      {productType && (
+      {productLine && (
         <div className="btn-container">
           <button
             type="submit"

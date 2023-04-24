@@ -20,7 +20,7 @@ mongoose.set("strictQuery", false);
 
 // Load env vars
 const dotenv = require("dotenv");
-dotenv.config({ path: "server/config/config.env" });
+dotenv.config({ path: ".env" });
 const PORT = process.env.PORT || 8080;
 
 // Database connection
@@ -52,7 +52,6 @@ app.use(express.static(path.resolve(__dirname, "./client/build")));
 
 // Load and use authentication middleware for protected routes
 app.use("/api/auth", require("./server/routes/authRoutes"));
-app.use("/api/others", require("./server/routes/othersRoutes"));
 app.use(
   "/api/product",
   authenticateUser,

@@ -13,6 +13,6 @@ To install this project, follow these steps:
 
 ## Usage
 
-To use this application, navigate to `http://localhost:3000` in your web browser to view the home page. From there, you can search and filter through the fastener database by selecting various options such as product type, material, and coatings.
+To use this application, navigate to `http://localhost:3000` in your web browser to view the home page. From there, you can search and filter through the fastener database by selecting various options such as product line, material, and coatings.
 
 Clicking on a specific fastener will take you to a detailed page with information about the product, including its dimensions, load capacity, and installation instructions.

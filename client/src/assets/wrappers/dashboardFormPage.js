@@ -37,12 +37,9 @@ const Wrapper = styled.section`
     display: grid;
     grid-template-columns: 1fr;
     row-gap: 0.5rem;
-    label {
-      font-weight: bold;
-    }
   }
   .checkbox-options {
-    display: flex;
+    display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 1rem;
     row-gap: 0.5rem;

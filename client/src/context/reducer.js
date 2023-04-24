@@ -141,7 +141,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         editProductId: "",
-        productType: "",
+        productLine: "",
         modelName: "",
         company: "",
       };
@@ -184,12 +184,12 @@ const reducer = (state, action) => {
       const product = state.products.find(
         (product) => product._id === action.payload.id
       );
-      const { _id, isActive, productType, modelName, company } = product;
+      const { _id, isActive, productLine, modelName, company } = product;
       return {
         ...state,
         selectedProductId: _id,
         isActive,
-        productType,
+        productLine,
         modelName,
         company,
       };

@@ -8,7 +8,7 @@ import { BsFillHouseGearFill } from "react-icons/bs";
 
 const ProductCard = ({
   _id,
-  productType,
+  productLine,
   isActive,
   modelName,
   company,
@@ -20,11 +20,11 @@ const ProductCard = ({
   return (
     <Wrapper>
       <header>
-        <div className="main-icon">{productType.charAt(0)}</div>
+        <div className="main-icon">{productLine.charAt(0)}</div>
         {/*TODO: Replace with product picture or carousel in the future */}
         <div className="info">
           <h5>{modelName}</h5>
-          <p>{productType}</p>
+          <p>{productLine}</p>
         </div>
       </header>
       <div className="content">

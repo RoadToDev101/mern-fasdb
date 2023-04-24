@@ -13,7 +13,7 @@ const UpdateProduct = () => {
   const {
     showAlert,
     isLoading,
-    productType,
+    productLine,
     company,
     modelName,
     isActive,
@@ -68,9 +68,9 @@ const UpdateProduct = () => {
               ]}
             />
             <FormRowSelect
-              labelText="Product Type"
-              name="productType"
-              value={productType}
+              labelText="product Line"
+              name="productLine"
+              value={productLine}
               onChange={handleProductInput}
               options={[
                 { _id: 1, value: "Screw" },
@@ -113,7 +113,7 @@ const UpdateProduct = () => {
           </div>
         </div>
       </form>
-      {productType && (
+      {productLine && (
         <div className="btn-container">
           <button
             type="submit"

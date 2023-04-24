@@ -1,0 +1,274 @@
+[
+  {
+    "_id": 1,
+    "value": "Beam Reinforcement"
+  },
+  {
+    "_id": 2,
+    "value": "Coastal / Salt Air"
+  },
+  {
+    "_id": 3,
+    "value": "Cold-Formed Steel"
+  },
+  {
+    "_id": 4,
+    "value": "Cooling Towers"
+  },
+  {
+    "_id": 5,
+    "value": "Corrosive Environments"
+  },
+  {
+    "_id": 6,
+    "value": "Crating"
+  },
+  {
+    "_id": 7,
+    "value": "DIY / Home Projects"
+  },
+  {
+    "_id": 8,
+    "value": "Deck Framing"
+  },
+  {
+    "_id": 9,
+    "value": "Decking - Composite"
+  },
+  {
+    "_id": 10,
+    "value": "Decking - Metal"
+  },
+  {
+    "_id": 11,
+    "value": "Decking - Wood"
+  },
+  {
+    "_id": 12,
+    "value": "Deflection"
+  },
+  {
+    "_id": 13,
+    "value": "Dock and Boardwalk"
+  },
+  {
+    "_id": 14,
+    "value": "Drywall"
+  },
+  {
+    "_id": 15,
+    "value": "Engineered Wood"
+  },
+  {
+    "_id": 16,
+    "value": "Engineered Wood: Multi-Ply Fastening"
+  },
+  {
+    "_id": 17,
+    "value": "Factory-Built/Modular Construction"
+  },
+  {
+    "_id": 18,
+    "value": "Fastening Butt Joists"
+  },
+  {
+    "_id": 19,
+    "value": "Fastening Fiber-Cement Siding"
+  },
+  {
+    "_id": 20,
+    "value": "Fastening Fiberglass-Backed Sheathing"
+  },
+  {
+    "_id": 21,
+    "value": "Fastening Fire-Retardant Treated Lumber"
+  },
+  {
+    "_id": 22,
+    "value": "Fastening Floor-to-Floor"
+  },
+  {
+    "_id": 23,
+    "value": "Fastening Siding to Steel"
+  },
+  {
+    "_id": 24,
+    "value": "Fastening Siding to Wood"
+  },
+  {
+    "_id": 25,
+    "value": "Fastening Simpson Strong-Tie Connectors"
+  },
+  {
+    "_id": 26,
+    "value": "Fastening Stud-to-Plate"
+  },
+  {
+    "_id": 27,
+    "value": "Fastening Subfloor to Wood"
+  },
+  {
+    "_id": 28,
+    "value": "Fastening Support Beams"
+  },
+  {
+    "_id": 29,
+    "value": "Fastening Truss / Rafter-to-Plate"
+  },
+  {
+    "_id": 30,
+    "value": "Fastening Wall-to-Wall"
+  },
+  {
+    "_id": 31,
+    "value": "Fastening Wood Siding"
+  },
+  {
+    "_id": 32,
+    "value": "Fastening Wood to Steel: Sheathing"
+  },
+  {
+    "_id": 33,
+    "value": "Fastening Wood-to-Aluminum"
+  },
+  {
+    "_id": 34,
+    "value": "Fastening Wood-to-Steel"
+  },
+  {
+    "_id": 35,
+    "value": "Fastening Wood-to-Steel: Nailers and Ledgers"
+  },
+  {
+    "_id": 36,
+    "value": "Fastening Wood-to-Wood"
+  },
+  {
+    "_id": 37,
+    "value": "Fastening for Cold-Formed Steel"
+  },
+  {
+    "_id": 38,
+    "value": "Fencing"
+  },
+  {
+    "_id": 39,
+    "value": "Finishing, Millwork and Trim"
+  },
+  {
+    "_id": 40,
+    "value": "Flood-Resistant Construction"
+  },
+  {
+    "_id": 41,
+    "value": "Framing: Cold-Formed Steel"
+  },
+  {
+    "_id": 42,
+    "value": "Framing: Wood"
+  },
+  {
+    "_id": 43,
+    "value": "Furniture"
+  },
+  {
+    "_id": 44,
+    "value": "General Framing"
+  },
+  {
+    "_id": 45,
+    "value": "General Interior"
+  },
+  {
+    "_id": 46,
+    "value": "Heavy Timber"
+  },
+  {
+    "_id": 47,
+    "value": "Log-Home Construction"
+  },
+  {
+    "_id": 48,
+    "value": "Marine"
+  },
+  {
+    "_id": 49,
+    "value": "Mass Timber / Cross-Laminated Timber"
+  },
+  {
+    "_id": 50,
+    "value": "Metal Roofing and Siding: Exopsed Fastener"
+  },
+  {
+    "_id": 51,
+    "value": "Metal Roofing: Standing Seam"
+  },
+  {
+    "_id": 52,
+    "value": "Miscellaneous"
+  },
+  {
+    "_id": 53,
+    "value": "PVC Trim and Fascia"
+  },
+  {
+    "_id": 54,
+    "value": "Pier Restoration"
+  },
+  {
+    "_id": 55,
+    "value": "Roofing"
+  },
+  {
+    "_id": 56,
+    "value": "Roofing: Tile and Slate"
+  },
+  {
+    "_id": 57,
+    "value": "Sheathing"
+  },
+  {
+    "_id": 58,
+    "value": "Specialty"
+  },
+  {
+    "_id": 59,
+    "value": "Steel Decking and Stitching"
+  },
+  {
+    "_id": 60,
+    "value": "Steel-to-Wood / Engineered Wood"
+  },
+  {
+    "_id": 61,
+    "value": "Storm Panels"
+  },
+  {
+    "_id": 62,
+    "value": "Structural Composite Lumber"
+  },
+  {
+    "_id": 63,
+    "value": "Tongue-and-Groove Decking / Flooring"
+  },
+  {
+    "_id": 64,
+    "value": "Truck Beds / Trailer Flooring"
+  },
+  {
+    "_id": 65,
+    "value": "Truss-Ply Fastening"
+  },
+  {
+    "_id": 66,
+    "value": "Underlayment / Backerboard"
+  },
+  {
+    "_id": 67,
+    "value": "Wire Lath"
+  },
+  {
+    "_id": 68,
+    "value": "Wood / Residental Construction"
+  }
+]

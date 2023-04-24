@@ -51,9 +51,10 @@ const initialState = {
   showSmallSideBar: false,
   selectedProductId: "",
   isActive: false,
-  productType: "",
+  productLine: "",
   modelName: "",
   company: "",
+  application: [],
   products: [],
   totalProducts: 0,
   page: 1,
@@ -205,9 +206,9 @@ const AppProvider = ({ children }) => {
   const createProduct = async (product) => {
     dispatch({ type: CREATE_PRODUCT_BEGIN });
     try {
-      const { productType, modelName, company } = state;
+      const { productLine, modelName, company } = state;
       await authFetch.post(`/product/create-product`, {
-        productType,
+        productLine,
         modelName,
         company,
       });
@@ -266,12 +267,12 @@ const AppProvider = ({ children }) => {
   const editProduct = async () => {
     dispatch({ type: EDIT_PRODUCT_BEGIN });
     try {
-      const { productType, modelName, company, isActive } = state;
+      const { productLine, modelName, company, isActive } = state;
       await authFetch.patch(
         `/product/update-product/${state.selectedProductId}`,
         {
           isActive,
-          productType,
+          productLine,
           modelName,
           company,
         }

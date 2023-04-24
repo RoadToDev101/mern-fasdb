@@ -1,0 +1,26 @@
+[
+  {
+    "shankTypeName": "Knurls"
+  },
+  {
+    "shankTypeName": "Shank Slot"
+  },
+  {
+    "shankTypeName": "Partially Threaded Shank"
+  },
+  {
+    "shankTypeName": "Fully Threaded Shank"
+  },
+  {
+    "shankTypeName": "Annular-Ring Shank"
+  },
+  {
+    "shankTypeName": "Screw Shank"
+  },
+  {
+    "shankTypeName": "Smooth Sank"
+  },
+  {
+    "shankTypeName": "Spiral/Ring Shank"
+  }
+]
