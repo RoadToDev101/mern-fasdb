@@ -1,31 +1,62 @@
-[{
-  "threadTypeName": "Box Threads"
-},{
-  "threadTypeName": "Coarse Threads"
-},{
-  "threadTypeName": "Fine Threads"
-},{
-  "threadTypeName": "High/Low Serrated Threads"
-},{
-  "threadTypeName": "High/Low Threads"
-},{
-  "threadTypeName": "Machine Threads"
-},{
-  "threadTypeName": "Serrated Threads"
-},{
-  "threadTypeName": "Metal Tapping Threads"
-},{
-  "threadTypeName": "Tri-Lobe Threads"
-},{
-  "threadTypeName": "Triple-Thread Design"
-},{
-  "threadTypeName": "Twin Threads"
-},{
-  "threadTypeName": "Variable Threads Design"
-},{
-  "threadTypeName": "Reverse Threads"
-},{
-  "threadTypeName": "One Flute"
-},{
-  "threadTypeName": "Buttress Threads"
-}]
+[
+  {
+    "value": "Box Threads",
+    "_id": 1
+  },
+  {
+    "value": "Coarse Threads",
+    "_id": 2
+  },
+  {
+    "value": "Fine Threads",
+    "_id": 3
+  },
+  {
+    "value": "High/Low Serrated Threads",
+    "_id": 4
+  },
+  {
+    "value": "High/Low Threads",
+    "_id": 5
+  },
+  {
+    "value": "Machine Threads",
+    "_id": 6
+  },
+  {
+    "value": "Serrated Threads",
+    "_id": 7
+  },
+  {
+    "value": "Metal Tapping Threads",
+    "_id": 8
+  },
+  {
+    "value": "Tri-Lobe Threads",
+    "_id": 9
+  },
+  {
+    "value": "Triple-Thread Design",
+    "_id": 10
+  },
+  {
+    "value": "Twin Threads",
+    "_id": 11
+  },
+  {
+    "value": "Variable Threads Design",
+    "_id": 12
+  },
+  {
+    "value": "Reverse Threads",
+    "_id": 13
+  },
+  {
+    "value": "One Flute",
+    "_id": 14
+  },
+  {
+    "value": "Buttress Threads",
+    "_id": 15
+  }
+]

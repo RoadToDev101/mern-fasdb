@@ -1,50 +1,66 @@
 [
   {
-    "pointTypeName": "Drill Point"
+    "value": "Drill Point",
+    "_id": 1
   },
   {
-    "pointTypeName": "Drill Point with Wings"
+    "value": "Drill Point with Wings",
+    "_id": 2
   },
   {
-    "pointTypeName": "Fast-Start point with Helical Ridge"
+    "value": "Fast-Start point with Helical Ridge",
+    "_id": 3
   },
   {
-    "pointTypeName": "High-Low Threaded Tip"
+    "value": "High-Low Threaded Tip",
+    "_id": 4
   },
   {
-    "pointTypeName": "Paddle Point"
+    "value": "Paddle Point",
+    "_id": 5
   },
   {
-    "pointTypeName": "Pilot Point"
+    "value": "Pilot Point",
+    "_id": 6
   },
   {
-    "pointTypeName": "SawTooth® Point"
+    "value": "SawTooth® Point",
+    "_id": 7
   },
   {
-    "pointTypeName": "SawTooth® with Type-17 Point"
+    "value": "SawTooth® with Type-17 Point",
+    "_id": 8
   },
   {
-    "pointTypeName": "Sharp Point"
+    "value": "Sharp Point",
+    "_id": 9
   },
   {
-    "pointTypeName": "Type C"
+    "value": "Type C",
+    "_id": 10
   },
   {
-    "pointTypeName": "Type-17"
+    "value": "Type-17",
+    "_id": 11
   },
   {
-    "pointTypeName": "Type-A Point"
+    "value": "Type-A Point",
+    "_id": 12
   },
   {
-    "pointTypeName": "Half-Cut Tip"
+    "value": "Half-Cut Tip",
+    "_id": 13
   },
   {
-    "pointTypeName": "High-Low Threaded Tip with Type-17 Point"
+    "value": "High-Low Threaded Tip with Type-17 Point",
+    "_id": 14
   },
   {
-    "pointTypeName": "Chisel Point"
+    "value": "Chisel Point",
+    "_id": 15
   },
   {
-    "pointTypeName": "Diamond Point"
+    "value": "Diamond Point",
+    "_id": 16
   }
 ]

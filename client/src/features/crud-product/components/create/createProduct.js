@@ -8,10 +8,10 @@ import { useAppContext } from "@context/appContext";
 import Wrapper from "@wrappers/dashboardFormPage";
 import applicationList from "@data/application";
 
+//TODO: Open modal window to add specific data
 const CreateProduct = () => {
   const {
     showAlert,
-    // displayAlert,
     isLoading,
     productLine,
     company,

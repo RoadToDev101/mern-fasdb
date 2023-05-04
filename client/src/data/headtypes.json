@@ -1,74 +1,98 @@
 [
   {
-    "headTypeName": "Box-Shaped Cutter Head"
+    "value": "Box-Shaped Cutter Head",
+    "_id": 1
   },
   {
-    "headTypeName": "Bugle Head"
+    "value": "Bugle Head",
+    "_id": 2
   },
   {
-    "headTypeName": "Cap Head"
+    "value": "Cap Head",
+    "_id": 3
   },
   {
-    "headTypeName": "Combination"
+    "value": "Combination",
+    "_id": 4
   },
   {
-    "headTypeName": "Compact Head"
+    "value": "Compact Head",
+    "_id": 5
   },
   {
-    "headTypeName": "Flat Head"
+    "value": "Flat Head",
+    "_id": 6
   },
   {
-    "headTypeName": "Flat Head with Nibs"
+    "value": "Flat Head with Nibs",
+    "_id": 7
   },
   {
-    "headTypeName": "Flat Pan Head"
+    "value": "Flat Pan Head",
+    "_id": 8
   },
   {
-    "headTypeName": "Hex Head"
+    "value": "Hex Head",
+    "_id": 9
   },
   {
-    "headTypeName": "Hex Washer Head"
+    "value": "Hex Washer Head",
+    "_id": 10
   },
   {
-    "headTypeName": "Large Hex Washer Head"
+    "value": "Large Hex Washer Head",
+    "_id": 11
   },
   {
-    "headTypeName": "Low Profile Head"
+    "value": "Low Profile Head",
+    "_id": 12
   },
   {
-    "headTypeName": "Modified Truss Head"
+    "value": "Modified Truss Head",
+    "_id": 13
   },
   {
-    "headTypeName": "Pan Head"
+    "value": "Pan Head",
+    "_id": 14
   },
   {
-    "headTypeName": "Pancake Head"
+    "value": "Pancake Head",
+    "_id": 15
   },
   {
-    "headTypeName": "Ribbed Flat Head"
+    "value": "Ribbed Flat Head",
+    "_id": 16
   },
   {
-    "headTypeName": "Ribbed Wafer Head"
+    "value": "Ribbed Wafer Head",
+    "_id": 17
   },
   {
-    "headTypeName": "Rimmed Flat Head with Nibs"
+    "value": "Rimmed Flat Head with Nibs",
+    "_id": 18
   },
   {
-    "headTypeName": "Trim Head"
+    "value": "Trim Head",
+    "_id": 19
   },
   {
-    "headTypeName": "Trim Head with Nibs"
+    "value": "Trim Head with Nibs",
+    "_id": 20
   },
   {
-    "headTypeName": "Truss Head"
+    "value": "Truss Head",
+    "_id": 21
   },
   {
-    "headTypeName": "Ultra-Low Profile Pancake Head"
+    "value": "Ultra-Low Profile Pancake Head",
+    "_id": 22
   },
   {
-    "headTypeName": "Wafer Head"
+    "value": "Wafer Head",
+    "_id": 23
   },
   {
-    "headTypeName": "Washer Head"
+    "value": "Washer Head",
+    "_id": 24
   }
 ]

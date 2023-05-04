@@ -1,21 +1,18 @@
-[{
-  "_id": {
-    "$oid": "63eb0a3f8b5526303e73b7ca"
+[
+  {
+    "_id": 1,
+    "value": "Type 304 Stainless Steel"
   },
-  "materialName": "Type 304 Stainless Steel"
-},{
-  "_id": {
-    "$oid": "63eb0a3f8b5526303e73b7cb"
+  {
+    "_id": 2,
+    "value": "Type 305 Stainless Steel"
   },
-  "materialName": "Type 305 Stainless Steel"
-},{
-  "_id": {
-    "$oid": "63eb0a3f8b5526303e73b7cc"
+  {
+    "_id": 3,
+    "value": "Type 316 Stainless Steel"
   },
-  "materialName": "Type 316 Stainless Steel"
-},{
-  "_id": {
-    "$oid": "63eb0a3f8b5526303e73b7cd"
-  },
-  "materialName": "Carbon Steel"
-}]
+  {
+    "_id": 4,
+    "value": "Carbon Steel"
+  }
+]

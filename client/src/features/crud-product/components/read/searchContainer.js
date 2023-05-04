@@ -7,6 +7,8 @@ import { useAppContext } from "@context/appContext";
 import Wrapper from "@wrappers/dashboardFormPage";
 import { useState, useMemo } from "react";
 
+//TODO: Search by features, applications, materials, coatings, etc.
+//TODO: Convert to multi select checkbox
 const SearchContainer = () => {
   const [localSearch, setLocalSearch] = useState("");
   const {

@@ -7,6 +7,7 @@ const ProductDetails = () => {
   if (isLoading) {
     return <Loading center />;
   }
+  //TODO: Add product details
   return (
     <div>
       <h1>Product Details</h1>

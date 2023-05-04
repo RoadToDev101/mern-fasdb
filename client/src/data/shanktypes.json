@@ -1,26 +1,34 @@
 [
   {
-    "shankTypeName": "Knurls"
+    "value": "Knurls",
+    "_id": 1
   },
   {
-    "shankTypeName": "Shank Slot"
+    "value": "Shank Slot",
+    "_id": 2
   },
   {
-    "shankTypeName": "Partially Threaded Shank"
+    "value": "Partially Threaded Shank",
+    "_id": 3
   },
   {
-    "shankTypeName": "Fully Threaded Shank"
+    "value": "Fully Threaded Shank",
+    "_id": 4
   },
   {
-    "shankTypeName": "Annular-Ring Shank"
+    "value": "Annular-Ring Shank",
+    "_id": 5
   },
   {
-    "shankTypeName": "Screw Shank"
+    "value": "Screw Shank",
+    "_id": 6
   },
   {
-    "shankTypeName": "Smooth Sank"
+    "value": "Smooth Sank",
+    "_id": 7
   },
   {
-    "shankTypeName": "Spiral/Ring Shank"
+    "value": "Spiral/Ring Shank",
+    "_id": 8
   }
 ]

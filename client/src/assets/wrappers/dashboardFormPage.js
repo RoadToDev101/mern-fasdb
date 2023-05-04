@@ -9,6 +9,8 @@ const Wrapper = styled.section`
   h3 {
     margin-top: 0;
   }
+  //TODO: Check form styles
+  //TODO: Multi select checkbox styles
   .form {
     margin: 0;
     border-radius: 0;
