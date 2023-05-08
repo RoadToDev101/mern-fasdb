@@ -8,7 +8,6 @@ import { useAppContext } from "@context/appContext";
 import Wrapper from "@wrappers/dashboardFormPage";
 import applicationList from "@data/application";
 
-//TODO: Open modal window to add specific data
 const CreateProduct = () => {
   const {
     showAlert,
@@ -38,7 +37,7 @@ const CreateProduct = () => {
         {showAlert && <Alert />}
         <div className="form-center">
           <div className="form-section">
-            <label>General Info</label>
+            {/* <label>General Info</label> */}
             <FormRowSelect
               labelText="product Line"
               name="productLine"
@@ -51,7 +50,7 @@ const CreateProduct = () => {
               ]}
             />
           </div>
-          <div className="form-section">
+          {/* <div className="form-section">
             <FormRowMultiSelectCheckbox
               labelText="Application"
               name="application"
@@ -60,7 +59,7 @@ const CreateProduct = () => {
               //Get the options from the application.json file
               options={applicationList}
             />
-          </div>
+          </div> */}
           <div className="form-section">
             <FormRowSelect
               labelText="Company"

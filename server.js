@@ -29,7 +29,7 @@ const connectDB = require("./server/database/connection");
 // Middleware
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
-const authenticateUser = require("./server/middleware/auth");
+const authenticateUser = require("./server/middleware/authentication");
 const helmet = require("helmet");
 const xss = require("xss-clean");
 const mongoSanitize = require("express-mongo-sanitize");

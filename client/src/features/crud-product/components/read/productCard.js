@@ -21,7 +21,7 @@ const ProductCard = ({
     <Wrapper>
       <header>
         <div className="main-icon">{productLine.charAt(0)}</div>
-        {/*TODO: Replace with product picture or carousel in the future */}
+        {/*TODO: Replace with product picture or carousel */}
         <div className="info">
           <h5>{modelName}</h5>
           <p>{productLine}</p>

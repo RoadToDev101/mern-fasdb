@@ -15,7 +15,6 @@ const productSchema = new mongoose.Schema(
       uppercase: true,
       required: [true, "Please provide model name"],
       unique: true,
-      index: true,
       uniqueCaseInsensitive: true,
     },
     company: {
@@ -50,7 +49,6 @@ const productSchema = new mongoose.Schema(
     application: [
       {
         type: String,
-        unique: true,
       },
     ],
     createdBy: {
@@ -67,7 +65,7 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-productSchema.plugin(uniqueValidator, { message: "{VALUE} already exists" });
+productSchema.plugin(uniqueValidator);
 const Product = mongoose.model("Product", productSchema);
 
 module.exports = {
