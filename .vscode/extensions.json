@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "naumovs.color-highlight",
+    "sporiley.css-auto-prefix",
+    "mikestead.dotenv",
+    "dsznajder.es7-react-js-snippets",
+    "dbaeumer.vscode-eslint",
+    "kisstkondoros.vscode-gutter-preview",
+    "wayou.vscode-todo-highlight",
+    "styled-components.vscode-styled-components"
+  ]
+}

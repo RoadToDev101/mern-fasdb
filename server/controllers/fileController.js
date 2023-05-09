@@ -1,27 +1,67 @@
-const { ProductionDrawing, CodeReport } = require("../models/file.js");
+const { ProductionDrawing } = require("../models/file.js");
 const { StatusCodes } = require("http-status-codes");
 const BadRequestError = require("../errors/bad-request");
-const UnAuthenticatedError = require("../errors/unauthenticated");
+const multer = require("multer");
+// Create a storage engine for multer
+const storage = multer.memoryStorage();
+
+// Configure multer
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 5000000 }, // limit file size to 5 MB
+});
 
 exports.getAllDrawings = async (req, res) => {
-  console.log("all drawings retrieved");
+  const drawings = await ProductionDrawing.find();
+  res.status(StatusCodes.OK).json({
+    drawings,
+  });
 };
 
-exports.uploadDrawing = async (req, res) => {
-  const { name, file } = req.body;
-  if (!name || !file) {
-    throw new BadRequestError("Please provide all values");
-  }
+exports.uploadDrawing = async (req, res, next) => {
+  // Use multer to upload the file and extract the drawingName, version, and file buffer
+  const uploadMiddleware = upload.single("file");
+  uploadMiddleware(req, res, async (err) => {
+    if (err instanceof multer.MulterError) {
+      throw new BadRequestError("File upload error");
+    } else if (err) {
+      throw new BadRequestError("Unknown error");
+    }
 
-  const productionDrawing = new ProductionDrawing({
-    name,
-    file,
-  });
+    const { drawingName, version, revisedDate } = req.body;
 
-  await productionDrawing.save();
+    // Check if a drawing with the same name and version already exists
+    const existingDrawing = await ProductionDrawing.findOne({
+      drawingName,
+      version,
+    });
+    if (existingDrawing) {
+      throw new BadRequestError(
+        `${drawingName} version ${version} already exists`
+      );
+    }
 
-  res.status(StatusCodes.OK).json({
-    productionDrawing,
+    const file = req.file.buffer;
+
+    // Create a new production drawing document and save it to the database
+    const productionDrawing = new ProductionDrawing({
+      drawingName,
+      version,
+      file,
+      revisedDate,
+    });
+
+    try {
+      await productionDrawing.save();
+      res.status(StatusCodes.CREATED).json({
+        drawingName,
+        version,
+        revisedDate,
+        msg: "Production Drawing upload successfully",
+      });
+    } catch (err) {
+      next(err);
+    }
   });
 };
 

@@ -1,11 +1,10 @@
 const { Product } = require("../models/product.js");
-const { User } = require("../models/user.js");
 const { StatusCodes } = require("http-status-codes");
 const BadRequestError = require("../errors/bad-request");
 const NotFoundError = require("../errors/not-found");
-const mongoose = require("mongoose");
 
 exports.createProduct = async (req, res) => {
+  // console.log(req.body);
   const { productLine, modelName, company } = req.body;
   // Validate request
   if (!productLine || !modelName || !company) {
@@ -67,6 +66,7 @@ exports.getAllProducts = async (req, res) => {
 };
 
 exports.updateProduct = async (req, res) => {
+  // console.log(req.body);
   const { id: productId } = req.params;
   const { productLine, modelName, company } = req.body;
   // Validate request
