@@ -1,6 +1,7 @@
 [
   {
     "value": "Yellow-Zinc Plating",
+    "corrosionResistanceLevel": "Low",
     "_id": 1
   },
   {
@@ -9,14 +10,17 @@
   },
   {
     "value": "Electrocoating (E-Coat™)",
+    "corrosionResistanceLevel": "Low",
     "_id": 3
   },
   {
-    "value": "Gray Phosphate",
+    "value": "Gray Phosphate Coating",
+    "corrosionResistanceLevel": "Low",
     "_id": 4
   },
   {
-    "value": "Black Phosphate",
+    "value": "Black Phosphate Coating",
+    "corrosionResistanceLevel": "Low",
     "_id": 5
   },
   {
@@ -28,91 +32,91 @@
     "_id": 7
   },
   {
-    "value": "Gray Phosphate Coating",
+    "value": "Quik Guard® Coating",
+    "corrosionResistanceLevel": "Medium",
     "_id": 8
   },
   {
-    "value": "Black Phosphate Coating",
+    "value": "Double-Barrier Coating",
+    "corrosionResistanceLevel": "Medium",
     "_id": 9
   },
   {
-    "value": "Quik Guard® Coating",
+    "value": "Class D Hot-Dip Galvanized, ASTM A153",
+    "corrosionResistanceLevel": "Medium",
     "_id": 10
   },
   {
-    "value": "Double-Barrier Coating",
+    "value": "N2000® Mechanically Galvanized",
+    "corrosionResistanceLevel": "Medium",
     "_id": 11
   },
   {
-    "value": "Class D Hot-Dip Galvanized, ASTM A153",
+    "value": "Class 55 Mechanically Galvanized, ASTM B695",
+    "corrosionResistanceLevel": "Medium",
     "_id": 12
   },
   {
-    "value": "N2000® Mechanically Galvanized",
+    "value": "C-3 Mechanically Galvanized",
+    "corrosionResistanceLevel": "Medium",
     "_id": 13
   },
   {
-    "value": "Class 55 Mechanically Galvanized, ASTM B695",
+    "value": "Class C, Hot-Dip Galvanized, ASTM A153",
+    "corrosionResistanceLevel": "Severe",
     "_id": 14
   },
   {
-    "value": "C-3 Mechanically Galvanized",
+    "value": "Blue-Zinc Plating",
     "_id": 15
   },
   {
-    "value": "Class C, Hot-Dip Galvanized, ASTM A153",
+    "value": "Double-Barrier Black Coating",
+    "corrosionResistanceLevel": "Medium",
     "_id": 16
   },
   {
-    "value": "Blue-Zinc Plating",
+    "value": "Wax Fuchs-Lubritech Gleitmo 615",
     "_id": 17
   },
   {
-    "value": "Double-Barrier Black Coating",
+    "value": "Wax ADREM P/N 615-F",
     "_id": 18
   },
   {
-    "value": "Wax Fuchs-Lubritech Gleitmo 615",
+    "value": "PPG Powercron XP Cathodic Electrocoat",
     "_id": 19
   },
   {
-    "value": "Wax ADREM P/N 615-F",
+    "value": "PPG Powercron XL Black Cathodic Electrocoat",
     "_id": 20
   },
   {
-    "value": "PPG Powercron XP Cathodic Electrocoat",
+    "value": "Magni 599 W57 Grey",
     "_id": 21
   },
   {
-    "value": "PPG Powercron XL Black Cathodic Electrocoat",
+    "value": "HWR-F Water Based Rust Inhibitor",
     "_id": 22
   },
   {
-    "value": "Magni 599 W57 Grey",
+    "value": "MR-27F White Ruspert",
     "_id": 23
   },
   {
-    "value": "HWR-F Water Based Rust Inhibitor",
+    "value": "Magni 599 W117 Silver",
     "_id": 24
   },
   {
-    "value": "MR-27F White Ruspert",
+    "value": "Magni 599 W56 Tan",
     "_id": 25
   },
   {
-    "value": "Magni 599 W117 Silver",
+    "value": "Ruspert Pantone 179 Orange Dip Spin Coating",
     "_id": 26
   },
   {
-    "value": "Magni 599 W56 Tan",
-    "_id": 27
-  },
-  {
-    "value": "Ruspert Pantone 179 Orange Dip Spin Coating",
-    "_id": 28
-  },
-  {
     "value": "Wax Atotech #9 Friction Modifier",
-    "_id": 29
+    "_id": 27
   }
 ]

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 const uniqueValidator = require("mongoose-unique-validator");
 // const { ProductionDrawing, CodeReport } = require("./file.js");
 const uniqueArray = require("../middleware/uniqueArray");
@@ -43,10 +44,25 @@ const modelSchema = new mongoose.Schema({
     enum: enumValues.material,
     required: [true, "Please provide material"],
   },
+  coatings: [
+    {
+      coating: {
+        type: String,
+        enum: enumValues.coating,
+      },
+      layer: {
+        type: Number,
+        required: [true, "Please provide layer"],
+      },
+      thickness: {
+        type: Number,
+      },
+    },
+  ],
   corrosionResistance: {
     type: String,
-    enum: ["None", "Low", "Medium", "High", "Severe"],
-    default: "None",
+    enum: ["N/a", "Low", "Medium", "High", "Severe"],
+    default: "N/a",
   },
   features: {
     headType: {
@@ -61,16 +77,20 @@ const modelSchema = new mongoose.Schema({
       type: String,
       enum: enumValues.pointType,
     },
-    shankType: [
+    shankTypes: [
       {
-        type: String,
-        enum: enumValues.shankType,
+        shankType: {
+          type: String,
+          enum: enumValues.shankType,
+        },
       },
     ],
-    threadType: [
+    threadTypes: [
       {
-        type: String,
-        enum: enumValues.threadType,
+        threadType: {
+          type: String,
+          enum: enumValues.threadType,
+        },
         topThreadAngle: {
           type: Number,
         },
@@ -80,45 +100,32 @@ const modelSchema = new mongoose.Schema({
       },
     ],
   },
-  commercialDimensions: {
-    overallLength: {
-      type: Number,
-    },
-    size: {
-      type: String,
-    },
-    headDiameter: {
-      type: Number,
-    },
-    threadLength: {
-      type: Number,
-    },
-    shankDiameter: {
-      type: Number,
-    },
-    nailGauge: {
-      type: String,
-    },
-  },
-  coatings: [
-    {
-      type: String,
-      enum: enumValues.coating,
-      layer: {
-        type: Number,
-        required: [true, "Please provide layer"],
-      },
-      thickness: {
-        type: Number,
-      },
-    },
-  ],
-  SKUs: [
+  SKU: [
     {
       skuCode: {
         type: String,
         unique: [true, "SKU code must be unique"],
         required: [true, "SKU code is required"],
+      },
+      commercialDimensions: {
+        overallLength: {
+          type: Number,
+        },
+        size: {
+          type: String,
+        },
+        headDiameter: {
+          type: Number,
+        },
+        threadLength: {
+          type: Number,
+        },
+        shankDiameter: {
+          type: Number,
+        },
+        nailGauge: {
+          type: String,
+        },
       },
       status: {
         type: String,
@@ -135,7 +142,7 @@ const modelSchema = new mongoose.Schema({
       },
     },
   ],
-  mechanicalProperties: {
+  mechanicalProperty: {
     yieldStrength: {
       type: String,
     },
@@ -155,7 +162,7 @@ const modelSchema = new mongoose.Schema({
       type: String,
     },
   },
-  screwAllowableLoads: {
+  screwAllowableLoad: {
     woodToWood: {
       withdrawal: [
         {
@@ -213,16 +220,26 @@ const productSchema = new mongoose.Schema(
       default: true,
       required: [true, "Please provide active status"],
     },
-    models: [modelSchema],
-    // productionDrawingID: [
-    //   {
-    //     type: mongoose.Types.ObjectId,
-    //     ref: "ProductionDrawing",
-    //   },
-    // ],
-    codeReports: [
+    model: [modelSchema],
+    productionDrawingID: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "ProductionDrawing",
+      },
+    ],
+    url: [
       {
         type: String,
+        validate: {
+          validator: function (v) {
+            return validator.isURL(v);
+          },
+          message: "Invalid URL",
+        },
+        metadata: {
+          type: Object,
+          required: false,
+        },
       },
     ],
     application: [
@@ -247,6 +264,30 @@ const productSchema = new mongoose.Schema(
 
 productSchema.plugin(uniqueValidator);
 modelSchema.plugin(uniqueValidator);
+
+modelSchema.pre("save", function (next) {
+  const material = this.material;
+  const coating = this.coatings.length > 0 ? this.coatings[0].type : null;
+
+  // Find the material and coating with the given value
+  const materialObj = enumData.material.find((m) => m.value === material);
+  const coatingObj = coating
+    ? enumData.coating.find((c) => c.value === coating)
+    : null;
+
+  // Set the corrosion resistance level based on material and coating
+  let corrosionResistanceLevel = "N/a";
+  if (materialObj && materialObj.corrosionResistanceLevel) {
+    corrosionResistanceLevel = materialObj.corrosionResistanceLevel;
+  } else if (coatingObj && coatingObj.corrosionResistanceLevel) {
+    corrosionResistanceLevel = coatingObj.corrosionResistanceLevel;
+  }
+
+  // Set the corrosionResistance field to the calculated value
+  this.corrosionResistance = corrosionResistanceLevel;
+  next();
+});
+
 productSchema.pre(
   "save",
   uniqueArray("application"),

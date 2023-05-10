@@ -1,18 +1,31 @@
 [
   {
     "_id": 1,
-    "value": "Type 304 Stainless Steel"
+    "value": "Carbon Steel"
   },
   {
     "_id": 2,
-    "value": "Type 305 Stainless Steel"
+    "value": "Type 304 Stainless Steel",
+    "corrosionResistanceLevel": "High"
   },
   {
     "_id": 3,
-    "value": "Type 316 Stainless Steel"
+    "value": "Type 305 Stainless Steel",
+    "corrosionResistanceLevel": "High"
   },
   {
     "_id": 4,
-    "value": "Carbon Steel"
+    "value": "Type 316 Stainless Steel",
+    "corrosionResistanceLevel": "Severe"
+  },
+  {
+    "_id": 5,
+    "value": "Type 316L Stainless Steel",
+    "corrosionResistanceLevel": "High"
+  },
+  {
+    "_id": 6,
+    "value": "Type 410 Stainless Steel",
+    "corrosionResistanceLevel": "Low"
   }
 ]
