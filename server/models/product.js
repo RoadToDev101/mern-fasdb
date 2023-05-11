@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const uniqueValidator = require("mongoose-unique-validator");
-// const { ProductionDrawing, CodeReport } = require("./file.js");
 const uniqueArray = require("../middleware/uniqueArray");
 const enumData = require("../../client/src/data/index");
+
 const getEnumValues = (enums) => {
   return enums.reduce((acc, cur) => {
     acc[cur] = enumData[cur].map((item) => item.value);
@@ -220,21 +220,23 @@ const productSchema = new mongoose.Schema(
       default: true,
       required: [true, "Please provide active status"],
     },
-    model: [modelSchema],
+    models: [modelSchema],
     productionDrawingID: [
       {
         type: mongoose.Types.ObjectId,
         ref: "ProductionDrawing",
       },
     ],
-    url: [
+    urls: [
       {
-        type: String,
-        validate: {
-          validator: function (v) {
-            return validator.isURL(v);
+        url: {
+          type: String,
+          validate: {
+            validator: function (v) {
+              return validator.isURL(v);
+            },
+            message: "Invalid URL",
           },
-          message: "Invalid URL",
         },
         metadata: {
           type: Object,
@@ -265,33 +267,77 @@ const productSchema = new mongoose.Schema(
 productSchema.plugin(uniqueValidator);
 modelSchema.plugin(uniqueValidator);
 
-modelSchema.pre("save", function (next) {
-  const material = this.material;
-  const coating = this.coatings.length > 0 ? this.coatings[0].type : null;
+/*
+ * corrosionResistanceAssign - a function that auto assign the corrosion resistance for each model in an array
+ *
+ * @param next: a function to be called after the function finishes its processing
+ *
+ * This function takes an array of model objects and assign the corrosion resistance for each model
+ * based on its material and coatings properties. The resulting corrosion resistance value is assigned to
+ * the model's 'corrosionResistance' property.
+ *
+ * The function also uses two lookup objects, 'materialLookup' and 'coatingLookup', to store the objects
+ * from the 'enumData.material' and 'enumData.coating' arrays respectively, indexed by their 'value' property.
+ * This allows for constant-time lookups of these objects when processing each model in the loop.
+ *
+ * The function avoids unnecessary iterations by checking for 'corrosionResistanceLevel' values and empty coatings
+ * arrays before iterating over them.
+ */
+function corrosionResistanceAssign(next) {
+  const models = this.models;
+  const materialLookup = enumData.material.reduce((acc, obj) => {
+    acc[obj.value] = obj;
+    return acc;
+  }, {});
+  const coatingLookup = enumData.coating.reduce((acc, obj) => {
+    acc[obj.value] = obj;
+    return acc;
+  }, {});
 
-  // Find the material and coating with the given value
-  const materialObj = enumData.material.find((m) => m.value === material);
-  const coatingObj = coating
-    ? enumData.coating.find((c) => c.value === coating)
-    : null;
+  for (let i = 0; i < models.length; i++) {
+    const model = models[i];
+    const material = model.material;
+    const coatings = model.coatings;
 
-  // Set the corrosion resistance level based on material and coating
-  let corrosionResistanceLevel = "N/a";
-  if (materialObj && materialObj.corrosionResistanceLevel) {
-    corrosionResistanceLevel = materialObj.corrosionResistanceLevel;
-  } else if (coatingObj && coatingObj.corrosionResistanceLevel) {
-    corrosionResistanceLevel = coatingObj.corrosionResistanceLevel;
+    let corrosionResistanceLevel = "N/a";
+
+    const materialObj = materialLookup[material];
+
+    if (
+      coatings.length === 0 &&
+      materialObj &&
+      materialObj.corrosionResistanceLevel
+    ) {
+      corrosionResistanceLevel = materialObj.corrosionResistanceLevel;
+    } else {
+      for (let j = 0; j < coatings.length; j++) {
+        const coatingValue = coatings[j].coating;
+        const coatingObj = coatingLookup[coatingValue];
+        if (coatingObj && coatingObj.corrosionResistanceLevel) {
+          corrosionResistanceLevel = coatingObj.corrosionResistanceLevel;
+          break;
+        }
+      }
+      if (
+        corrosionResistanceLevel === "N/a" &&
+        materialObj &&
+        materialObj.corrosionResistanceLevel
+      ) {
+        corrosionResistanceLevel = materialObj.corrosionResistanceLevel;
+      }
+    }
+
+    model.corrosionResistance = corrosionResistanceLevel;
   }
 
-  // Set the corrosionResistance field to the calculated value
-  this.corrosionResistance = corrosionResistanceLevel;
   next();
-});
+}
 
 productSchema.pre(
   "save",
+  corrosionResistanceAssign,
   uniqueArray("application"),
-  uniqueArray("codeReports")
+  uniqueArray("urls.url")
 );
 
 const Product = mongoose.model("Product", productSchema);
