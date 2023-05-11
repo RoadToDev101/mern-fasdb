@@ -283,8 +283,15 @@ modelSchema.plugin(uniqueValidator);
  * The function avoids unnecessary iterations by checking for 'corrosionResistanceLevel' values and empty coatings
  * arrays before iterating over them.
  */
-function corrosionResistanceAssign(next) {
-  const models = this.models;
+async function corrosionResistanceAssign(next) {
+  const models = this.models || this.getUpdate().models;
+  const isUpdating = this.models ? false : true;
+
+  if (!models || models.length === 0) {
+    console.log("No models found");
+    return next();
+  }
+
   const materialLookup = enumData.material.reduce((acc, obj) => {
     acc[obj.value] = obj;
     return acc;
@@ -298,6 +305,12 @@ function corrosionResistanceAssign(next) {
     const model = models[i];
     const material = model.material;
     const coatings = model.coatings;
+    // console.log(material);
+    // console.log(coatings);
+    // console.log(model.corrosionResistance);
+    // console.log(isUpdating);
+
+    if (model.corrosionResistance !== "N/a" && isUpdating == false) continue;
 
     let corrosionResistanceLevel = "N/a";
 
@@ -326,15 +339,22 @@ function corrosionResistanceAssign(next) {
         corrosionResistanceLevel = materialObj.corrosionResistanceLevel;
       }
     }
-
+    // console.log(corrosionResistanceLevel);
     model.corrosionResistance = corrosionResistanceLevel;
   }
 
-  next();
+  await next();
 }
 
 productSchema.pre(
   "save",
+  corrosionResistanceAssign,
+  uniqueArray("application"),
+  uniqueArray("urls.url")
+);
+
+productSchema.pre(
+  "findOneAndUpdate",
   corrosionResistanceAssign,
   uniqueArray("application"),
   uniqueArray("urls.url")

@@ -65,29 +65,30 @@ exports.getAllProducts = async (req, res) => {
 };
 
 exports.updateProduct = async (req, res) => {
-  // console.log(req.body);
   const { id: productId } = req.params;
   const { productLine, modelName, company } = req.body;
+  // console.log(req.body.models);
+
   // Validate request
-  if (!req.body) {
+  if (!productLine || !modelName || !company) {
     throw new BadRequestError("Please provide all values!");
   }
 
   const updatedBy = req.user.userId;
 
-  const updatedProduct = await Product.findOneAndUpdate(
+  const result = await Product.findOneAndUpdate(
     { _id: productId },
     { ...req.body, updatedBy },
-    { new: true, runValidators: true }
+    { new: true }
   );
 
-  if (!updatedProduct) {
+  if (!result) {
     throw new NotFoundError(`Product with id ${productId} not found!`);
   }
 
   res.status(StatusCodes.OK).json({
     success: true,
-    updatedProduct,
+    updatedProduct: result,
   });
 };
 
