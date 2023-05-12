@@ -1,4 +1,4 @@
-import { Landing, ErrorPage, ProtectedRoute } from "./pages";
+import { Landing, VerifyEmail, ErrorPage, ProtectedRoute } from "./pages";
 import { Register } from "./features/authentication";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { UserProfile } from "./features/other";
@@ -29,6 +29,7 @@ function App() {
           <Route path="user-profile" element={<UserProfile />} />
         </Route>
         <Route path="register" element={<Register />} />
+        <Route path="verify-email" element={<VerifyEmail />} />
         <Route path="landing" element={<Landing />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>

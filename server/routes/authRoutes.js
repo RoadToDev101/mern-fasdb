@@ -10,15 +10,8 @@ const limiter = rateLimit({
   message: "Too many requests from this IP, please try again after 10 minutes",
 });
 
-/**
- *
- * @method POST /api/auth/register
- *
- * @method POST /api/auth/login
- *
- * @method PATCH /api/auth/update
- **/
 router.post("/register", limiter, authController.register);
+router.post("/verify-email", authController.verifyEmail);
 router.post("/login", limiter, authController.login);
 router.get(
   "/get-current-user",

@@ -1,20 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const fileController = require("../controllers/fileController.js");
-const checkPermission = require("../middleware/authorization.js");
+const authorization = require("../middleware/authorization.js");
 
 // Production Drawings API
 router.get("/get-drawings", fileController.getAllDrawings);
+router.get("/get-drawing", fileController.getDrawing);
 router.post(
-  "/new-drawing",
-  checkPermission,
+  "/create-drawing",
   fileController.uploadDrawing,
   fileController.newDrawing
 );
-router.delete(
-  "/api/drawings/:id",
-  checkPermission,
-  fileController.deleteDrawing
-);
+router.delete("/delete-drawing/:id", fileController.deleteDrawing);
 
 module.exports = router;

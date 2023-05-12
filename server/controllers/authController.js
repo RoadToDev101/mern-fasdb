@@ -1,10 +1,12 @@
-const { User } = require("../models/user.js");
+const { User } = require("../models/user");
 const { StatusCodes } = require("http-status-codes");
 const BadRequestError = require("../errors/bad-request");
 const UnAuthenticatedError = require("../errors/unauthenticated");
-const attachCookies = require("../utils/attachCookies.js");
+const attachCookies = require("../utils/attachCookies");
+const crypto = require("crypto");
+const nodemailer = require("../services/nodemailer");
+const e = require("express");
 
-// Register user, check existing user through username or email, if not found, create new user
 exports.register = async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -18,29 +20,58 @@ exports.register = async (req, res) => {
     throw new BadRequestError("Username already in use");
   }
 
-  // Check if email already exists
+  // Check if email already exists in db
   const emailAlreadyExists = await User.findOne({ email });
   if (emailAlreadyExists) {
     throw new BadRequestError("Email already in use");
   }
 
-  // Create a new user
-  const user = await User.create({ username, email, password });
+  const emailToken = crypto.randomBytes(64).toString("hex");
+
+  const user = await User.create({
+    username,
+    email,
+    emailToken,
+    password,
+  });
   const token = user.createJWT();
 
   attachCookies(res, token);
+
+  // Send verification email
+  nodemailer.sendVerificationEmail(req, res, email, emailToken);
 
   res.status(StatusCodes.CREATED).json({
     user: {
       _id: user._id,
       username: user.username,
       email: user.email,
+      emailToken: user.emailToken,
       role: user.role,
+      EmailVerified: user.isEmailVerified,
     },
   });
 };
 
-// Login user
+exports.verifyEmail = async (req, res) => {
+  const { emailToken } = req.query;
+  const user = await User.findOne({ emailToken });
+  if (!user) {
+    res.status(StatusCodes.BAD_REQUEST).json({
+      msg: "Invalid token, please try again",
+    });
+    return;
+  }
+
+  user.emailToken = null;
+  user.isEmailVerified = true;
+  await user.save();
+  res.status(StatusCodes.OK).json({
+    msg: "Email verified",
+  });
+  res.redirect(`${req.headers.host}/register`);
+};
+
 exports.login = async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -59,7 +90,6 @@ exports.login = async (req, res) => {
   if (!user) {
     throw new UnAuthenticatedError("User not found!");
   }
-  // console.log(user);
 
   const isPasswordCorrect = await user.comparePassword(password);
   if (!isPasswordCorrect) {

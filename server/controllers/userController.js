@@ -4,7 +4,7 @@ const BadRequestError = require("../errors/bad-request");
 const UnAuthenticatedError = require("../errors/unauthenticated");
 
 exports.updateUsernameAndEmail = async (req, res) => {
-  const { username, email, role } = req.body;
+  const { username, email } = req.body;
 
   if (!username || !email) {
     throw new BadRequestError("Please provide all values");
@@ -17,7 +17,6 @@ exports.updateUsernameAndEmail = async (req, res) => {
 
   user.username = username;
   user.email = email;
-  user.role = role;
 
   await user.save();
 
@@ -25,6 +24,41 @@ exports.updateUsernameAndEmail = async (req, res) => {
   token = user.createJWT();
   res.status(StatusCodes.OK).json({
     user,
+  });
+};
+
+exports.updateUserRole = async (req, res) => {
+  const { role, username } = req.body;
+
+  if (!role || !username) {
+    throw new BadRequestError("Please provide all values");
+  }
+  if (!req.user || !req.user.userId) {
+    throw new UnAuthenticatedError("User is not authenticated");
+  }
+
+  const user = await User.findOne({ username });
+
+  // If user is not found
+  if (!user) {
+    throw new NotFoundError(`User with username '${username}' not found`);
+  }
+  // If user is already got the role
+  if (user.role === role) {
+    throw new BadRequestError(`User already got the role '${role}'`);
+  }
+  // If target user is Super-Admin and current user is not Super-Admin
+  if (user.role === "Super-Admin" && req.user.role !== "Super-Admin") {
+    throw new BadRequestError(`Cannot change Super-Admin's role`);
+  }
+
+  user.role = role;
+
+  await user.save();
+
+  res.status(StatusCodes.OK).json({
+    user,
+    msg: `User ${username}'s role updated to '${role}' successfully`,
   });
 };
 

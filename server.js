@@ -30,6 +30,7 @@ const connectDB = require("./server/database/connection");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const authenticateUser = require("./server/middleware/authentication");
+const authorization = require("./server/middleware/authorization");
 const helmet = require("helmet");
 const xss = require("xss-clean");
 const mongoSanitize = require("express-mongo-sanitize");
@@ -55,10 +56,21 @@ app.use("/api/auth", require("./server/routes/authRoutes"));
 app.use(
   "/api/product",
   authenticateUser,
+  authorization,
   require("./server/routes/productRoutes")
 );
-app.use("/api/user", authenticateUser, require("./server/routes/userRoutes"));
-app.use("/api/file", authenticateUser, require("./server/routes/fileRoutes"));
+app.use(
+  "/api/user",
+  authenticateUser,
+  authorization,
+  require("./server/routes/userRoutes")
+);
+app.use(
+  "/api/file",
+  authenticateUser,
+  authorization,
+  require("./server/routes/fileRoutes")
+);
 
 // Serve the React app's index.html file for all other requests
 app.get("*", (req, res) => {

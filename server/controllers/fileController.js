@@ -2,6 +2,7 @@ const { ProductionDrawing } = require("../models/file.js");
 const { Product } = require("../models/product.js");
 const { StatusCodes } = require("http-status-codes");
 const BadRequestError = require("../errors/bad-request");
+const NotFoundError = require("../errors/not-found");
 const multer = require("multer");
 // Create a storage engine for multer
 const multerStorage = multer.memoryStorage();
@@ -24,7 +25,7 @@ const upload = multer({
 
 exports.getAllDrawings = async (req, res) => {
   const { drawingNameSearch, modelNameSearch } = req.query;
-  console.log(req.query);
+  // console.log(req.query);
 
   const queryObj = {};
 
@@ -32,8 +33,12 @@ exports.getAllDrawings = async (req, res) => {
   if (drawingNameSearch) {
     queryObj.drawingName = { $regex: drawingNameSearch, $options: "i" };
   }
+  // Filter documents based on the modelName field and ensure it matches the value of the modelNameSearch parameter
   if (modelNameSearch) {
-    queryObj.modelName = { $regex: modelNameSearch, $options: "i" };
+    const products = await Product.find({
+      modelName: { $regex: modelNameSearch, $options: "i" },
+    });
+    queryObj.productId = { $in: products.map((p) => p._id) };
   }
 
   //Pagination
@@ -42,6 +47,15 @@ exports.getAllDrawings = async (req, res) => {
   const startIndex = (page - 1) * limit;
 
   const drawings = await ProductionDrawing.aggregate([
+    {
+      $lookup: {
+        from: "products",
+        localField: "productId",
+        foreignField: "_id",
+        as: "product",
+      },
+    },
+    { $unwind: "$product" },
     { $match: queryObj },
     { $skip: startIndex },
     { $limit: limit },
@@ -52,9 +66,11 @@ exports.getAllDrawings = async (req, res) => {
         version: 1,
         revisedDate: 1,
         createdBy: 1,
+        modelName: "$product.models.modelName",
       },
     },
   ]).allowDiskUse(true);
+  console.log(drawings);
 
   const totalDrawings = await ProductionDrawing.countDocuments(queryObj);
 
@@ -65,6 +81,7 @@ exports.getAllDrawings = async (req, res) => {
     version: drawings.map((drawing) => drawing.version),
     revisedDate: drawings.map((drawing) => drawing.revisedDate),
     createdBy: drawings.map((drawing) => drawing.createdBy),
+    modelName: drawings.map((drawing) => drawing.modelName),
     numOfPages: Math.ceil(totalDrawings / limit),
   });
 };
@@ -89,9 +106,7 @@ exports.newDrawing = async (req, res) => {
   // Find the product with the matching modelName
   const product = await Product.findOne({ modelName });
   if (!product) {
-    throw new BadRequestError(
-      `Product with modelName '${modelName}' not found`
-    );
+    throw new NotFoundError(`Product with modelName '${modelName}' not found`);
   }
 
   const file = req.file.buffer;
@@ -121,6 +136,30 @@ exports.newDrawing = async (req, res) => {
   });
 };
 
+exports.getDrawing = async (req, res) => {
+  const { drawingName, version } = req.query;
+  if (!drawingName || !version)
+    throw new BadRequestError("Please provide drawingName and version");
+
+  const drawing = await ProductionDrawing.findOne({ drawingName, version });
+
+  if (!drawing) {
+    throw new NotFoundError(`${drawingName} version ${version} not found!`);
+  }
+
+  res.setHeader("Content-Type", "application/pdf");
+  res.status(StatusCodes.OK).send(drawing.file);
+};
+
 exports.deleteDrawing = async (req, res) => {
-  console.log("file deleted");
+  const { id: drawingId } = req.params;
+  const drawing = await ProductionDrawing.findOneAndDelete({ _id: drawingId });
+
+  if (!drawing) {
+    throw new NotFoundError(`Drawing with id ${drawingId} not found`);
+  }
+
+  res.status(StatusCodes.ACCEPTED).json({
+    msg: `Drawing deleted successfully`,
+  });
 };

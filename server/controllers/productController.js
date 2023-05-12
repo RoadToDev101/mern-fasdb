@@ -100,7 +100,7 @@ exports.deleteProduct = async (req, res) => {
     throw new NotFoundError(`Product with id ${productId} not found!`);
   }
 
-  res.status(StatusCodes.OK).json({
+  res.status(StatusCodes.ACCEPTED).json({
     msg: "Product deleted successfully",
   });
 };

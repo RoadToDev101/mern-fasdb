@@ -28,9 +28,16 @@ const userSchema = new mongoose.Schema(
       trim: true,
       lowercase: true,
     },
+    emailToken: {
+      type: String,
+    },
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
     role: {
       type: String,
-      enum: ["User", "Editor", "Admin"],
+      enum: ["User", "Pro-User", "Editor", "Admin", "Super-Admin"],
       default: "User",
       required: [true, "Role is required"],
     },
@@ -45,6 +52,7 @@ userSchema.pre("save", async function (next) {
   // Hash password before saving to database
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
+
   next();
 });
 
