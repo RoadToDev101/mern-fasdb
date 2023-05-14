@@ -51,8 +51,8 @@ app.use(mongoSanitize());
 // Serve static files from the React app
 app.use(express.static(path.resolve(__dirname, "./client/build")));
 
-// Load and use authentication middleware for protected routes
 app.use("/api/auth", require("./server/routes/authRoutes"));
+// Use authentication and authorization middleware for below routes
 app.use(
   "/api/product",
   authenticateUser,

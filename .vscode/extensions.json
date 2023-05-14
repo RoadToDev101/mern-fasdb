@@ -7,6 +7,19 @@
     "dbaeumer.vscode-eslint",
     "kisstkondoros.vscode-gutter-preview",
     "wayou.vscode-todo-highlight",
-    "styled-components.vscode-styled-components"
+    "styled-components.vscode-styled-components",
+    "mongodb.mongodb-vscode",
+    "ms-edgedevtools.vscode-edge-devtools",
+    "Zignd.html-css-class-completion",
+    "streetsidesoftware.code-spell-checker",
+    "esbenp.prettier-vscode",
+    "rafamel.subtle-brackets",
+    "vscode.typescript-language-features",
+    "formulahendry.auto-rename-tag",
+    "vscode.json-language-features",
+    "vscode.emmet",
+    "sporiley.css-auto-prefix",
+    "shardulm94.trailing-spaces",
+    "DavidAnson.vscode-markdownlint"
   ]
 }

@@ -17,7 +17,7 @@ exports.sendVerificationEmail = async (req, res, email, emailToken) => {
     subject: "Email Verification",
     html: `<h1>Verify your email address</h1>
     <p>Please click the link below to verify your email address</p>
-    <a href="http://${req.headers.host}/verify-email/?emailToken=${emailToken}">Verify Email</a>`,
+    <a href="http://${req.headers.host}/verify-email/${emailToken}">Verify Email</a>`,
   };
 
   // Verify email using the transporter
@@ -26,7 +26,7 @@ exports.sendVerificationEmail = async (req, res, email, emailToken) => {
       console.log(err);
       return false;
     } else {
-      console.log("Verification Email sent to: " + email);
+      // console.log("Verification Email sent to: " + email);
       return true;
     }
   });

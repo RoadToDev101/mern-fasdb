@@ -5,7 +5,6 @@ const UnAuthenticatedError = require("../errors/unauthenticated");
 const attachCookies = require("../utils/attachCookies");
 const crypto = require("crypto");
 const nodemailer = require("../services/nodemailer");
-const e = require("express");
 
 exports.register = async (req, res) => {
   const { username, email, password } = req.body;
@@ -39,7 +38,7 @@ exports.register = async (req, res) => {
   attachCookies(res, token);
 
   // Send verification email
-  nodemailer.sendVerificationEmail(req, res, email, emailToken);
+  await nodemailer.sendVerificationEmail(req, res, email, emailToken);
 
   res.status(StatusCodes.CREATED).json({
     user: {
@@ -49,27 +48,29 @@ exports.register = async (req, res) => {
       emailToken: user.emailToken,
       role: user.role,
       EmailVerified: user.isEmailVerified,
+      msg: `Email sent to ${user.email}, please verify your email address.`,
     },
   });
 };
 
 exports.verifyEmail = async (req, res) => {
   const { emailToken } = req.query;
-  const user = await User.findOne({ emailToken });
+  // console.log(emailToken);
+  if (!emailToken) {
+    throw new BadRequestError("No email token!");
+  }
+  const user = await User.findOneAndUpdate(
+    { emailToken: emailToken },
+    { emailToken: null, isEmailVerified: true }
+  );
+  // console.log(user);
   if (!user) {
-    res.status(StatusCodes.BAD_REQUEST).json({
-      msg: "Invalid token, please try again",
-    });
-    return;
+    throw new BadRequestError("Invalid email token!");
   }
 
-  user.emailToken = null;
-  user.isEmailVerified = true;
-  await user.save();
   res.status(StatusCodes.OK).json({
     msg: "Email verified",
   });
-  res.redirect(`${req.headers.host}/register`);
 };
 
 exports.login = async (req, res) => {

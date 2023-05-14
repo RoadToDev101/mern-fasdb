@@ -29,7 +29,7 @@ function App() {
           <Route path="user-profile" element={<UserProfile />} />
         </Route>
         <Route path="register" element={<Register />} />
-        <Route path="verify-email" element={<VerifyEmail />} />
+        <Route path="verify-email/:emailToken" element={<VerifyEmail />} />
         <Route path="landing" element={<Landing />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
