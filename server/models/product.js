@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
-const uniqueValidator = require("mongoose-unique-validator");
 const uniqueArray = require("../middleware/uniqueArray");
 const enumData = require("../../client/src/data/index");
 
@@ -64,7 +63,7 @@ const modelSchema = new mongoose.Schema({
     enum: ["N/a", "Low", "Medium", "High", "Severe"],
     default: "N/a",
   },
-  features: {
+  feature: {
     headType: {
       type: String,
       enum: enumValues.headType,
@@ -220,16 +219,16 @@ const productSchema = new mongoose.Schema(
       default: true,
       required: [true, "Please provide active status"],
     },
-    models: [modelSchema],
+    model: [modelSchema],
     productionDrawingID: [
       {
         type: mongoose.Types.ObjectId,
         ref: "ProductionDrawing",
       },
     ],
-    urls: [
+    url: [
       {
-        url: {
+        hyperlink: {
           type: String,
           validate: {
             validator: function (v) {
@@ -264,8 +263,8 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-productSchema.plugin(uniqueValidator);
-modelSchema.plugin(uniqueValidator);
+// productSchema.plugin(uniqueValidator);
+// modelSchema.plugin(uniqueValidator);
 
 /*
  * corrosionResistanceAssign - a function that auto assign the corrosion resistance for each model in an array
@@ -284,11 +283,13 @@ modelSchema.plugin(uniqueValidator);
  * arrays before iterating over them.
  */
 async function corrosionResistanceAssign(next) {
-  const models = this.models || this.getUpdate().models;
-  const isUpdating = this.models ? false : true;
+  let models = this.model;
+  let isUpdating = !this.isNew;
+  if (isUpdating) {
+    models = this.getUpdate().model;
+  }
 
   if (!models || models.length === 0) {
-    console.log("No models found");
     return next();
   }
 
@@ -305,10 +306,6 @@ async function corrosionResistanceAssign(next) {
     const model = models[i];
     const material = model.material;
     const coatings = model.coatings;
-    // console.log(material);
-    // console.log(coatings);
-    // console.log(model.corrosionResistance);
-    // console.log(isUpdating);
 
     if (model.corrosionResistance !== "N/a" && isUpdating == false) continue;
 
@@ -350,14 +347,14 @@ productSchema.pre(
   "save",
   corrosionResistanceAssign,
   uniqueArray("application"),
-  uniqueArray("urls.url")
+  uniqueArray("url.hyperlink")
 );
 
 productSchema.pre(
   "findOneAndUpdate",
   corrosionResistanceAssign,
   uniqueArray("application"),
-  uniqueArray("urls.url")
+  uniqueArray("url.hyperlink")
 );
 
 const Product = mongoose.model("Product", productSchema);

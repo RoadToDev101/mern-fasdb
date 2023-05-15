@@ -24,7 +24,7 @@ const upload = multer({
 });
 
 exports.getAllDrawings = async (req, res) => {
-  const { drawingNameSearch, modelNameSearch } = req.query;
+  const { drawingNameSearch, productNameSearch } = req.query;
   // console.log(req.query);
 
   const queryObj = {};
@@ -33,10 +33,15 @@ exports.getAllDrawings = async (req, res) => {
   if (drawingNameSearch) {
     queryObj.drawingName = { $regex: drawingNameSearch, $options: "i" };
   }
-  // Filter documents based on the modelName field and ensure it matches the value of the modelNameSearch parameter
-  if (modelNameSearch) {
+  // Filter documents based on the modelName field and ensure it matches the value of the productNameSearch parameter
+  if (productNameSearch) {
+    const regex = new RegExp(productNameSearch, "i");
     const products = await Product.find({
-      modelName: { $regex: modelNameSearch, $options: "i" },
+      $or: [
+        { modelName: regex },
+        { "model.modelNumber": regex },
+        { "model.SKU.skuCode": regex },
+      ],
     });
     queryObj.productId = { $in: products.map((p) => p._id) };
   }
@@ -66,11 +71,11 @@ exports.getAllDrawings = async (req, res) => {
         version: 1,
         revisedDate: 1,
         createdBy: 1,
-        modelName: "$product.models.modelName",
+        modelName: "$product.model.modelName",
       },
     },
   ]).allowDiskUse(true);
-  console.log(drawings);
+  // console.log(drawings);
 
   const totalDrawings = await ProductionDrawing.countDocuments(queryObj);
 
@@ -106,7 +111,7 @@ exports.newDrawing = async (req, res) => {
   // Find the product with the matching modelName
   const product = await Product.findOne({ modelName });
   if (!product) {
-    throw new NotFoundError(`Product with modelName '${modelName}' not found`);
+    throw new NotFoundError(`Product with Model Name '${modelName}' not found`);
   }
 
   const file = req.file.buffer;
@@ -122,11 +127,14 @@ exports.newDrawing = async (req, res) => {
   });
   await productionDrawing.save();
 
-  // Update and save the productionDrawingID field of the product with the ID of the new production drawing
-  product.productionDrawingID.push(productionDrawing._id);
-  await product.save();
+  // Update the productionDrawingID field of the product with the ID of the new production drawing
+  await Product.updateOne(
+    { _id: product._id },
+    { $push: { productionDrawingID: productionDrawing._id } }
+  );
 
   res.status(StatusCodes.CREATED).json({
+    drawingId: productionDrawing._id,
     productId: product._id,
     drawingName,
     version,
@@ -153,11 +161,15 @@ exports.getDrawing = async (req, res) => {
 
 exports.deleteDrawing = async (req, res) => {
   const { id: drawingId } = req.params;
-  const drawing = await ProductionDrawing.findOneAndDelete({ _id: drawingId });
 
-  if (!drawing) {
-    throw new NotFoundError(`Drawing with id ${drawingId} not found`);
-  }
+  const drawingDeletionPromise = ProductionDrawing.findByIdAndDelete(drawingId);
+
+  const productUpdatePromise = Product.updateMany(
+    { productionDrawingID: drawingId },
+    { $pull: { productionDrawingID: drawingId } }
+  );
+
+  await Promise.all([drawingDeletionPromise, productUpdatePromise]);
 
   res.status(StatusCodes.ACCEPTED).json({
     msg: `Drawing deleted successfully`,

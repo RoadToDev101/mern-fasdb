@@ -11,17 +11,17 @@ const ProductCardsContainer = () => {
     isLoading,
     page,
     totalProducts,
-    modelNameSearch,
+    productNameSearch,
     companySearch,
     sortBy,
-    productTypeSearch,
+    productLineSearch,
     numOfPages,
   } = useAppContext();
 
   useEffect(() => {
     getProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [modelNameSearch, companySearch, sortBy, productTypeSearch, page]);
+  }, [productLineSearch, productNameSearch, companySearch, sortBy, page]);
 
   if (isLoading) {
     return <Loading center />;

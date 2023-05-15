@@ -2,6 +2,11 @@ const { Product } = require("../models/product.js");
 const { StatusCodes } = require("http-status-codes");
 const BadRequestError = require("../errors/bad-request");
 const NotFoundError = require("../errors/not-found");
+const {
+  driveType,
+  pointType,
+  shankType,
+} = require("../../client/src/data/index.js");
 
 exports.createProduct = async (req, res) => {
   const { productLine, modelName, company } = req.body;
@@ -21,27 +26,75 @@ exports.createProduct = async (req, res) => {
 };
 
 exports.getAllProducts = async (req, res) => {
-  const { productTypeSearch, modelNameSearch, companySearch, sortBy } =
-    req.query;
+  const {
+    productLineSearch,
+    productNameSearch,
+    companySearch,
+    applicationSearch,
+    materialSearch,
+    corrosionResistanceSearch,
+    coatingSearch,
+    headTypeSearch,
+    driveTypeSearch,
+    pointTypeSearch,
+    threadTypeSearch,
+    shankTypeSearch,
+    sortBy,
+  } = req.query;
 
   const queryObj = {};
 
   //Search criteria
-  if (productTypeSearch && productTypeSearch !== "all") {
-    queryObj.productLine = productTypeSearch;
+  if (productLineSearch && productLineSearch.length > 0) {
+    queryObj["productLine"] = { $in: productLineSearch };
   }
-  if (modelNameSearch) {
-    queryObj.modelName = { $regex: modelNameSearch, $options: "i" };
+  if (productNameSearch) {
+    const regex = new RegExp(productNameSearch, "i");
+    queryObj.$or = [
+      { modelName: regex },
+      { "model.modelNumber": regex },
+      { "model.SKU.skuCode": regex },
+    ];
   }
-  if (companySearch && companySearch !== "all") {
-    queryObj.company = companySearch;
+  if (companySearch && companySearch.length > 0) {
+    queryObj["company"] = { $in: companySearch };
   }
+  if (applicationSearch && applicationSearch.length > 0) {
+    queryObj["application"] = { $in: applicationSearch };
+  }
+  if (materialSearch && materialSearch.length > 0) {
+    queryObj["model.material"] = { $in: materialSearch };
+  }
+  if (corrosionResistanceSearch && corrosionResistanceSearch !== "all") {
+    queryObj["model.corrosionResistance"] = { $in: corrosionResistanceSearch };
+  }
+  if (coatingSearch && coatingSearch.length > 0) {
+    queryObj["model.coatings.coating"] = { $in: coatingSearch };
+  }
+  if (headTypeSearch && headTypeSearch.length > 0) {
+    queryObj["model.feature.headType"] = { $in: headTypeSearch };
+  }
+  if (driveTypeSearch && driveTypeSearch.length > 0) {
+    queryObj["model.feature.driveType"] = { $in: driveTypeSearch };
+  }
+  if (pointTypeSearch && pointTypeSearch.length > 0) {
+    queryObj["model.feature.pointType"] = { $in: pointTypeSearch };
+  }
+  if (threadTypeSearch && threadTypeSearch.length > 0) {
+    queryObj["model.feature.threadTypes.threadType"] = {
+      $in: threadTypeSearch,
+    };
+  }
+  if (shankTypeSearch && shankTypeSearch.length > 0) {
+    queryObj["model.feature.shankTypes.shankType"] = { $in: shankTypeSearch };
+  }
+  console.log(queryObj);
 
   let queryResult = Product.find(queryObj);
 
   //Sorting
-  if (sortBy === "a-z") queryResult = queryResult.sort(modelNameSearch);
-  if (sortBy === "z-a") queryResult = queryResult.sort(-modelNameSearch);
+  if (sortBy === "a-z") queryResult = queryResult.sort(productNameSearch);
+  if (sortBy === "z-a") queryResult = queryResult.sort(-productNameSearch);
   if (sortBy === "oldest") queryResult = queryResult.sort("updatedAt");
   if (sortBy === "latest") queryResult = queryResult.sort("-updatedAt");
 
@@ -67,7 +120,7 @@ exports.getAllProducts = async (req, res) => {
 exports.updateProduct = async (req, res) => {
   const { id: productId } = req.params;
   const { productLine, modelName, company } = req.body;
-  // console.log(req.body.models);
+  // console.log(req.body.model);
 
   // Validate request
   if (!productLine || !modelName || !company) {

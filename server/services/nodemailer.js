@@ -21,13 +21,10 @@ exports.sendVerificationEmail = async (req, res, email, emailToken) => {
   };
 
   // Verify email using the transporter
-  transporter.sendMail(verifyOptions, (err, info) => {
+  transporter.sendMail(verifyOptions, (err) => {
     if (err) {
-      console.log(err);
       return false;
-    } else {
-      // console.log("Verification Email sent to: " + email);
-      return true;
     }
+    return true;
   });
 };

@@ -49,9 +49,9 @@ const reducer = (state, action) => {
     case CLEAR_FILTERS:
       return {
         ...state,
-        companySearch: "all",
-        modelNameSearch: "",
-        productTypeSearch: "all",
+        companySearch: [],
+        productNameSearch: "",
+        productLineSearch: [],
         sortBy: "a-z",
       };
     case HANDLE_CHANGE:
