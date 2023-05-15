@@ -21,7 +21,8 @@ const errorHandlerMiddleware = (err, req, res, next) => {
   if (err.code && err.code === 11000) {
     defaultError.statusCode = StatusCodes.BAD_REQUEST;
     // Use the name of the duplicate field in the error message
-    defaultError.msg = `${Object.keys(err.keyValue)} field has to be unique`;
+    const duplicateField = Object.keys(err.keyValue)[0];
+    defaultError.msg = `This ${duplicateField.toUpperCase()} already exist!`;
   }
 
   // If the error is a Multer error, update the status code and message

@@ -12,7 +12,7 @@ import { useState, useMemo } from "react";
 const SearchContainer = () => {
   const [localSearch, setLocalSearch] = useState("");
   const {
-    productTypeSearch,
+    productLineSearch,
     companySearch,
     sortBy,
     handleChange,
@@ -49,20 +49,19 @@ const SearchContainer = () => {
         <div className="form-center">
           <FormRow
             labelText="Model Name"
-            name="modelNameSearch"
+            name="productNameSearch"
             value={localSearch}
             onChange={optimizedDebounce}
           />
           <FormRowSelect
             labelText="product Line"
-            name="productTypeSearch"
-            value={productTypeSearch}
+            name="productLineSearch"
+            value={productLineSearch}
             onChange={handleSearch}
             options={[
               { _id: 1, value: "Screw" },
               { _id: 2, value: "Nail" },
               { _id: 3, value: "Anchor" },
-              { _id: 4, value: "all", display: "All Product Types" },
             ]}
           />
           <FormRowSelect
@@ -74,7 +73,6 @@ const SearchContainer = () => {
               { _id: 1, value: "Simpson Strong-Tie" },
               { _id: 2, value: "Hilti" },
               { _id: 3, value: "DeWalt" },
-              { _id: 4, value: "all", display: "All Companies" },
             ]}
           />
           <FormRowSelect

@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const uniqueValidator = require("mongoose-unique-validator");
 const productionDrawingSchema = new mongoose.Schema(
   {
     productId: {
@@ -34,7 +33,7 @@ const productionDrawingSchema = new mongoose.Schema(
 );
 
 productionDrawingSchema.index({ drawingName: 1, version: 1 }, { unique: true });
-productionDrawingSchema.plugin(uniqueValidator);
+
 const ProductionDrawing = mongoose.model(
   "ProductionDrawing",
   productionDrawingSchema

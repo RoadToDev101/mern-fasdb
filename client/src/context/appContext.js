@@ -59,10 +59,15 @@ const initialState = {
   totalProducts: 0,
   page: 1,
   numOfPages: 1,
-  modelNameSearch: "",
-  productTypeSearch: "all",
-  companySearch: "all",
   sortBy: "a-z",
+  productNameSearch: "",
+  productLineSearch: [],
+  companySearch: [],
+  materialSearch: [],
+  corrosionResistanceSearch: [],
+  coatingSearch: [],
+  applicationSearch: [],
+  shankTypeSearch: [],
 };
 
 const AppContext = React.createContext();
@@ -218,7 +223,7 @@ const AppProvider = ({ children }) => {
       dispatch({ type: CREATE_PRODUCT_SUCCESS });
       dispatch({ type: CLEAR_VALUES });
     } catch (error) {
-      console.log(error.response);
+      // console.log(error.response);
       // If the user is not authorized, logout the user
       if (error.response.status !== 401) {
         dispatch({
@@ -231,13 +236,62 @@ const AppProvider = ({ children }) => {
   };
 
   const getProducts = async () => {
-    const { page, modelNameSearch, productTypeSearch, companySearch, sortBy } =
-      state;
-    const searchString = `?page=${page}&?productTypeSearch=${productTypeSearch}&companySearch=${companySearch}&sortBy=${sortBy}`;
-    let url = `/product/get-all-products${searchString}`;
-    if (modelNameSearch) {
-      url = url + `&modelNameSearch=${modelNameSearch}`;
+    const {
+      page,
+      sortBy,
+      productNameSearch,
+      productLineSearch,
+      companySearch,
+      materialSearch,
+      corrosionResistanceSearch,
+      coatingSearch,
+      applicationSearch,
+      shankTypeSearch,
+    } = state;
+    const searchParams = new URLSearchParams();
+    searchParams.append("page", page);
+    searchParams.append("sortBy", sortBy);
+    if (productNameSearch) {
+      searchParams.append("productNameSearch", productNameSearch);
     }
+    if (productLineSearch && productLineSearch.length > 0) {
+      productLineSearch.forEach((item) => {
+        searchParams.append("productLineSearch[]", item);
+      });
+    }
+    if (companySearch && companySearch.length > 0) {
+      companySearch.forEach((item) => {
+        searchParams.append("companySearch[]", item);
+      });
+    }
+    if (materialSearch && materialSearch.length > 0) {
+      materialSearch.forEach((item) => {
+        searchParams.append("materialSearch[]", item);
+      });
+    }
+    if (corrosionResistanceSearch && corrosionResistanceSearch.length > 0) {
+      corrosionResistanceSearch.forEach((item) => {
+        searchParams.append("corrosionResistanceSearch[]", item);
+      });
+    }
+    if (coatingSearch && coatingSearch.length > 0) {
+      coatingSearch.forEach((item) => {
+        searchParams.append("coatingSearch[]", item);
+      });
+    }
+    if (applicationSearch && applicationSearch.length > 0) {
+      applicationSearch.forEach((item) => {
+        searchParams.append("applicationSearch[]", item);
+      });
+    }
+    if (shankTypeSearch && shankTypeSearch.length > 0) {
+      shankTypeSearch.forEach((item) => {
+        searchParams.append("shankTypeSearch[]", item);
+      });
+    }
+
+    const url = `/product/get-all-products?${searchParams.toString()}`;
+
     dispatch({ type: GET_PRODUCTS_BEGIN });
     try {
       const { data } = await authFetch.get(url);

@@ -38,7 +38,10 @@ exports.register = async (req, res) => {
   attachCookies(res, token);
 
   // Send verification email
-  await nodemailer.sendVerificationEmail(req, res, email, emailToken);
+  const emailSent = await nodemailer.sendVerificationEmail(req, res, email, emailToken);
+  if (!emailSent) {
+    throw new BadRequestError("Something went wrong, please try again later!");
+  }
 
   res.status(StatusCodes.CREATED).json({
     user: {

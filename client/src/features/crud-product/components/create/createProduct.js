@@ -1,12 +1,12 @@
 import {
   FormRow,
   FormRowSelect,
-  FormRowMultiSelectCheckbox,
+  // FormRowMultiSelectCheckbox,
   Alert,
 } from "@components/index";
 import { useAppContext } from "@context/appContext";
 import Wrapper from "@wrappers/dashboardFormPage";
-import applicationList from "@data/application";
+//import applicationList from "@data/application";
 
 const CreateProduct = () => {
   const {
@@ -15,7 +15,7 @@ const CreateProduct = () => {
     productLine,
     company,
     modelName,
-    application,
+    //application,
     handleChange,
     clearValues,
     createProduct,
