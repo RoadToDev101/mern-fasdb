@@ -263,9 +263,6 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// productSchema.plugin(uniqueValidator);
-// modelSchema.plugin(uniqueValidator);
-
 /*
  * corrosionResistanceAssign - a function that auto assign the corrosion resistance for each model in an array
  *

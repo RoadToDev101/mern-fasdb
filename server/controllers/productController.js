@@ -2,11 +2,7 @@ const { Product } = require("../models/product.js");
 const { StatusCodes } = require("http-status-codes");
 const BadRequestError = require("../errors/bad-request");
 const NotFoundError = require("../errors/not-found");
-const {
-  driveType,
-  pointType,
-  shankType,
-} = require("../../client/src/data/index.js");
+const mongoose = require("mongoose");
 
 exports.createProduct = async (req, res) => {
   const { productLine, modelName, company } = req.body;
@@ -88,7 +84,7 @@ exports.getAllProducts = async (req, res) => {
   if (shankTypeSearch && shankTypeSearch.length > 0) {
     queryObj["model.feature.shankTypes.shankType"] = { $in: shankTypeSearch };
   }
-  console.log(queryObj);
+  // console.log(queryObj);
 
   let queryResult = Product.find(queryObj);
 
@@ -114,6 +110,51 @@ exports.getAllProducts = async (req, res) => {
     totalProducts, // Cant use products.length because of limit
     products,
     numOfPages: Math.ceil(totalProducts / limit),
+  });
+};
+
+exports.compareModels = async (req, res) => {
+  const { modelIds } = req.body;
+
+  if (!Array.isArray(modelIds) || modelIds.length < 2) {
+    throw new BadRequestError("Please provide at least two models to compare!");
+  }
+
+  const pipeline = [
+    {
+      $unwind: "$model",
+    },
+    {
+      $match: {
+        "model._id": {
+          $in: modelIds.map((id) => new mongoose.Types.ObjectId(id)),
+        },
+      },
+    },
+    {
+      $project: {
+        _id: "$model._id",
+        modelNumber: "$model.modelNumber",
+        material: "$model.material",
+        coatings: "$model.coatings",
+        corrosionResistance: "$model.corrosionResistance",
+        feature: "$model.feature",
+        // TODO: Add other necessary fields for comparison
+      },
+    },
+  ];
+
+  // Return the models with the specified ids
+  const models = await Product.aggregate(pipeline);
+
+  if (models.length !== modelIds.length) {
+    throw new NotFoundError("One or more models not found!");
+  }
+
+  res.status(StatusCodes.OK).json({
+    success: true,
+    totalModels: models.length,
+    models,
   });
 };
 

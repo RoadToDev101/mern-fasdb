@@ -25,7 +25,6 @@ const upload = multer({
 
 exports.getAllDrawings = async (req, res) => {
   const { drawingNameSearch, productNameSearch } = req.query;
-  // console.log(req.query);
 
   const queryObj = {};
 
@@ -33,7 +32,6 @@ exports.getAllDrawings = async (req, res) => {
   if (drawingNameSearch) {
     queryObj.drawingName = { $regex: drawingNameSearch, $options: "i" };
   }
-  // Filter documents based on the modelName field and ensure it matches the value of the productNameSearch parameter
   if (productNameSearch) {
     const regex = new RegExp(productNameSearch, "i");
     const products = await Product.find({
@@ -69,9 +67,14 @@ exports.getAllDrawings = async (req, res) => {
         _id: 0,
         drawingName: 1,
         version: 1,
-        revisedDate: 1,
+        revisedDate: {
+          $dateToString: {
+            format: "%Y-%m-%dT%H:%M:%S.%LZ",
+            date: "$revisedDate",
+          },
+        },
         createdBy: 1,
-        modelName: "$product.model.modelName",
+        modelName: "$product.modelName",
       },
     },
   ]).allowDiskUse(true);
@@ -82,11 +85,11 @@ exports.getAllDrawings = async (req, res) => {
   res.status(StatusCodes.OK).json({
     success: true,
     totalDrawings,
-    drawingName: drawings.map((drawing) => drawing.drawingName),
-    version: drawings.map((drawing) => drawing.version),
-    revisedDate: drawings.map((drawing) => drawing.revisedDate),
-    createdBy: drawings.map((drawing) => drawing.createdBy),
-    modelName: drawings.map((drawing) => drawing.modelName),
+    drawingName: drawings.map((drawing) => drawing.drawingName).join(", "),
+    version: drawings.map((drawing) => drawing.version).join(", "),
+    revisedDate: drawings.map((drawing) => drawing.revisedDate).join(", "),
+    createdBy: drawings.map((drawing) => drawing.createdBy).join(", "),
+    modelName: drawings.map((drawing) => drawing.modelName).join(", "),
     numOfPages: Math.ceil(totalDrawings / limit),
   });
 };
@@ -115,6 +118,9 @@ exports.newDrawing = async (req, res) => {
   }
 
   const file = req.file.buffer;
+  if (!file) {
+    throw new BadRequestError("Please upload a file");
+  }
 
   // Create a new production drawing document and save it to the database
   const productionDrawing = new ProductionDrawing({
@@ -169,9 +175,15 @@ exports.deleteDrawing = async (req, res) => {
     { $pull: { productionDrawingID: drawingId } }
   );
 
-  await Promise.all([drawingDeletionPromise, productUpdatePromise]);
-
-  res.status(StatusCodes.ACCEPTED).json({
-    msg: `Drawing deleted successfully`,
-  });
+  await Promise.all([drawingDeletionPromise, productUpdatePromise])
+    .then(() => {
+      res.status(StatusCodes.ACCEPTED).json({
+        msg: `Drawing deleted successfully`,
+      });
+    })
+    .catch(() => {
+      throw new BadRequestError(
+        `Can not delete drawing with ID: ${drawingId}, please try again`
+      );
+    });
 };
