@@ -4,16 +4,16 @@ const logSchema = new mongoose.Schema(
   {
     method: {
       type: String,
-      //enum: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"],
     },
     url: { type: String },
     statusCode: { type: Number },
-    responseTime: { type: Number },
     userId: {
       type: mongoose.Types.ObjectId,
       ref: "User",
       required: [true, "Please provide user"],
     },
+    requestBody: { type: Object },
+    requestParams: { type: Object },
   },
   { timestamps: { createdAt: true, updatedAt: false } }
 );

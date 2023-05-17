@@ -37,8 +37,15 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["User", "Pro-User", "Editor", "Admin", "Super-Admin"],
-      default: "User",
+      enum: [
+        "Unverified",
+        "User",
+        "Pro-User",
+        "Editor",
+        "Admin",
+        "Super-Admin",
+      ],
+      default: "Unverified",
       required: [true, "Role is required"],
     },
   },

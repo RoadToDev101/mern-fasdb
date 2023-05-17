@@ -20,9 +20,14 @@ const accessControlLists = [
     roles: ["Editor", "Admin", "Super-Admin"],
   },
   {
-    path: "/get-products",
+    path: "/create-product",
+    methods: ["POST"],
+    roles: ["Editor", "Admin", "Super-Admin"],
+  },
+  {
+    path: "/get-all-products",
     methods: ["GET"],
-    roles: ["User", "Pro-User", "Editor", "Admin", "Super-Admin"],
+    roles: ["Unverified", "User", "Pro-User", "Editor", "Admin", "Super-Admin"],
   },
   {
     path: "/get-product",
@@ -30,9 +35,9 @@ const accessControlLists = [
     roles: ["User", "Pro-User", "Editor", "Admin", "Super-Admin"],
   },
   {
-    path: "/create-product",
-    methods: ["POST"],
-    roles: ["Editor", "Admin", "Super-Admin"],
+    path: "/compare-models",
+    methods: ["GET"],
+    roles: ["User", "Pro-User", "Editor", "Admin", "Super-Admin"],
   },
   {
     path: "/update-product",
@@ -47,7 +52,7 @@ const accessControlLists = [
   {
     path: "/update-username-email",
     methods: ["PATCH"],
-    roles: ["User", "Pro-User", "Editor", "Admin", "Super-Admin"],
+    roles: ["Unverified", "User", "Pro-User", "Editor", "Admin", "Super-Admin"],
   },
   {
     path: "/update-role",
@@ -57,10 +62,10 @@ const accessControlLists = [
   {
     path: "/change-password",
     methods: ["PATCH"],
-    roles: ["User", "Pro-User", "Editor", "Admin", "Super-Admin"],
+    roles: ["Unverified", "User", "Pro-User", "Editor", "Admin", "Super-Admin"],
   },
   {
-    path: "/delete-user/:id",
+    path: "/delete-user",
     methods: ["DELETE"],
     roles: ["Admin", "Super-Admin"],
   },

@@ -161,7 +161,6 @@ exports.compareModels = async (req, res) => {
 exports.updateProduct = async (req, res) => {
   const { id: productId } = req.params;
   const { productLine, modelName, company } = req.body;
-  // console.log(req.body.model);
 
   // Validate request
   if (!productLine || !modelName || !company) {

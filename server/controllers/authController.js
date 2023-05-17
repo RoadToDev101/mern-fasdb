@@ -38,10 +38,19 @@ exports.register = async (req, res) => {
   attachCookies(res, token);
 
   // Send verification email
-  const emailSent = await nodemailer.sendVerificationEmail(req, res, email, emailToken);
-  if (!emailSent) {
+  const emailSent = await nodemailer.sendVerificationEmail(
+    req,
+    res,
+    email,
+    emailToken
+  );
+  Promise.all([emailSent, user]).catch(() => {
     throw new BadRequestError("Something went wrong, please try again later!");
-  }
+  });
+
+  // if (!emailSent) {
+  //   throw new BadRequestError("Something went wrong, please try again later!");
+  // }
 
   res.status(StatusCodes.CREATED).json({
     user: {
@@ -57,6 +66,23 @@ exports.register = async (req, res) => {
 };
 
 exports.verifyEmail = async (req, res) => {
+  const requestUser = req.user?.userId;
+  // console.log(req.user);
+  if (!requestUser) {
+    throw new BadRequestError("User not found!");
+  }
+  // console.log(requestUser);
+  const alreadyVerified = await User.findOne({
+    _id: requestUser,
+    isEmailVerified: true,
+  });
+
+  if (alreadyVerified) {
+    return res.status(StatusCodes.ACCEPTED).json({
+      msg: "Email already verified",
+    });
+  }
+
   const { emailToken } = req.query;
   // console.log(emailToken);
   if (!emailToken) {
@@ -64,7 +90,7 @@ exports.verifyEmail = async (req, res) => {
   }
   const user = await User.findOneAndUpdate(
     { emailToken: emailToken },
-    { emailToken: null, isEmailVerified: true }
+    { role: "User", emailToken: null, isEmailVerified: true }
   );
   // console.log(user);
   if (!user) {
