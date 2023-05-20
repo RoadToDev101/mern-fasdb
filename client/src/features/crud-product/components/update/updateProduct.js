@@ -44,6 +44,7 @@ const UpdateProduct = () => {
     //     target: { name: e.target.name, value: e.target.value.split(",") },
     //   });
     // } else {
+      console.log(e);
     handleChange(e);
     // }
     // console.log(e.target.name, e.target.value);
