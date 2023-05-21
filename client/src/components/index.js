@@ -1,6 +1,6 @@
 import FormRow from "./form/formRow";
 import FormRowSelect from "./form/formRowSelect";
-import FormRowMultiSelectCheckbox from "./form/formRowMultiSelectCheckbox";
+import FormRowMultiSelect from "./form/formRowMultiSelect";
 import Logo from "./ui/logo";
 import Alert from "./ui/alert";
 import Loading from "./ui/loading";
@@ -10,7 +10,7 @@ export {
   Logo,
   FormRow,
   FormRowSelect,
-  FormRowMultiSelectCheckbox,
+  FormRowMultiSelect,
   Alert,
   Loading,
   Pagination,

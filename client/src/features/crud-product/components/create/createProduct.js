@@ -1,12 +1,12 @@
 import {
   FormRow,
   FormRowSelect,
-  // FormRowMultiSelectCheckbox,
+  FormRowMultiSelect,
   Alert,
 } from "@components/index";
 import { useAppContext } from "@context/appContext";
 import Wrapper from "@wrappers/dashboardFormPage";
-//import applicationList from "@data/application";
+import applicationList from "@data/application";
 
 const CreateProduct = () => {
   const {
@@ -15,7 +15,7 @@ const CreateProduct = () => {
     productLine,
     company,
     modelName,
-    //application,
+    application,
     handleChange,
     clearValues,
     createProduct,
@@ -36,53 +36,49 @@ const CreateProduct = () => {
       <form className="form">
         {showAlert && <Alert />}
         <div className="form-center">
-          <div className="form-section">
-            {/* <label>General Info</label> */}
-            <FormRowSelect
-              labelText="product Line"
-              name="productLine"
-              value={productLine}
-              onChange={handleProductInput}
-              options={[
-                { _id: 1, value: "Screw" },
-                { _id: 2, value: "Nail" },
-                { _id: 3, value: "Anchor" },
-              ]}
-            />
-          </div>
-          {/* <div className="form-section">
-            <FormRowMultiSelectCheckbox
-              labelText="Application"
-              name="application"
-              value={application}
-              onChange={handleProductInput}
-              //Get the options from the application.json file
-              options={applicationList}
-            />
-          </div> */}
-          <div className="form-section">
-            <FormRowSelect
-              labelText="Company"
-              name="company"
-              value={company}
-              onChange={handleProductInput}
-              options={[
-                { _id: 1, value: "Simpson Strong-Tie" },
-                { _id: 2, value: "Hilti" },
-                { _id: 3, value: "DeWalt" },
-              ]}
-            />
-          </div>
-          <div className="form-section">
-            <FormRow
-              labelText="Model Name"
-              name="modelName"
-              value={modelName}
-              onChange={handleProductInput}
-            />
-          </div>
+          {/* <label>General Info</label> */}
+          <FormRowSelect
+            labelText="product Line"
+            name="productLine"
+            value={productLine}
+            onChange={handleProductInput}
+            options={[
+              { _id: 1, value: "Screw" },
+              { _id: 2, value: "Nail" },
+              { _id: 3, value: "Anchor" },
+            ]}
+          />
+
+          <FormRowMultiSelect
+            labelText="Application"
+            name="application"
+            value={application}
+            onChange={handleProductInput}
+            //Get the options from the application.json file
+            options={applicationList}
+          />
+
+          <FormRowSelect
+            labelText="Company"
+            name="company"
+            value={company}
+            onChange={handleProductInput}
+            options={[
+              { _id: 1, value: "Simpson Strong-Tie" },
+              { _id: 2, value: "Hilti" },
+              { _id: 3, value: "DeWalt" },
+            ]}
+          />
+
+          <FormRow
+            labelText="Model Name"
+            name="modelName"
+            value={modelName}
+            onChange={handleProductInput}
+          />
         </div>
       </form>
+
       {productLine && (
         <div className="btn-container">
           <button
