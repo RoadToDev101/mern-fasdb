@@ -49,15 +49,6 @@ const CreateProduct = () => {
             ]}
           />
 
-          <FormRowMultiSelect
-            labelText="Application"
-            name="application"
-            value={application}
-            onChange={handleProductInput}
-            //Get the options from the application.json file
-            options={applicationList}
-          />
-
           <FormRowSelect
             labelText="Company"
             name="company"
@@ -76,30 +67,38 @@ const CreateProduct = () => {
             value={modelName}
             onChange={handleProductInput}
           />
+          <FormRowMultiSelect
+            labelText="Application"
+            name="application"
+            value={application}
+            onChange={handleProductInput}
+            //Get the options from the application.json file
+            options={applicationList}
+          />
+
+          {productLine && (
+            <div className="btn-container">
+              <button
+                type="submit"
+                className="btn btn-block submit-btn"
+                disabled={isLoading}
+                onClick={handleSubmit}
+              >
+                Add
+              </button>
+              <button
+                className="btn btn-block clear-btn"
+                onClick={(e) => {
+                  e.preventDefault();
+                  clearValues();
+                }}
+              >
+                Clear all
+              </button>
+            </div>
+          )}
         </div>
       </form>
-
-      {productLine && (
-        <div className="btn-container">
-          <button
-            type="submit"
-            className="btn btn-block submit-btn"
-            disabled={isLoading}
-            onClick={handleSubmit}
-          >
-            Add
-          </button>
-          <button
-            className="btn btn-block clear-btn"
-            onClick={(e) => {
-              e.preventDefault();
-              clearValues();
-            }}
-          >
-            Clear all
-          </button>
-        </div>
-      )}
     </Wrapper>
   );
 };

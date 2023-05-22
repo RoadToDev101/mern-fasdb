@@ -4,6 +4,8 @@ const productController = require("../controllers/productController.js");
 const requestLogger = require("../middleware/requestLogger");
 
 router.post("/create-product", productController.createProduct, requestLogger);
+router.post("/create-model", productController.createModel, requestLogger);
+router.post("/create-sku", productController.createSKU, requestLogger);
 router.get("/get-all-products", productController.getAllProducts);
 router.get("/compare-models", productController.compareModels);
 router.patch(
@@ -11,6 +13,8 @@ router.patch(
   productController.updateProduct,
   requestLogger
 );
+router.patch("/update-model/:id", productController.updateModel, requestLogger);
+router.patch("/update-sku/:id", productController.updateSKU, requestLogger);
 router.delete(
   "/delete-product/:id",
   productController.deleteProduct,

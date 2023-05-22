@@ -25,6 +25,16 @@ const accessControlLists = [
     roles: ["Editor", "Admin", "Super-Admin"],
   },
   {
+    path: "/create-model",
+    methods: ["POST"],
+    roles: ["Editor", "Admin", "Super-Admin"],
+  },
+  {
+    path: "/create-sku",
+    methods: ["POST"],
+    roles: ["Editor", "Admin", "Super-Admin"],
+  },
+  {
     path: "/get-all-products",
     methods: ["GET"],
     roles: ["Unverified", "User", "Pro-User", "Editor", "Admin", "Super-Admin"],
@@ -40,7 +50,17 @@ const accessControlLists = [
     roles: ["User", "Pro-User", "Editor", "Admin", "Super-Admin"],
   },
   {
-    path: "/update-product",
+    path: "/update-product/:id",
+    methods: ["PATCH"],
+    roles: ["Editor", "Admin", "Super-Admin"],
+  },
+  {
+    path: "/update-model/:id",
+    methods: ["PATCH"],
+    roles: ["Editor", "Admin", "Super-Admin"],
+  },
+  {
+    path: "/update-sku/:id",
     methods: ["PATCH"],
     roles: ["Editor", "Admin", "Super-Admin"],
   },

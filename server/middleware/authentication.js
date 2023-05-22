@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const authenticateUser = async (req, res, next) => {
   const token = req.cookies.token;
-  if (!token) throw new UnAuthenticatedError("No token, authorization denied");
+  if (!token) throw new UnAuthenticatedError("No token, authentication denied");
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
     // console.log(payload);

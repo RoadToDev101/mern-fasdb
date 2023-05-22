@@ -1,8 +1,9 @@
 const { Product } = require("../models/product.js");
+const { Model } = require("../models/product-model.js");
+const { SKU } = require("../models/model-sku.js");
 const { StatusCodes } = require("http-status-codes");
 const BadRequestError = require("../errors/bad-request");
 const NotFoundError = require("../errors/not-found");
-const mongoose = require("mongoose");
 
 exports.createProduct = async (req, res) => {
   const { productLine, modelName, company } = req.body;
@@ -18,6 +19,73 @@ exports.createProduct = async (req, res) => {
   await newProduct.save();
   res.status(StatusCodes.CREATED).json({
     newProduct,
+    msg: "Product created successfully",
+  });
+};
+
+exports.createModel = async (req, res) => {
+  const { modelName, modelNumber, material } = req.body;
+  // Validate request
+  if (!modelName || !modelNumber || !material) {
+    throw new BadRequestError("Please provide all values!");
+  }
+
+  const existingProduct = await Product.findOne({ modelName });
+  if (!existingProduct) {
+    throw new NotFoundError(`Product with Model Name '${modelName}' not found`);
+  }
+
+  req.body.createdBy = req.user.userId;
+  req.body.updatedBy = req.user.userId;
+
+  const newModel = new Model({
+    productId: existingProduct._id,
+    ...req.body,
+  });
+  await newModel.save();
+
+  await Product.updateOne(
+    { _id: existingProduct._id },
+    { $push: { model: newModel._id } }
+  );
+
+  res.status(StatusCodes.CREATED).json({
+    newModel,
+    msg: "Model created successfully",
+  });
+};
+
+exports.createSKU = async (req, res) => {
+  const { modelNumber, skuCode } = req.body;
+  // Validate request
+  if (!skuCode) {
+    throw new BadRequestError("Please provide SKU Code!");
+  }
+
+  const existingModel = await Model.findOne({ modelNumber });
+  if (!existingModel) {
+    throw new NotFoundError(
+      `Model with Model Number '${modelNumber}' not found`
+    );
+  }
+
+  req.body.createdBy = req.user.userId;
+  req.body.updatedBy = req.user.userId;
+
+  const newSKU = new SKU({
+    modelId: existingModel._id,
+    ...req.body,
+  });
+  await newSKU.save();
+
+  await Model.updateOne(
+    { _id: existingModel._id },
+    { $push: { SKU: newSKU._id } }
+  );
+
+  res.status(StatusCodes.CREATED).json({
+    newSKU,
+    msg: "SKU created successfully",
   });
 };
 
@@ -38,78 +106,133 @@ exports.getAllProducts = async (req, res) => {
     sortBy,
   } = req.query;
 
-  const queryObj = {};
+  const pipeline = [];
 
-  //Search criteria
+  // Lookup stage for Model collection
+  pipeline.push({
+    $lookup: {
+      from: "models",
+      localField: "model",
+      foreignField: "_id",
+      as: "modelData",
+    },
+  });
+
+  // Unwind stage for Model array
+  pipeline.push({ $unwind: "$modelData" });
+
+  // Lookup stage for SKU collection
+  pipeline.push({
+    $lookup: {
+      from: "skus",
+      localField: "modelData.SKU",
+      foreignField: "_id",
+      as: "skuData",
+    },
+  });
+
+  // Unwind stage for SKU array
+  pipeline.push({ $unwind: "$skuData" });
+
+  // Match stage for search criteria
+  const matchStage = {};
+
   if (productLineSearch && productLineSearch.length > 0) {
-    queryObj["productLine"] = { $in: productLineSearch };
+    matchStage.productLine = { $in: productLineSearch };
   }
+
   if (productNameSearch) {
     const regex = new RegExp(productNameSearch, "i");
-    queryObj.$or = [
+    matchStage.$or = [
       { modelName: regex },
-      { "model.modelNumber": regex },
-      { "model.SKU.skuCode": regex },
+      { "modelData.modelNumber": regex },
+      { "modelData.skuData.skuCode": regex },
     ];
   }
+
   if (companySearch && companySearch.length > 0) {
-    queryObj["company"] = { $in: companySearch };
+    matchStage.company = { $in: companySearch };
   }
+
   if (applicationSearch && applicationSearch.length > 0) {
-    queryObj["application"] = { $in: applicationSearch };
+    matchStage.application = { $in: applicationSearch };
   }
+
   if (materialSearch && materialSearch.length > 0) {
-    queryObj["model.material"] = { $in: materialSearch };
+    matchStage["modelData.material"] = { $in: materialSearch };
   }
+
   if (corrosionResistanceSearch && corrosionResistanceSearch !== "all") {
-    queryObj["model.corrosionResistance"] = { $in: corrosionResistanceSearch };
+    matchStage["modelData.corrosionResistance"] = {
+      $in: corrosionResistanceSearch,
+    };
   }
+
   if (coatingSearch && coatingSearch.length > 0) {
-    queryObj["model.coatings.coating"] = { $in: coatingSearch };
+    matchStage["modelData.coatings.coating"] = { $in: coatingSearch };
   }
+
   if (headTypeSearch && headTypeSearch.length > 0) {
-    queryObj["model.feature.headType"] = { $in: headTypeSearch };
+    matchStage["modelData.feature.headType"] = { $in: headTypeSearch };
   }
+
   if (driveTypeSearch && driveTypeSearch.length > 0) {
-    queryObj["model.feature.driveType"] = { $in: driveTypeSearch };
+    matchStage["modelData.feature.driveType"] = { $in: driveTypeSearch };
   }
+
   if (pointTypeSearch && pointTypeSearch.length > 0) {
-    queryObj["model.feature.pointType"] = { $in: pointTypeSearch };
+    matchStage["modelData.feature.pointType"] = { $in: pointTypeSearch };
   }
+
   if (threadTypeSearch && threadTypeSearch.length > 0) {
-    queryObj["model.feature.threadTypes.threadType"] = {
+    matchStage["modelData.feature.threadTypes.threadType"] = {
       $in: threadTypeSearch,
     };
   }
+
   if (shankTypeSearch && shankTypeSearch.length > 0) {
-    queryObj["model.feature.shankTypes.shankType"] = { $in: shankTypeSearch };
+    matchStage["modelData.feature.shankTypes.shankType"] = {
+      $in: shankTypeSearch,
+    };
   }
-  // console.log(queryObj);
 
-  let queryResult = Product.find(queryObj);
+  pipeline.push({ $match: matchStage });
 
-  //Sorting
-  if (sortBy === "a-z") queryResult = queryResult.sort(productNameSearch);
-  if (sortBy === "z-a") queryResult = queryResult.sort(-productNameSearch);
-  if (sortBy === "oldest") queryResult = queryResult.sort("updatedAt");
-  if (sortBy === "latest") queryResult = queryResult.sort("-updatedAt");
+  // Sorting
+  const sortStage = {};
 
-  //Pagination
+  if (sortBy === "a-z") {
+    sortStage.modelName = 1;
+  } else if (sortBy === "z-a") {
+    sortStage.modelName = -1;
+  } else if (sortBy === "oldest") {
+    sortStage.updatedAt = 1;
+  } else if (sortBy === "latest") {
+    sortStage.updatedAt = -1;
+  }
+
+  pipeline.push({ $sort: sortStage });
+
+  // Pagination
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
-  const startIndex = (page - 1) * limit;
+  const skip = (page - 1) * limit;
 
-  queryResult = queryResult.skip(startIndex).limit(limit);
+  pipeline.push({ $skip: skip });
+  pipeline.push({ $limit: limit });
 
-  const products = await queryResult;
+  // console.log("Pipeline:", JSON.stringify(pipeline, null, 2));
+  const products = await Product.aggregate(pipeline);
+  // console.log("Products:", JSON.stringify(products, null, 2));
+  const totalProducts = await Product.countDocuments(matchStage);
+  const numOfPages = Math.ceil(totalProducts / limit);
 
-  const totalProducts = await Product.countDocuments(queryObj);
-
-  res.status(StatusCodes.OK).json({
-    success: true,
-    totalProducts, // Cant use products.length because of limit
+  res.json({
     products,
-    numOfPages: Math.ceil(totalProducts / limit),
+    page,
+    limit,
+    totalProducts,
+    numOfPages,
   });
 };
 
@@ -120,32 +243,8 @@ exports.compareModels = async (req, res) => {
     throw new BadRequestError("Please provide at least two models to compare!");
   }
 
-  const pipeline = [
-    {
-      $unwind: "$model",
-    },
-    {
-      $match: {
-        "model._id": {
-          $in: modelIds.map((id) => new mongoose.Types.ObjectId(id)),
-        },
-      },
-    },
-    {
-      $project: {
-        _id: "$model._id",
-        modelNumber: "$model.modelNumber",
-        material: "$model.material",
-        coatings: "$model.coatings",
-        corrosionResistance: "$model.corrosionResistance",
-        feature: "$model.feature",
-        // TODO: Add other necessary fields for comparison
-      },
-    },
-  ];
-
   // Return the models with the specified ids
-  const models = await Product.aggregate(pipeline);
+  const models = await Model.find({ _id: { $in: modelIds } });
 
   if (models.length !== modelIds.length) {
     throw new NotFoundError("One or more models not found!");
@@ -185,15 +284,105 @@ exports.updateProduct = async (req, res) => {
   });
 };
 
+exports.updateModel = async (req, res) => {
+  const { id: modelId } = req.params;
+  const { modelNumber, material } = req.body;
+
+  if (!modelNumber || !material) {
+    throw new BadRequestError("Please provide all values!");
+  }
+
+  const updatedBy = req.user.userId;
+
+  const result = await Model.findOneAndUpdate(
+    { _id: modelId },
+    { ...req.body, updatedBy },
+    { new: true }
+  );
+
+  if (!result) {
+    throw new NotFoundError(`Model with id ${modelId} not found!`);
+  }
+
+  res.status(StatusCodes.OK).json({
+    success: true,
+    updatedModel: result,
+  });
+};
+
+exports.updateSKU = async (req, res) => {
+  const { id: skuId } = req.params;
+  const { skuCode } = req.body;
+
+  if (!skuCode) {
+    throw new BadRequestError("Please provide SKU code!");
+  }
+
+  const updatedBy = req.user.userId;
+
+  const result = await SKU.findOneAndUpdate(
+    { _id: skuId },
+    { ...req.body, updatedBy },
+    { new: true }
+  );
+
+  if (!result) {
+    throw new NotFoundError(`SKU with id ${skuId} not found!`);
+  }
+
+  res.status(StatusCodes.OK).json({
+    success: true,
+    updatedSKU: result,
+  });
+};
+
 exports.deleteProduct = async (req, res) => {
   const { id: productId } = req.params;
-  const deletedProduct = await Product.findOneAndDelete({ _id: productId });
+  const productDeletionPromise = Product.findOneAndDelete({ _id: productId });
+  const models = await Model.find({ productId: productId });
+  const modelDeletionPromise = Model.deleteMany({ productId: productId });
+  const skuDeletionPromise = SKU.deleteMany({
+    modelId: { $in: models.map((m) => m._id) },
+  });
 
+  const [deletedProduct] = await Promise.all([productDeletionPromise]);
   if (!deletedProduct) {
     throw new NotFoundError(`Product with id ${productId} not found!`);
   }
 
+  await Promise.all([modelDeletionPromise, skuDeletionPromise]);
+
   res.status(StatusCodes.ACCEPTED).json({
     msg: "Product deleted successfully",
+  });
+};
+
+exports.deleteModel = async (req, res) => {
+  const { id: modelId } = req.params;
+  const modelDeletionPromise = Model.findOneAndDelete({ _id: modelId });
+  const skuDeletionPromise = SKU.deleteMany({ modelId: modelId });
+
+  const [deletedModel] = await Promise.all([modelDeletionPromise]);
+  if (!deletedModel) {
+    throw new NotFoundError(`Model with id ${modelId} not found!`);
+  }
+
+  await Promise.all([skuDeletionPromise]);
+
+  res.status(StatusCodes.ACCEPTED).json({
+    msg: "Model deleted successfully",
+  });
+};
+
+exports.deleteSKU = async (req, res) => {
+  const { id: skuId } = req.params;
+  const deletedSKU = await SKU.findOneAndDelete({ _id: skuId });
+
+  if (!deletedSKU) {
+    throw new NotFoundError(`SKU with id ${skuId} not found!`);
+  }
+
+  res.status(StatusCodes.ACCEPTED).json({
+    msg: "SKU deleted successfully",
   });
 };
