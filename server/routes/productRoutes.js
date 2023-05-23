@@ -20,5 +20,11 @@ router.delete(
   productController.deleteProduct,
   requestLogger
 );
+router.delete(
+  "/delete-model/:id",
+  productController.deleteModel,
+  requestLogger
+);
+router.delete("/delete-sku/:id", productController.deleteSKU, requestLogger);
 
 module.exports = router;

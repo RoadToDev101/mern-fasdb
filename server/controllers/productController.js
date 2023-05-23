@@ -146,7 +146,7 @@ exports.getAllProducts = async (req, res) => {
     matchStage.$or = [
       { modelName: regex },
       { "modelData.modelNumber": regex },
-      { "modelData.skuData.skuCode": regex },
+      { "skuData.skuCode": regex },
     ];
   }
 
@@ -338,19 +338,17 @@ exports.updateSKU = async (req, res) => {
 
 exports.deleteProduct = async (req, res) => {
   const { id: productId } = req.params;
-  const productDeletionPromise = Product.findOneAndDelete({ _id: productId });
-  const models = await Model.find({ productId: productId });
-  const modelDeletionPromise = Model.deleteMany({ productId: productId });
-  const skuDeletionPromise = SKU.deleteMany({
-    modelId: { $in: models.map((m) => m._id) },
-  });
 
-  const [deletedProduct] = await Promise.all([productDeletionPromise]);
+  const deletedProduct = await Product.findOneAndDelete({ _id: productId });
   if (!deletedProduct) {
     throw new NotFoundError(`Product with id ${productId} not found!`);
   }
 
-  await Promise.all([modelDeletionPromise, skuDeletionPromise]);
+  const models = await Model.find({ productId: productId });
+  const modelIds = models.map((m) => m._id);
+
+  await Model.deleteMany({ productId: productId });
+  await SKU.deleteMany({ modelId: { $in: modelIds } });
 
   res.status(StatusCodes.ACCEPTED).json({
     msg: "Product deleted successfully",
@@ -359,15 +357,14 @@ exports.deleteProduct = async (req, res) => {
 
 exports.deleteModel = async (req, res) => {
   const { id: modelId } = req.params;
-  const modelDeletionPromise = Model.findOneAndDelete({ _id: modelId });
-  const skuDeletionPromise = SKU.deleteMany({ modelId: modelId });
 
-  const [deletedModel] = await Promise.all([modelDeletionPromise]);
+  const deletedModel = await Model.findByIdAndDelete(modelId);
   if (!deletedModel) {
     throw new NotFoundError(`Model with id ${modelId} not found!`);
   }
 
-  await Promise.all([skuDeletionPromise]);
+  await Product.updateMany({ model: modelId }, { $pull: { model: modelId } });
+  await SKU.deleteMany({ modelId: modelId });
 
   res.status(StatusCodes.ACCEPTED).json({
     msg: "Model deleted successfully",
@@ -376,11 +373,14 @@ exports.deleteModel = async (req, res) => {
 
 exports.deleteSKU = async (req, res) => {
   const { id: skuId } = req.params;
-  const deletedSKU = await SKU.findOneAndDelete({ _id: skuId });
+
+  const deletedSKU = await SKU.findByIdAndDelete(skuId);
 
   if (!deletedSKU) {
     throw new NotFoundError(`SKU with id ${skuId} not found!`);
   }
+
+  await Model.updateMany({ SKU: skuId }, { $pull: { SKU: skuId } });
 
   res.status(StatusCodes.ACCEPTED).json({
     msg: "SKU deleted successfully",

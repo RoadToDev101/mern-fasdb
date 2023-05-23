@@ -226,7 +226,7 @@ async function corrosionResistanceAssign(next) {
   let corrosionResistanceLevel = "N/a";
 
   const materialObj = materialLookup[material];
-  console.log("materialObj: ", materialObj);
+  // console.log("materialObj: ", materialObj);
   if (
     coatings.length === 0 &&
     materialObj &&
@@ -237,7 +237,7 @@ async function corrosionResistanceAssign(next) {
     for (let j = 0; j < coatings.length; j++) {
       const coatingValue = coatings[j].coating;
       const coatingObj = coatingLookup[coatingValue];
-      console.log("coatingObj: ", coatingObj);
+      // console.log("coatingObj: ", coatingObj);
       if (coatingObj && coatingObj.corrosionResistanceLevel) {
         corrosionResistanceLevel = coatingObj.corrosionResistanceLevel;
         break;
@@ -251,11 +251,27 @@ async function corrosionResistanceAssign(next) {
       corrosionResistanceLevel = materialObj.corrosionResistanceLevel;
     }
   }
-  console.log("corrosionResistanceLevel: ", corrosionResistanceLevel);
+  // console.log("corrosionResistanceLevel: ", corrosionResistanceLevel);
   this.set("corrosionResistance", corrosionResistanceLevel);
 
   await next();
 }
+
+modelSchema.path("coatings").validate(function (coatings) {
+  const coatingLayerPairs = coatings.map((coating) => ({
+    coating: coating.coating,
+    layer: coating.layer,
+  }));
+
+  const duplicates = coatingLayerPairs.filter(
+    (pair, index) =>
+      coatingLayerPairs.findIndex(
+        (p) => p.coating === pair.coating && p.layer === pair.layer
+      ) !== index
+  );
+
+  return duplicates.length === 0;
+}, "Coating and layer combination must be unique within the model.");
 
 modelSchema.pre("save", corrosionResistanceAssign);
 

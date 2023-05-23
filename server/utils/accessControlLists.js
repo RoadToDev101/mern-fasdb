@@ -70,6 +70,16 @@ const accessControlLists = [
     roles: ["Editor", "Admin", "Super-Admin"],
   },
   {
+    path: "/delete-model/:id",
+    methods: ["DELETE"],
+    roles: ["Editor", "Admin", "Super-Admin"],
+  },
+  {
+    path: "/delete-sku/:id",
+    methods: ["DELETE"],
+    roles: ["Editor", "Admin", "Super-Admin"],
+  },
+  {
     path: "/update-username-email",
     methods: ["PATCH"],
     roles: ["Unverified", "User", "Pro-User", "Editor", "Admin", "Super-Admin"],
