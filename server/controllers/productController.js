@@ -106,34 +106,6 @@ exports.getAllProducts = async (req, res) => {
     sortBy,
   } = req.query;
 
-  const pipeline = [];
-
-  // Lookup stage for Model collection
-  pipeline.push({
-    $lookup: {
-      from: "models",
-      localField: "model",
-      foreignField: "_id",
-      as: "modelData",
-    },
-  });
-
-  // Unwind stage for Model array
-  pipeline.push({ $unwind: "$modelData" });
-
-  // Lookup stage for SKU collection
-  pipeline.push({
-    $lookup: {
-      from: "skus",
-      localField: "modelData.SKU",
-      foreignField: "_id",
-      as: "skuData",
-    },
-  });
-
-  // Unwind stage for SKU array
-  pipeline.push({ $unwind: "$skuData" });
-
   // Match stage for search criteria
   const matchStage = {};
 
@@ -196,6 +168,38 @@ exports.getAllProducts = async (req, res) => {
     };
   }
 
+  const pipeline = [];
+
+  // Lookup stage for Model collection
+  pipeline.push({
+    $lookup: {
+      from: "models",
+      localField: "model",
+      foreignField: "_id",
+      as: "modelData",
+    },
+  });
+
+  // Unwind stage for Model array
+  pipeline.push({
+    $unwind: { path: "$modelData", preserveNullAndEmptyArrays: true },
+  });
+
+  // Lookup stage for SKU collection
+  pipeline.push({
+    $lookup: {
+      from: "skus",
+      localField: "modelData.SKU",
+      foreignField: "_id",
+      as: "skuData",
+    },
+  });
+
+  // Unwind stage for SKU array
+  pipeline.push({
+    $unwind: { path: "$skuData", preserveNullAndEmptyArrays: true },
+  });
+
   pipeline.push({ $match: matchStage });
 
   // Sorting
@@ -222,6 +226,7 @@ exports.getAllProducts = async (req, res) => {
   pipeline.push({ $limit: limit });
 
   // console.log("Pipeline:", JSON.stringify(pipeline, null, 2));
+  // console.log("matchStage:", JSON.stringify(matchStage, null, 2));
   const products = await Product.aggregate(pipeline);
   // console.log("Products:", JSON.stringify(products, null, 2));
   const totalProducts = await Product.countDocuments(matchStage);
