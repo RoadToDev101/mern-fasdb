@@ -10,7 +10,7 @@ const accessControlLists = [
     roles: ["Pro-User", "Editor", "Admin", "Super-Admin"],
   },
   {
-    path: "/create-drawing",
+    path: "/upload-drawing",
     methods: ["POST"],
     roles: ["Editor", "Admin", "Super-Admin"],
   },
@@ -40,7 +40,7 @@ const accessControlLists = [
     roles: ["Unverified", "User", "Pro-User", "Editor", "Admin", "Super-Admin"],
   },
   {
-    path: "/get-product",
+    path: "/get-one-product/:id",
     methods: ["GET"],
     roles: ["User", "Pro-User", "Editor", "Admin", "Super-Admin"],
   },

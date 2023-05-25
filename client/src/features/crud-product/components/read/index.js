@@ -1,6 +1,11 @@
 import ProductCard from "./productCard";
 import ProductCardInfo from "./productCardInfo";
 import ProductCardsContainer from "./productCardsContainer";
-import SearchContainer from "./searchContainer";
+import ProductSearchContainer from "./productSearchContainer";
 
-export { ProductCard, ProductCardInfo, ProductCardsContainer, SearchContainer };
+export {
+  ProductCard,
+  ProductCardInfo,
+  ProductCardsContainer,
+  ProductSearchContainer,
+};

@@ -4,6 +4,8 @@ const { SKU } = require("../models/model-sku.js");
 const { StatusCodes } = require("http-status-codes");
 const BadRequestError = require("../errors/bad-request");
 const NotFoundError = require("../errors/not-found");
+const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Types;
 
 exports.createProduct = async (req, res) => {
   const { productLine, modelName, company } = req.body;
@@ -109,64 +111,33 @@ exports.getAllProducts = async (req, res) => {
   // Match stage for search criteria
   const matchStage = {};
 
-  if (productLineSearch && productLineSearch.length > 0) {
-    matchStage.productLine = { $in: productLineSearch };
-  }
+  const addToMatchStage = (field, value) => {
+    if (value && value.length > 0) {
+      matchStage[field] = { $in: value };
+    }
+  };
+
+  addToMatchStage("productLine", productLineSearch);
 
   if (productNameSearch) {
     const regex = new RegExp(productNameSearch, "i");
     matchStage.$or = [
       { modelName: regex },
-      { "modelData.modelNumber": regex },
-      { "skuData.skuCode": regex },
+      { "model.modelNumber": regex },
+      { "sku.skuCode": regex },
     ];
   }
 
-  if (companySearch && companySearch.length > 0) {
-    matchStage.company = { $in: companySearch };
-  }
-
-  if (applicationSearch && applicationSearch.length > 0) {
-    matchStage.application = { $in: applicationSearch };
-  }
-
-  if (materialSearch && materialSearch.length > 0) {
-    matchStage["modelData.material"] = { $in: materialSearch };
-  }
-
-  if (corrosionResistanceSearch && corrosionResistanceSearch !== "all") {
-    matchStage["modelData.corrosionResistance"] = {
-      $in: corrosionResistanceSearch,
-    };
-  }
-
-  if (coatingSearch && coatingSearch.length > 0) {
-    matchStage["modelData.coatings.coating"] = { $in: coatingSearch };
-  }
-
-  if (headTypeSearch && headTypeSearch.length > 0) {
-    matchStage["modelData.feature.headType"] = { $in: headTypeSearch };
-  }
-
-  if (driveTypeSearch && driveTypeSearch.length > 0) {
-    matchStage["modelData.feature.driveType"] = { $in: driveTypeSearch };
-  }
-
-  if (pointTypeSearch && pointTypeSearch.length > 0) {
-    matchStage["modelData.feature.pointType"] = { $in: pointTypeSearch };
-  }
-
-  if (threadTypeSearch && threadTypeSearch.length > 0) {
-    matchStage["modelData.feature.threadTypes.threadType"] = {
-      $in: threadTypeSearch,
-    };
-  }
-
-  if (shankTypeSearch && shankTypeSearch.length > 0) {
-    matchStage["modelData.feature.shankTypes.shankType"] = {
-      $in: shankTypeSearch,
-    };
-  }
+  addToMatchStage("company", companySearch);
+  addToMatchStage("application", applicationSearch);
+  addToMatchStage("model.material", materialSearch);
+  addToMatchStage("model.corrosionResistance", corrosionResistanceSearch);
+  addToMatchStage("model.coatings.coating", coatingSearch);
+  addToMatchStage("model.feature.headType", headTypeSearch);
+  addToMatchStage("model.feature.driveType", driveTypeSearch);
+  addToMatchStage("model.feature.pointType", pointTypeSearch);
+  addToMatchStage("model.feature.threadTypes.threadType", threadTypeSearch);
+  addToMatchStage("model.feature.shankTypes.shankType", shankTypeSearch);
 
   const pipeline = [];
 
@@ -176,31 +147,55 @@ exports.getAllProducts = async (req, res) => {
       from: "models",
       localField: "model",
       foreignField: "_id",
-      as: "modelData",
+      as: "model",
     },
   });
 
   // Unwind stage for Model array
   pipeline.push({
-    $unwind: { path: "$modelData", preserveNullAndEmptyArrays: true },
+    $unwind: { path: "$model", preserveNullAndEmptyArrays: true },
   });
 
   // Lookup stage for SKU collection
   pipeline.push({
     $lookup: {
       from: "skus",
-      localField: "modelData.SKU",
+      localField: "model.SKU",
       foreignField: "_id",
-      as: "skuData",
+      as: "sku",
     },
   });
 
   // Unwind stage for SKU array
   pipeline.push({
-    $unwind: { path: "$skuData", preserveNullAndEmptyArrays: true },
+    $unwind: { path: "$sku", preserveNullAndEmptyArrays: true },
+  });
+
+  pipeline.push({
+    $group: {
+      _id: "$_id",
+      root: { $mergeObjects: "$$ROOT" },
+    },
+  });
+
+  pipeline.push({
+    $replaceRoot: {
+      newRoot: "$root",
+    },
   });
 
   pipeline.push({ $match: matchStage });
+
+  pipeline.push({
+    $project: {
+      _id: 1,
+      productLine: 1,
+      modelName: 1,
+      company: 1,
+      isActive: 1,
+      updatedAt: 1,
+    },
+  });
 
   // Sorting
   const sortStage = {};
@@ -232,12 +227,77 @@ exports.getAllProducts = async (req, res) => {
   const totalProducts = await Product.countDocuments(matchStage);
   const numOfPages = Math.ceil(totalProducts / limit);
 
-  res.json({
+  res.status(StatusCodes.OK).json({
     products,
     page,
     limit,
     totalProducts,
     numOfPages,
+  });
+};
+
+exports.getOneProduct = async (req, res) => {
+  const { id: productId } = req.params;
+
+  const pipeline = [];
+
+  // Lookup stage for Model collection
+  pipeline.push({
+    $lookup: {
+      from: "models",
+      localField: "model",
+      foreignField: "_id",
+      as: "model",
+    },
+  });
+
+  // Unwind stage for Model array
+  pipeline.push({
+    $unwind: { path: "$model", preserveNullAndEmptyArrays: true },
+  });
+
+  // Lookup stage for SKU collection
+  pipeline.push({
+    $lookup: {
+      from: "skus",
+      localField: "model.SKU",
+      foreignField: "_id",
+      as: "sku",
+    },
+  });
+
+  // Unwind stage for SKU array
+  pipeline.push({
+    $unwind: { path: "$sku", preserveNullAndEmptyArrays: true },
+  });
+
+  pipeline.push({
+    $group: {
+      _id: "$_id",
+      root: { $mergeObjects: "$$ROOT" },
+    },
+  });
+
+  pipeline.push({
+    $replaceRoot: {
+      newRoot: "$root",
+    },
+  });
+
+  pipeline.push({
+    $match: {
+      _id: new ObjectId(productId), // Use ObjectId constructor with 'new' keyword
+    },
+  });
+
+  const product = await Product.aggregate(pipeline);
+
+  if (!product) {
+    throw new NotFoundError("Product not found!");
+  }
+
+  res.status(StatusCodes.OK).json({
+    product,
   });
 };
 

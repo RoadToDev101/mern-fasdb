@@ -254,37 +254,65 @@ const AppProvider = ({ children }) => {
     if (productNameSearch) {
       searchParams.append("productNameSearch", productNameSearch);
     }
-    if (productLineSearch && productLineSearch.length > 0) {
+    if (
+      productLineSearch &&
+      Array.isArray(productLineSearch) &&
+      productLineSearch.length > 0
+    ) {
       productLineSearch.forEach((item) => {
         searchParams.append("productLineSearch[]", item);
       });
     }
-    if (companySearch && companySearch.length > 0) {
+    if (
+      companySearch &&
+      Array.isArray(companySearch) &&
+      companySearch.length > 0
+    ) {
       companySearch.forEach((item) => {
         searchParams.append("companySearch[]", item);
       });
     }
-    if (materialSearch && materialSearch.length > 0) {
+    if (
+      materialSearch &&
+      Array.isArray(materialSearch) &&
+      materialSearch.length > 0
+    ) {
       materialSearch.forEach((item) => {
         searchParams.append("materialSearch[]", item);
       });
     }
-    if (corrosionResistanceSearch && corrosionResistanceSearch.length > 0) {
+    if (
+      corrosionResistanceSearch &&
+      Array.isArray(corrosionResistanceSearch) &&
+      corrosionResistanceSearch.length > 0
+    ) {
       corrosionResistanceSearch.forEach((item) => {
         searchParams.append("corrosionResistanceSearch[]", item);
       });
     }
-    if (coatingSearch && coatingSearch.length > 0) {
+    if (
+      coatingSearch &&
+      Array.isArray(coatingSearch) &&
+      coatingSearch.length > 0
+    ) {
       coatingSearch.forEach((item) => {
         searchParams.append("coatingSearch[]", item);
       });
     }
-    if (applicationSearch && applicationSearch.length > 0) {
+    if (
+      applicationSearch &&
+      Array.isArray(applicationSearch) &&
+      applicationSearch.length > 0
+    ) {
       applicationSearch.forEach((item) => {
         searchParams.append("applicationSearch[]", item);
       });
     }
-    if (shankTypeSearch && shankTypeSearch.length > 0) {
+    if (
+      shankTypeSearch &&
+      Array.isArray(shankTypeSearch) &&
+      shankTypeSearch.length > 0
+    ) {
       shankTypeSearch.forEach((item) => {
         searchParams.append("shankTypeSearch[]", item);
       });

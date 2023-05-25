@@ -2,16 +2,16 @@ import moment from "moment";
 import { Link } from "react-router-dom";
 import ProductInfo from "./productCardInfo";
 import { useAppContext } from "@context/appContext";
-import Wrapper from "@wrappers/productCard";
+import Wrapper from "@wrappers/card";
 import { FaEdit, FaTrash, FaSearch, FaCalendarAlt } from "react-icons/fa";
 import { BsFillHouseGearFill } from "react-icons/bs";
 
 const ProductCard = ({
   _id,
   productLine,
-  isActive,
   modelName,
   company,
+  isActive,
   updatedAt,
 }) => {
   const { viewProduct, setEditProduct, deleteProduct } = useAppContext();

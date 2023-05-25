@@ -23,13 +23,6 @@ const FeatureLinks = [
     path: "/create-product",
     icon: <FaPlus />,
   },
-  // {
-  //   id: 3,
-  //   text: "update product",
-  //   title: "update product",
-  //   path: "/update-product",
-  //   icon: <FaEdit />,
-  // },
   {
     id: 3,
     text: "tools",
@@ -46,9 +39,9 @@ const FeatureLinks = [
   },
   {
     id: 5,
-    text: "add file",
-    title: "add a new file",
-    path: "/add-file",
+    text: "upload file",
+    title: "upload a new file",
+    path: "/upload-file",
     icon: <FaFileImport />,
   },
   {

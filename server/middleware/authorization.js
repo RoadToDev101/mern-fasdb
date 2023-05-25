@@ -39,7 +39,7 @@ const authorization = async (req, res, next) => {
 
   // Check if the user's role is included in the access control list
   if (!acl.roles.includes(userRole)) {
-    throw new ForbiddenError("You are not authorized to access this route");
+    throw new ForbiddenError("You are not authorized to do this action");
   }
 
   next();

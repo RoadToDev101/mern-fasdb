@@ -1,15 +1,11 @@
-import {
-  FormRow,
-  FormRowSelect,
-  // FormRowMultiSelectCheckbox,
-} from "@components/index";
+import { FormRow, FormRowMultiSelect } from "@components/index";
 import { useAppContext } from "@context/appContext";
 import Wrapper from "@wrappers/dashboardFormPage";
 import { useState, useMemo } from "react";
 
 //TODO: Search by features, applications, materials, coatings, etc.
 //TODO: Convert to multi select checkbox
-const SearchContainer = () => {
+const ProductSearchContainer = () => {
   const [localSearch, setLocalSearch] = useState("");
   const {
     productLineSearch,
@@ -53,7 +49,7 @@ const SearchContainer = () => {
             value={localSearch}
             onChange={optimizedDebounce}
           />
-          <FormRowSelect
+          <FormRowMultiSelect
             labelText="product Line"
             name="productLineSearch"
             value={productLineSearch}
@@ -64,7 +60,7 @@ const SearchContainer = () => {
               { _id: 3, value: "Anchor" },
             ]}
           />
-          <FormRowSelect
+          <FormRowMultiSelect
             labelText="Company"
             name="companySearch"
             value={companySearch}
@@ -75,7 +71,7 @@ const SearchContainer = () => {
               { _id: 3, value: "DeWalt" },
             ]}
           />
-          <FormRowSelect
+          <FormRowMultiSelect
             labelText="Sort by"
             name="sortBy"
             value={sortBy}
@@ -99,4 +95,4 @@ const SearchContainer = () => {
   );
 };
 
-export default SearchContainer;
+export default ProductSearchContainer;

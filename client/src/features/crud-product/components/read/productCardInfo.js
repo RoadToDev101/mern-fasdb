@@ -1,4 +1,4 @@
-import Wrapper from "@wrappers/productCardInfo";
+import Wrapper from "@wrappers/cardInfo";
 
 const ProductCardInfo = ({ icon, text }) => {
   return (

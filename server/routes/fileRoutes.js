@@ -7,7 +7,7 @@ const requestLogger = require("../middleware/requestLogger");
 router.get("/get-drawings", fileController.getAllDrawings);
 router.get("/get-drawing", fileController.getDrawing);
 router.post(
-  "/create-drawing",
+  "/upload-drawing",
   fileController.uploadDrawing,
   fileController.newDrawing,
   requestLogger

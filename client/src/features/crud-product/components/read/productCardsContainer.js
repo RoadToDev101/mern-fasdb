@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Loading, Pagination } from "@components/index";
 import { useAppContext } from "@context/appContext";
 import Product from "./productCard";
-import Wrapper from "@wrappers/productCardsContainer";
+import Wrapper from "@wrappers/cardsContainer";
 
 const ProductCardsContainer = () => {
   const {

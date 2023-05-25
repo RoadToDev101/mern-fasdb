@@ -1,4 +1,3 @@
-// import { useEffect, useState } from "react";
 import {
   FormRow,
   FormRowSelect,
@@ -7,7 +6,6 @@ import {
 } from "@components/index";
 import { useAppContext } from "@context/appContext";
 import Wrapper from "@wrappers/dashboardFormPage";
-// import { getApplications } from "@crud-utils/api";
 
 const UpdateProduct = () => {
   const {
@@ -21,32 +19,13 @@ const UpdateProduct = () => {
     editProduct,
   } = useAppContext();
 
-  // const [applications, setApplications] = useState([]);
-
-  // useEffect(() => {
-  //   getApplications().then((data) => {
-  //     setApplications(data);
-  //   });
-  // }, []);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     editProduct();
   };
 
   const handleProductInput = (e) => {
-    // if (
-    //   e.target.name === "applications" &&
-    //   typeof e.target.value === "string" &&
-    //   e.target.value.split
-    // ) {
-    //   handleChange({
-    //     target: { name: e.target.name, value: e.target.value.split(",") },
-    //   });
-    // } else {
     handleChange(e);
-    // }
-    // console.log(e.target.name, e.target.value);
   };
 
   return (

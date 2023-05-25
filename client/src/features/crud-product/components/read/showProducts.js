@@ -1,9 +1,9 @@
-import { SearchContainer, ProductCardsContainer } from "./index";
+import { ProductSearchContainer, ProductCardsContainer } from "./index";
 
 const ShowProducts = () => {
   return (
     <>
-      <SearchContainer />
+      <ProductSearchContainer />
       <ProductCardsContainer />
     </>
   );

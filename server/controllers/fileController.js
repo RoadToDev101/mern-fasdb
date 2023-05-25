@@ -26,71 +26,107 @@ const upload = multer({
 exports.getAllDrawings = async (req, res) => {
   const { drawingNameSearch, productNameSearch } = req.query;
 
-  const queryObj = {};
+  // Match stage for search criteria
+  const matchStage = {};
 
   //Search criteria
   if (drawingNameSearch) {
-    queryObj.drawingName = { $regex: drawingNameSearch, $options: "i" };
+    matchStage.drawingName = { $regex: drawingNameSearch, $options: "i" };
   }
   if (productNameSearch) {
     const regex = new RegExp(productNameSearch, "i");
-    const products = await Product.find({
-      $or: [
-        { modelName: regex },
-        { "model.modelNumber": regex },
-        { "model.SKU.skuCode": regex },
-      ],
-    });
-    queryObj.productId = { $in: products.map((p) => p._id) };
+    matchStage.$or = [
+      { "productData.modelName": regex },
+      // { "model.modelNumber": regex },
+      // { "sku.skuCode": regex },
+    ];
   }
+
+  const pipeline = [];
+
+  // Lookup stage for Product collection
+  pipeline.push({
+    $lookup: {
+      from: "products",
+      localField: "productId",
+      foreignField: "_id",
+      as: "productData",
+    },
+  });
+
+  // Unwind stage for Product array
+  pipeline.push({
+    $unwind: { path: "$productData", preserveNullAndEmptyArrays: true },
+  });
+
+  // Lookup stage for Model collection
+  // pipeline.push({
+  //   $lookup: {
+  //     from: "models",
+  //     localField: "model",
+  //     foreignField: "_id",
+  //     as: "model",
+  //   },
+  // });
+
+  // Unwind stage for Model array
+  // pipeline.push({
+  //   $unwind: { path: "$model", preserveNullAndEmptyArrays: true },
+  // });
+
+  // Lookup stage for SKU collection
+  // pipeline.push({
+  //   $lookup: {
+  //     from: "skus",
+  //     localField: "model.SKU",
+  //     foreignField: "_id",
+  //     as: "sku",
+  //   },
+  // });
+
+  // Unwind stage for SKU array
+  // pipeline.push({
+  //   $unwind: { path: "$sku", preserveNullAndEmptyArrays: true },
+  // });
+
+  pipeline.push({ $match: matchStage });
+
+  // Project stage to rename fields
+  pipeline.push({
+    $project: {
+      _id: 0,
+      drawingName: 1,
+      version: 1,
+      revisedDate: {
+        $dateToString: {
+          format: "%Y-%m-%dT%H:%M:%S.%LZ",
+          date: "$revisedDate",
+        },
+      },
+      createdBy: 1,
+      modelName: "$productData.modelName",
+    },
+  });
 
   //Pagination
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
-  const startIndex = (page - 1) * limit;
+  const skip = (page - 1) * limit;
 
-  const drawings = await ProductionDrawing.aggregate([
-    {
-      $lookup: {
-        from: "products",
-        localField: "productId",
-        foreignField: "_id",
-        as: "product",
-      },
-    },
-    { $unwind: "$product" },
-    { $match: queryObj },
-    { $skip: startIndex },
-    { $limit: limit },
-    {
-      $project: {
-        _id: 0,
-        drawingName: 1,
-        version: 1,
-        revisedDate: {
-          $dateToString: {
-            format: "%Y-%m-%dT%H:%M:%S.%LZ",
-            date: "$revisedDate",
-          },
-        },
-        createdBy: 1,
-        modelName: "$product.modelName",
-      },
-    },
-  ]).allowDiskUse(true);
-  // console.log(drawings);
+  pipeline.push({ $skip: skip });
+  pipeline.push({ $limit: limit });
 
-  const totalDrawings = await ProductionDrawing.countDocuments(queryObj);
+  const drawings = await ProductionDrawing.aggregate(pipeline).allowDiskUse(
+    true
+  );
+  const totalDrawings = drawings.length;
+  const numOfPages = Math.ceil(totalDrawings / limit);
 
   res.status(StatusCodes.OK).json({
     success: true,
     totalDrawings,
-    drawingName: drawings.map((drawing) => drawing.drawingName).join(", "),
-    version: drawings.map((drawing) => drawing.version).join(", "),
-    revisedDate: drawings.map((drawing) => drawing.revisedDate).join(", "),
-    createdBy: drawings.map((drawing) => drawing.createdBy).join(", "),
-    modelName: drawings.map((drawing) => drawing.modelName).join(", "),
-    numOfPages: Math.ceil(totalDrawings / limit),
+    drawings,
+    numOfPages,
   });
 };
 
