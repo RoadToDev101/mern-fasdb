@@ -48,10 +48,6 @@ exports.register = async (req, res) => {
     throw new BadRequestError("Something went wrong, please try again later!");
   });
 
-  // if (!emailSent) {
-  //   throw new BadRequestError("Something went wrong, please try again later!");
-  // }
-
   res.status(StatusCodes.CREATED).json({
     user: {
       _id: user._id,
@@ -118,7 +114,9 @@ exports.login = async (req, res) => {
     "+password"
   );
   if (!user) {
-    throw new UnAuthenticatedError("User not found!");
+    throw new UnAuthenticatedError(
+      "The username or email is incorrect. Please try again!"
+    );
   }
 
   const isPasswordCorrect = await user.comparePassword(password);

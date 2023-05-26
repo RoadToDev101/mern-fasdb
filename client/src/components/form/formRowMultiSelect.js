@@ -9,7 +9,9 @@ const FormRowMultiSelectCheckbox = ({
   disabled,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedValues, setSelectedValues] = useState([]);
+  const [selectedValues, setSelectedValues] = useState(
+    Array.isArray(value) ? value : []
+  );
 
   const handleDropdownToggle = () => {
     setIsOpen(!isOpen);
@@ -25,6 +27,12 @@ const FormRowMultiSelectCheckbox = ({
     }
     setSelectedValues(newSelectedValues);
     onChange({ target: { name, value: newSelectedValues } });
+  };
+
+  //TODO: Check this function, it's currently refresh the page
+  const handleEraseAll = () => {
+    setSelectedValues([]);
+    onChange({ target: { name, value: [] } });
   };
 
   return (
@@ -44,6 +52,9 @@ const FormRowMultiSelectCheckbox = ({
           </div>
           {isOpen && (
             <div className="dropdown-menu">
+              <button className="erase-all-btn" onClick={handleEraseAll}>
+                Erase All
+              </button>
               {options.map((option, index) => (
                 <label key={index}>
                   <input
@@ -61,7 +72,11 @@ const FormRowMultiSelectCheckbox = ({
           )}
         </div>
       </div>
-      <input type="hidden" name={name} value={selectedValues.join(",")} />
+      <input
+        type="hidden"
+        name={name}
+        value={Array.isArray(selectedValues) ? selectedValues.join(",") : ""}
+      />
     </div>
   );
 };

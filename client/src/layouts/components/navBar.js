@@ -6,6 +6,7 @@ import {
   FaSignOutAlt,
   FaEye,
   FaAlignJustify,
+  FaDesktop,
 } from "react-icons/fa";
 import { useAppContext } from "@context/appContext";
 import { Logo } from "@components/index";
@@ -73,6 +74,17 @@ const NavBar = () => {
                 <FaEye /> profile
               </button>
             </Link>
+            {user.role === "Admin" || user.role === "Super-Admin" ? (
+              <Link to="/admin-dashboard">
+                <button
+                  type="button"
+                  className="dropdown-btn"
+                  onClick={() => setShowUserDropdown(!showUserDropdown)}
+                >
+                  <FaDesktop /> admin
+                </button>
+              </Link>
+            ) : null}
           </div>
         </div>
       </div>

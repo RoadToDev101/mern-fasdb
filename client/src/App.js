@@ -11,6 +11,7 @@ import {
 import { ToolsPage, CompareScrews } from "./features/tools";
 import { ShowFiles, UploadFile, UploadDrawing } from "./features/crud-files";
 import SharedLayout from "./layouts";
+import AdminDashboard from "./features/other/components/adminDashboard";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path="upload-drawing" element={<UploadDrawing />} />
           <Route path="guide" element={<GuidePage />} />
           <Route path="user-profile" element={<UserProfile />} />
+          <Route path="admin-dashboard" element={<AdminDashboard />} />
         </Route>
         <Route path="register" element={<Register />} />
         <Route path="verify-email/:emailToken" element={<VerifyEmail />} />

@@ -15,18 +15,15 @@ const ProductSearchContainer = () => {
     clearFilters,
   } = useAppContext();
 
-  const handleSearch = (e) => {
-    handleChange(e);
-  };
+  let timeoutID;
 
-  const handelClearFilters = (e) => {
+  const handleClearFilters = (e) => {
     e.preventDefault();
     setLocalSearch("");
     clearFilters();
   };
 
   const debounce = () => {
-    let timeoutID;
     return (e) => {
       setLocalSearch(e.target.value);
       clearTimeout(timeoutID);
@@ -44,7 +41,7 @@ const ProductSearchContainer = () => {
         <h4>Search</h4>
         <div className="form-center">
           <FormRow
-            labelText="Model Name"
+            labelText="Product Name"
             name="productNameSearch"
             value={localSearch}
             onChange={optimizedDebounce}
@@ -53,7 +50,7 @@ const ProductSearchContainer = () => {
             labelText="product Line"
             name="productLineSearch"
             value={productLineSearch}
-            onChange={handleSearch}
+            onChange={handleChange}
             options={[
               { _id: 1, value: "Screw" },
               { _id: 2, value: "Nail" },
@@ -64,7 +61,7 @@ const ProductSearchContainer = () => {
             labelText="Company"
             name="companySearch"
             value={companySearch}
-            onChange={handleSearch}
+            onChange={handleChange}
             options={[
               { _id: 1, value: "Simpson Strong-Tie" },
               { _id: 2, value: "Hilti" },
@@ -75,7 +72,7 @@ const ProductSearchContainer = () => {
             labelText="Sort by"
             name="sortBy"
             value={sortBy}
-            onChange={handleSearch}
+            onChange={handleChange}
             options={[
               { _id: 1, value: "a-z", display: "Model Name (A-Z)" },
               { _id: 2, value: "z-a", display: "Model Name (Z-A)" },
@@ -85,7 +82,7 @@ const ProductSearchContainer = () => {
           />
           <button
             className="btn btn-block clear-btn"
-            onClick={handelClearFilters}
+            onClick={handleClearFilters}
           >
             Clear Filters
           </button>
