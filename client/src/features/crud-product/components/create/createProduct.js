@@ -34,11 +34,11 @@ const CreateProduct = () => {
   return (
     <Wrapper>
       <form className="form">
+        <h4>General Info</h4>
         {showAlert && <Alert />}
         <div className="form-center">
-          {/* <label>General Info</label> */}
           <FormRowSelect
-            labelText="product Line"
+            labelText="Product Line"
             name="productLine"
             value={productLine}
             onChange={handleProductInput}
@@ -48,7 +48,6 @@ const CreateProduct = () => {
               { _id: 3, value: "Anchor" },
             ]}
           />
-
           <FormRowSelect
             labelText="Company"
             name="company"
@@ -60,7 +59,6 @@ const CreateProduct = () => {
               { _id: 3, value: "DeWalt" },
             ]}
           />
-
           <FormRow
             labelText="Model Name"
             name="modelName"
@@ -72,10 +70,8 @@ const CreateProduct = () => {
             name="application"
             value={application}
             onChange={handleProductInput}
-            //Get the options from the application.json file
-            options={applicationList}
+            options={applicationList} //Get the options from the application.json file
           />
-
           {productLine && (
             <div className="btn-container">
               <button

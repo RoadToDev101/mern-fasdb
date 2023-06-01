@@ -41,13 +41,15 @@ const ProductSearchContainer = () => {
         <h4>Search</h4>
         <div className="form-center">
           <FormRow
-            labelText="Product Name"
+            type="text"
+            id="productName"
             name="productNameSearch"
+            labelText="Product Name"
             value={localSearch}
             onChange={optimizedDebounce}
           />
           <FormRowMultiSelect
-            labelText="product Line"
+            labelText="Product Line"
             name="productLineSearch"
             value={productLineSearch}
             onChange={handleChange}

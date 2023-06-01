@@ -14,7 +14,6 @@ const logSchema = new mongoose.Schema(
     },
     requestBody: { type: Object },
     requestParams: { type: Object },
-    responseBody: { type: Object },
   },
   { timestamps: { createdAt: true, updatedAt: false } }
 );

@@ -36,6 +36,9 @@ import {
   EDIT_PRODUCT_SUCCESS,
   EDIT_PRODUCT_ERROR,
   DELETE_PRODUCT_BEGIN,
+  UPLOAD_DRAWING_BEGIN,
+  UPLOAD_DRAWING_SUCCESS,
+  UPLOAD_DRAWING_ERROR,
   GET_CURRENT_USER_BEGIN,
   GET_CURRENT_USER_SUCCESS,
 } from "./action";
@@ -56,6 +59,10 @@ const initialState = {
   company: "",
   application: [],
   products: [],
+  drawingName: "",
+  version: "",
+  revisedDate: "",
+  file: null,
   totalProducts: 0,
   page: 1,
   numOfPages: 1,
@@ -116,6 +123,13 @@ const AppProvider = ({ children }) => {
     dispatch({
       type: HANDLE_CHANGE,
       payload: { name: e.target.name, value: e.target.value },
+    });
+  };
+
+  const handleFileChange = (e) => {
+    dispatch({
+      type: HANDLE_CHANGE,
+      payload: { name: e.target.name, value: e.target.files[0] },
     });
   };
 
@@ -214,11 +228,12 @@ const AppProvider = ({ children }) => {
   const createProduct = async (product) => {
     dispatch({ type: CREATE_PRODUCT_BEGIN });
     try {
-      const { productLine, modelName, company } = state;
+      const { productLine, modelName, company, application } = state;
       await authFetch.post(`/product/create-product`, {
         productLine,
         modelName,
         company,
+        application,
       });
       dispatch({ type: CREATE_PRODUCT_SUCCESS });
       dispatch({ type: CLEAR_VALUES });
@@ -386,6 +401,37 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  //TODO: Cannot upload file
+  const uploadDrawing = async (drawing) => {
+    dispatch({ type: UPLOAD_DRAWING_BEGIN });
+    try {
+      const { drawingName, version, revisedDate, modelName, file } = state;
+      const formData = new FormData();
+      formData.append("drawingName", drawingName);
+      formData.append("version", version);
+      formData.append("revisedDate", revisedDate);
+      formData.append("modelName", modelName);
+      formData.append("file", file);
+      await authFetch.post(`/file/upload-drawing`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      dispatch({ type: UPLOAD_DRAWING_SUCCESS });
+      dispatch({ type: CLEAR_VALUES });
+    } catch (error) {
+      // console.log(error.response);
+      // If the user is not authorized, logout the user
+      if (error.response.status !== 401) {
+        dispatch({
+          type: UPLOAD_DRAWING_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
+    }
+    clearAlert();
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -397,6 +443,7 @@ const AppProvider = ({ children }) => {
         toggleBigSideBar,
         toggleSmallSideBar,
         handleChange,
+        handleFileChange,
         changePage,
         setupUser,
         getCurrentUser,
@@ -408,6 +455,7 @@ const AppProvider = ({ children }) => {
         setEditProduct,
         editProduct,
         deleteProduct,
+        uploadDrawing,
       }}
     >
       {children}

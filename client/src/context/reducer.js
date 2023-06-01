@@ -24,6 +24,9 @@ import {
   EDIT_PRODUCT_SUCCESS,
   EDIT_PRODUCT_ERROR,
   DELETE_PRODUCT_BEGIN,
+  UPLOAD_DRAWING_BEGIN,
+  UPLOAD_DRAWING_SUCCESS,
+  UPLOAD_DRAWING_ERROR,
   GET_CURRENT_USER_BEGIN,
   GET_CURRENT_USER_SUCCESS,
 } from "./action";
@@ -218,6 +221,27 @@ const reducer = (state, action) => {
       return {
         ...state,
         isLoading: true,
+      };
+    case UPLOAD_DRAWING_BEGIN:
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case UPLOAD_DRAWING_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        showAlert: true,
+        alertType: "success",
+        alertText: "Drawing uploaded successfully!",
+      };
+    case UPLOAD_DRAWING_ERROR:
+      return {
+        ...state,
+        isLoading: false,
+        showAlert: true,
+        alertText: action.payload.msg,
+        alertType: "danger",
       };
     default:
       throw new Error(`No Matching "${action.type}" - action type`);

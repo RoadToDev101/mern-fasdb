@@ -1,31 +1,31 @@
 const express = require("express");
 const router = express.Router();
 const productController = require("../controllers/productController.js");
-const requestLogger = require("../middleware/requestLogger");
+const requestLogger = require("../middleware/logger");
 
-router.post("/create-product", productController.createProduct, requestLogger);
-router.post("/create-model", productController.createModel, requestLogger);
-router.post("/create-sku", productController.createSKU, requestLogger);
+router.post("/create-product", requestLogger, productController.createProduct);
+router.post("/create-model", requestLogger, productController.createModel);
+router.post("/create-sku", requestLogger, productController.createSKU);
 router.get("/get-all-products", productController.getAllProducts);
 router.get("/get-one-product/:id", productController.getOneProduct);
 router.get("/compare-models", productController.compareModels);
 router.patch(
   "/update-product/:id",
-  productController.updateProduct,
-  requestLogger
+  requestLogger,
+  productController.updateProduct
 );
-router.patch("/update-model/:id", productController.updateModel, requestLogger);
-router.patch("/update-sku/:id", productController.updateSKU, requestLogger);
+router.patch("/update-model/:id", requestLogger, productController.updateModel);
+router.patch("/update-sku/:id", requestLogger, productController.updateSKU);
 router.delete(
   "/delete-product/:id",
-  productController.deleteProduct,
-  requestLogger
+  requestLogger,
+  productController.deleteProduct
 );
 router.delete(
   "/delete-model/:id",
-  productController.deleteModel,
-  requestLogger
+  requestLogger,
+  productController.deleteModel
 );
-router.delete("/delete-sku/:id", productController.deleteSKU, requestLogger);
+router.delete("/delete-sku/:id", requestLogger, productController.deleteSKU);
 
 module.exports = router;

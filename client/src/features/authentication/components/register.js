@@ -27,7 +27,7 @@ const Register = () => {
             name="username"
             value={values.username}
             onChange={handleChange}
-            label="Username"
+            labelText="Username"
             placeholder="Enter your username"
             autoComplete={"username"}
           />
@@ -52,7 +52,7 @@ const Register = () => {
           name="password"
           value={values.password}
           onChange={handleChange}
-          label="Password"
+          labelText="Password"
           placeholder="Enter your password"
           autoComplete={"current-password"}
         />

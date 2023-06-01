@@ -1,29 +1,29 @@
+import * as React from "react";
+import TextField from "@mui/material/TextField";
+
 const FormRow = ({
   type,
   id,
   name,
   value,
   onChange,
-  label,
+  labelText,
   placeholder,
   autoComplete,
-  labelText,
 }) => {
   return (
     <div className="form-row">
-      <label htmlFor={name} className="form-label">
-        {labelText || name}
-      </label>
-      <input
+      <TextField
         type={type}
         id={id}
         name={name}
         value={value}
-        onChange={onChange}
         className="form-input"
+        onChange={onChange}
+        label={labelText}
         placeholder={placeholder}
-        label={label}
         autoComplete={autoComplete}
+        variant="outlined" // Set the desired variant (outlined, filled, standard)
       />
     </div>
   );
