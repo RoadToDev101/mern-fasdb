@@ -1,4 +1,4 @@
-import { Logo, FormRow, Alert } from "@components/index";
+import { Logo, FormTextField, Alert } from "@components/index";
 import Wrapper from "@wrappers/registerPage";
 import useRegister from "../hooks/useRegister";
 
@@ -21,7 +21,7 @@ const Register = () => {
         <h3>{values.isMember ? "Login" : "Register"}</h3>
         {showAlert && <Alert />}
         {!values.isMember && (
-          <FormRow
+          <FormTextField
             type="text"
             id="username"
             name="username"
@@ -33,7 +33,7 @@ const Register = () => {
           />
         )}
 
-        <FormRow
+        <FormTextField
           type={!values.isMember ? "email" : "text"}
           id="login-input"
           name={!values.isMember ? "email" : "username"}
@@ -46,7 +46,7 @@ const Register = () => {
           autoComplete={!values.isMember ? "email" : "email username"}
         />
 
-        <FormRow
+        <FormTextField
           type="password"
           id="password"
           name="password"

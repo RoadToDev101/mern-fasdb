@@ -5,7 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
-const FormRowSelect = ({
+const FormSelect = ({
   labelText,
   name,
   value,
@@ -28,6 +28,7 @@ const FormRowSelect = ({
         <Select
           labelId={`${name}-label`}
           id={name}
+          name={name}
           value={selectedValue}
           label={labelText || name}
           onChange={handleSelectChange}
@@ -48,4 +49,4 @@ const FormRowSelect = ({
   );
 };
 
-export default FormRowSelect;
+export default FormSelect;

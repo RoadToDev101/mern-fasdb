@@ -113,11 +113,13 @@ exports.getAllProducts = async (req, res) => {
 
   const addToMatchStage = (field, value) => {
     if (value && value.length > 0) {
-      matchStage[field] = { $in: value };
+      if (Array.isArray(value)) {
+        matchStage[field] = { $in: value };
+      } else {
+        matchStage[field] = value;
+      }
     }
   };
-
-  addToMatchStage("productLine", productLineSearch);
 
   if (productNameSearch) {
     const regex = new RegExp(productNameSearch, "i");
@@ -128,6 +130,7 @@ exports.getAllProducts = async (req, res) => {
     ];
   }
 
+  addToMatchStage("productLine", productLineSearch);
   addToMatchStage("company", companySearch);
   addToMatchStage("application", applicationSearch);
   addToMatchStage("model.material", materialSearch);
@@ -222,9 +225,16 @@ exports.getAllProducts = async (req, res) => {
 
   // console.log("Pipeline:", JSON.stringify(pipeline, null, 2));
   // console.log("matchStage:", JSON.stringify(matchStage, null, 2));
-  const products = await Product.aggregate(pipeline);
-  // console.log("Products:", JSON.stringify(products, null, 2));
-  const totalProducts = await Product.countDocuments(matchStage);
+  const productsPipeline = [...pipeline];
+  const countPipeline = [...pipeline];
+  countPipeline.push({ $count: "count" });
+
+  const [products, countResult] = await Promise.all([
+    Product.aggregate(productsPipeline),
+    Product.aggregate(countPipeline),
+  ]);
+
+  const totalProducts = countResult.length > 0 ? countResult[0].count : 0;
   const numOfPages = Math.ceil(totalProducts / limit);
 
   res.status(StatusCodes.OK).json({

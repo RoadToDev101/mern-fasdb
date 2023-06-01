@@ -1,15 +1,32 @@
-import { FormRow, FormRowMultiSelect } from "@components/index";
+import { FormTextField, FormMultiSelect, FormSelect } from "@components/index";
 import { useAppContext } from "@context/appContext";
 import Wrapper from "@wrappers/dashboardFormPage";
 import { useState, useMemo } from "react";
+import {
+  application,
+  driveType,
+  headType,
+  pointType,
+  shankType,
+  threadType,
+  coating,
+  material,
+} from "@data/index";
 
-//TODO: Search by features, applications, materials, coatings, etc.
-//TODO: Convert to multi select checkbox
 const ProductSearchContainer = () => {
   const [localSearch, setLocalSearch] = useState("");
   const {
     productLineSearch,
     companySearch,
+    materialSearch,
+    corrosionResistanceSearch,
+    coatingSearch,
+    applicationSearch,
+    shankTypeSearch,
+    pointTypeSearch,
+    headTypeSearch,
+    driveTypeSearch,
+    threadTypeSearch,
     sortBy,
     handleChange,
     clearFilters,
@@ -40,7 +57,7 @@ const ProductSearchContainer = () => {
       <form className="form">
         <h4>Search</h4>
         <div className="form-center">
-          <FormRow
+          <FormTextField
             type="text"
             id="productName"
             name="productNameSearch"
@@ -48,7 +65,7 @@ const ProductSearchContainer = () => {
             value={localSearch}
             onChange={optimizedDebounce}
           />
-          <FormRowMultiSelect
+          <FormMultiSelect
             labelText="Product Line"
             name="productLineSearch"
             value={productLineSearch}
@@ -59,7 +76,7 @@ const ProductSearchContainer = () => {
               { _id: 3, value: "Anchor" },
             ]}
           />
-          <FormRowMultiSelect
+          <FormMultiSelect
             labelText="Company"
             name="companySearch"
             value={companySearch}
@@ -70,7 +87,75 @@ const ProductSearchContainer = () => {
               { _id: 3, value: "DeWalt" },
             ]}
           />
-          <FormRowMultiSelect
+          <FormMultiSelect
+            labelText="Material"
+            name="materialSearch"
+            value={materialSearch}
+            onChange={handleChange}
+            options={material}
+          />
+          <FormMultiSelect
+            labelText="Corrosion Resistance"
+            name="corrosionResistanceSearch"
+            value={corrosionResistanceSearch}
+            onChange={handleChange}
+            options={[
+              { _id: 1, value: "Low" },
+              { _id: 2, value: "Medium" },
+              { _id: 3, value: "High" },
+              { _id: 4, value: "Severe" },
+            ]}
+          />
+          <FormMultiSelect
+            labelText="Coating"
+            name="coatingSearch"
+            value={coatingSearch}
+            onChange={handleChange}
+            options={coating}
+          />
+          <FormMultiSelect
+            labelText="Application"
+            name="applicationSearch"
+            value={applicationSearch}
+            onChange={handleChange}
+            options={application}
+          />
+          <FormMultiSelect
+            labelText="Shank Type"
+            name="shankTypeSearch"
+            value={shankTypeSearch}
+            onChange={handleChange}
+            options={shankType}
+          />
+          <FormMultiSelect
+            labelText="Point Type"
+            name="pointTypeSearch"
+            value={pointTypeSearch}
+            onChange={handleChange}
+            options={pointType}
+          />
+          <FormMultiSelect
+            labelText="Head Type"
+            name="headTypeSearch"
+            value={headTypeSearch}
+            onChange={handleChange}
+            options={headType}
+          />
+          <FormMultiSelect
+            labelText="Drive Type"
+            name="driveTypeSearch"
+            value={driveTypeSearch}
+            onChange={handleChange}
+            options={driveType}
+          />
+          <FormMultiSelect
+            labelText="Thread Type"
+            name="threadTypeSearch"
+            value={threadTypeSearch}
+            onChange={handleChange}
+            options={threadType}
+          />
+          <FormSelect
             labelText="Sort by"
             name="sortBy"
             value={sortBy}

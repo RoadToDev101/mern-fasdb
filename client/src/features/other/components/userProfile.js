@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FormRow, FormRowSelect, Alert } from "@components/index";
+import { FormTextField, FormSelect, Alert } from "@components/index";
 import { useAppContext } from "@context/appContext";
 import Wrapper from "@wrappers/dashboardFormPage";
 
@@ -30,7 +30,7 @@ const UserProfile = () => {
         <h3>Profile</h3>
         {showAlert && <Alert />}
         <div className="form-center">
-          <FormRow
+          <FormTextField
             type="text"
             id="username"
             name="username"
@@ -38,7 +38,7 @@ const UserProfile = () => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
-          <FormRow
+          <FormTextField
             type="email"
             id="email"
             name="email"
@@ -46,7 +46,7 @@ const UserProfile = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <FormRowSelect
+          <FormSelect
             labelText="Role"
             name="role"
             value={role}

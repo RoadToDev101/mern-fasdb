@@ -116,10 +116,16 @@ exports.getAllDrawings = async (req, res) => {
   pipeline.push({ $skip: skip });
   pipeline.push({ $limit: limit });
 
-  const drawings = await ProductionDrawing.aggregate(pipeline).allowDiskUse(
-    true
-  );
-  const totalDrawings = drawings.length;
+  const drawingsPipeline = [...pipeline];
+  const countPipeline = [...pipeline];
+  countPipeline.push({ $count: "count" });
+
+  const [drawings, countResult] = await Promise.all([
+    ProductionDrawing.aggregate(drawingsPipeline).allowDiskUse(true),
+    ProductionDrawing.aggregate(countPipeline).allowDiskUse(true),
+  ]);
+
+  const totalDrawings = countResult.length > 0 ? countResult[0].count : 0;
   const numOfPages = Math.ceil(totalDrawings / limit);
 
   res.status(StatusCodes.OK).json({

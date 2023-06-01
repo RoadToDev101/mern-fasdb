@@ -1,7 +1,7 @@
 import {
-  FormRow,
-  FormRowSelect,
-  FormRowMultiSelect,
+  FormTextField,
+  FormSelect,
+  FormMultiSelect,
   Alert,
 } from "@components/index";
 import { useAppContext } from "@context/appContext";
@@ -26,50 +26,46 @@ const CreateProduct = () => {
     createProduct();
   };
 
-  const handleProductInput = (e) => {
-    handleChange(e);
-    console.log(e.target.value);
-  };
-
   return (
     <Wrapper>
       <form className="form">
         <h4>General Info</h4>
         {showAlert && <Alert />}
         <div className="form-center">
-          <FormRowSelect
+          <FormSelect
             labelText="Product Line"
             name="productLine"
             value={productLine}
-            onChange={handleProductInput}
+            onChange={handleChange}
             options={[
               { _id: 1, value: "Screw" },
               { _id: 2, value: "Nail" },
               { _id: 3, value: "Anchor" },
             ]}
           />
-          <FormRowSelect
+          <FormSelect
             labelText="Company"
             name="company"
             value={company}
-            onChange={handleProductInput}
+            onChange={handleChange}
             options={[
               { _id: 1, value: "Simpson Strong-Tie" },
               { _id: 2, value: "Hilti" },
               { _id: 3, value: "DeWalt" },
             ]}
           />
-          <FormRow
+          <FormTextField
             labelText="Model Name"
             name="modelName"
+            required
             value={modelName}
-            onChange={handleProductInput}
+            onChange={handleChange}
           />
-          <FormRowMultiSelect
+          <FormMultiSelect
             labelText="Application"
             name="application"
             value={application}
-            onChange={handleProductInput}
+            onChange={handleChange}
             options={applicationList} //Get the options from the application.json file
           />
           {productLine && (

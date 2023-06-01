@@ -13,6 +13,15 @@ const ProductCardsContainer = () => {
     totalProducts,
     productNameSearch,
     companySearch,
+    materialSearch,
+    corrosionResistanceSearch,
+    coatingSearch,
+    applicationSearch,
+    shankTypeSearch,
+    pointTypeSearch,
+    headTypeSearch,
+    driveTypeSearch,
+    threadTypeSearch,
     sortBy,
     productLineSearch,
     numOfPages,
@@ -21,7 +30,22 @@ const ProductCardsContainer = () => {
   useEffect(() => {
     getProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [productLineSearch, productNameSearch, companySearch, sortBy, page]);
+  }, [
+    productLineSearch,
+    productNameSearch,
+    companySearch,
+    materialSearch,
+    corrosionResistanceSearch,
+    coatingSearch,
+    applicationSearch,
+    shankTypeSearch,
+    pointTypeSearch,
+    headTypeSearch,
+    driveTypeSearch,
+    threadTypeSearch,
+    sortBy,
+    page,
+  ]);
 
   if (isLoading) {
     return <Loading center />;

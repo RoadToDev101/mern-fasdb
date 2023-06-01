@@ -75,6 +75,10 @@ const initialState = {
   coatingSearch: [],
   applicationSearch: [],
   shankTypeSearch: [],
+  headTypeSearch: [],
+  pointTypeSearch: [],
+  threadTypeSearch: [],
+  driveTypeSearch: [],
 };
 
 const AppContext = React.createContext();
@@ -123,6 +127,13 @@ const AppProvider = ({ children }) => {
     dispatch({
       type: HANDLE_CHANGE,
       payload: { name: e.target.name, value: e.target.value },
+    });
+  };
+
+  const handleDateChange = (date) => {
+    dispatch({
+      type: HANDLE_CHANGE,
+      payload: { name: "revisedDate", value: date },
     });
   };
 
@@ -262,6 +273,10 @@ const AppProvider = ({ children }) => {
       coatingSearch,
       applicationSearch,
       shankTypeSearch,
+      headTypeSearch,
+      threadTypeSearch,
+      driveTypeSearch,
+      pointTypeSearch,
     } = state;
     const searchParams = new URLSearchParams();
     searchParams.append("page", page);
@@ -330,6 +345,42 @@ const AppProvider = ({ children }) => {
     ) {
       shankTypeSearch.forEach((item) => {
         searchParams.append("shankTypeSearch[]", item);
+      });
+    }
+    if (
+      headTypeSearch &&
+      Array.isArray(headTypeSearch) &&
+      headTypeSearch.length > 0
+    ) {
+      headTypeSearch.forEach((item) => {
+        searchParams.append("headTypeSearch[]", item);
+      });
+    }
+    if (
+      threadTypeSearch &&
+      Array.isArray(threadTypeSearch) &&
+      threadTypeSearch.length > 0
+    ) {
+      threadTypeSearch.forEach((item) => {
+        searchParams.append("threadTypeSearch[]", item);
+      });
+    }
+    if (
+      driveTypeSearch &&
+      Array.isArray(driveTypeSearch) &&
+      driveTypeSearch.length > 0
+    ) {
+      driveTypeSearch.forEach((item) => {
+        searchParams.append("driveTypeSearch[]", item);
+      });
+    }
+    if (
+      pointTypeSearch &&
+      Array.isArray(pointTypeSearch) &&
+      pointTypeSearch.length > 0
+    ) {
+      pointTypeSearch.forEach((item) => {
+        searchParams.append("pointTypeSearch[]", item);
       });
     }
 
@@ -443,6 +494,7 @@ const AppProvider = ({ children }) => {
         toggleBigSideBar,
         toggleSmallSideBar,
         handleChange,
+        handleDateChange,
         handleFileChange,
         changePage,
         setupUser,
