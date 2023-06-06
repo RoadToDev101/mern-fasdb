@@ -215,6 +215,10 @@ exports.getAllProducts = async (req, res) => {
 
   pipeline.push({ $sort: sortStage });
 
+  // Count total products pipeline
+  const countPipeline = [...pipeline];
+  countPipeline.push({ $count: "count" });
+
   // Pagination
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
@@ -226,8 +230,6 @@ exports.getAllProducts = async (req, res) => {
   // console.log("Pipeline:", JSON.stringify(pipeline, null, 2));
   // console.log("matchStage:", JSON.stringify(matchStage, null, 2));
   const productsPipeline = [...pipeline];
-  const countPipeline = [...pipeline];
-  countPipeline.push({ $count: "count" });
 
   const [products, countResult] = await Promise.all([
     Product.aggregate(productsPipeline),

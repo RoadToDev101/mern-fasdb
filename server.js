@@ -51,26 +51,27 @@ app.use(mongoSanitize());
 // Serve static files from the React app
 app.use(express.static(path.resolve(__dirname, "./client/build")));
 
-app.use("/api/auth", require("./server/routes/authRoutes"));
+app.use("/api/auth", require("./server/routes/web/authRoutes"));
 // Use authentication and authorization middleware for below routes
 app.use(
   "/api/product",
   authenticateUser,
   authorization,
-  require("./server/routes/productRoutes")
+  require("./server/routes/api/productRoutes")
 );
 app.use(
   "/api/user",
   authenticateUser,
   authorization,
-  require("./server/routes/userRoutes")
+  require("./server/routes/api/userRoutes")
 );
 app.use(
   "/api/file",
   authenticateUser,
   authorization,
-  require("./server/routes/fileRoutes")
+  require("./server/routes/api/fileRoutes")
 );
+app.use("/api/predict", require("./server/routes/api/predict"));
 
 // Serve the React app's index.html file for all other requests
 app.get("*", (req, res) => {

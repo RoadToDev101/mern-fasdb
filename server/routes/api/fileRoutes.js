@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const fileController = require("../controllers/fileController.js");
-const requestLogger = require("../middleware/logger");
+const fileController = require("../../controllers/fileController.js");
+const requestLogger = require("../../middleware/logger.js");
 
 // Production Drawings API
 router.get("/get-drawings", fileController.getAllDrawings);

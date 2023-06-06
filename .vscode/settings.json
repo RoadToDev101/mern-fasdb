@@ -1,24 +1,28 @@
 {
-  "cSpell.words": [
-    "ADREM",
-    "ASTM",
-    "Atotech",
-    "Backerboard",
-    "Electrocoat",
-    "Electrocoating",
-    "fasdb",
-    "Gleitmo",
-    "Hilti",
-    "hotmail",
-    "Lubritech",
-    "Magni",
-    "maxlength",
-    "mern",
-    "Pantone",
-    "Powercron",
-    "Quik",
-    "Ruspert",
-    "skus",
-    "Underlayment"
-  ]
+    "cSpell.words": [
+        "ADREM",
+        "ASTM",
+        "Atotech",
+        "Backerboard",
+        "Electrocoat",
+        "Electrocoating",
+        "fasdb",
+        "Gleitmo",
+        "Hilti",
+        "hotmail",
+        "Lubritech",
+        "Magni",
+        "maxlength",
+        "mern",
+        "Pantone",
+        "Powercron",
+        "Quik",
+        "Ruspert",
+        "skus",
+        "Underlayment"
+    ],
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "python.formatting.provider": "none"
 }

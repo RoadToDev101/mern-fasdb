@@ -108,6 +108,10 @@ exports.getAllDrawings = async (req, res) => {
     },
   });
 
+  // Count files in pipeline
+  const countPipeline = [...pipeline];
+  countPipeline.push({ $count: "count" });
+
   //Pagination
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
@@ -117,8 +121,6 @@ exports.getAllDrawings = async (req, res) => {
   pipeline.push({ $limit: limit });
 
   const drawingsPipeline = [...pipeline];
-  const countPipeline = [...pipeline];
-  countPipeline.push({ $count: "count" });
 
   const [drawings, countResult] = await Promise.all([
     ProductionDrawing.aggregate(drawingsPipeline).allowDiskUse(true),

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const userController = require("../controllers/userController.js");
-const requestLogger = require("../middleware/logger");
+const userController = require("../../controllers/userController.js");
+const requestLogger = require("../../middleware/logger.js");
 
 router.patch("/update-username-email", userController.updateUsernameAndEmail);
 router.patch("/update-role", requestLogger, userController.updateUserRole);

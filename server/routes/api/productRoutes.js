@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const productController = require("../controllers/productController.js");
-const requestLogger = require("../middleware/logger");
+const productController = require("../../controllers/productController.js");
+const requestLogger = require("../../middleware/logger.js");
 
 router.post("/create-product", requestLogger, productController.createProduct);
 router.post("/create-model", requestLogger, productController.createModel);
