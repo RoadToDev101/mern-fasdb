@@ -1,4 +1,7 @@
 const express = require("express");
+const path = require("path");
+const mongoose = require("mongoose");
+
 // Initialize express app
 const app = express();
 // Async error handling middleware
@@ -14,8 +17,6 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-const path = require("path");
-const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 
 // Load env vars
@@ -71,7 +72,6 @@ app.use(
   authorization,
   require("./server/routes/api/fileRoutes")
 );
-app.use("/api/predict", require("./server/routes/api/predict"));
 
 // Serve the React app's index.html file for all other requests
 app.get("*", (req, res) => {

@@ -1,3 +1,6 @@
 # .gitignore
 /node_modules
+/machine-learning-app/__pycache__
+/machine-learning-app/venv
+/machine-learning-app/model/*
 .env

@@ -4,13 +4,15 @@
   "description": "Fastener Database for Simpson Strong-Tie",
   "main": "server.js",
   "scripts": {
-    "install-dependencies": "npm run install-client && npm install",
+    "install-dependencies": "npm run install-client && npm install && npm run install-ml-app ",
+    "install-ml-app": "cd machine-learning-app && python -m venv venv && .\\venv\\Scripts\\activate && pip install -r requirements.txt",
     "install-client": "cd client && npm install",
-    "server": "nodemon server.js --ignore client",
-    "client": "npm start --prefix client",
-    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "start-server": "nodemon server.js --ignore client",
+    "start-ml-app": "cd machine-learning-app && .\\venv\\Scripts\\activate && uvicorn main:app --host 0.0.0.0 --port 5001",
+    "start-client": "npm start --prefix client",
+    "start": "concurrently --kill-others-on-fail \"npm run start-server\" \"npm run start-ml-app\" \"npm run start-client\"",
     "build-client": "cd client && npm run build",
-    "setup-production": "npm run install-client && npm run build-client && npm install"
+    "setup-production": "npm run install-client && npm run build-client && npm run install-ml-app && npm install"
   },
   "keywords": [
     "fastener",
